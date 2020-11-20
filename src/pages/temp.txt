@@ -1,0 +1,38 @@
+commentInfo(){
+            return {
+                    courseStatistic:{
+                        content : this.apiData.content,
+                        teaching : this.apiData.teaching,
+                        grading : this.apiData.grading,
+                        workload : this.apiData.workload,
+                    },
+                    userInfro:{
+                        nickname:"lutianyi",
+                        photoPath:require("../../assets/touxiang.jpg"),
+                        grade:"2018级",
+                        major:"软件工程",
+                    },
+                    courseDetail:{
+                        year:"2020-2021",
+                        semester:"春",
+                        midTerm: this.apiData.midTerm,
+                        final: this.apiData.final,
+                        quiz: this.apiData.quiz,
+                        assignment: this.apiData.assignment,
+                        essay: this.apiData.essay,
+                        project: this.apiData.project,
+                        attendance: this.apiData.attendance,
+                        reading: this.apiData.reading,
+                        presentation: this.apiData.presentation,
+                    },
+                    commentDetail:{
+                        content : this.apiData.content,
+                        teaching : this.apiData.teaching,
+                        grading : this.apiData.grade,
+                        workload : this.apiData.homework,
+                        date: this.apiData.date,
+                        useful : 230,
+                        useless : 7
+                    }
+            }
+        },
