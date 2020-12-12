@@ -68,8 +68,6 @@
       <CourseInfo />
       <!-- <TeacherInfo /> -->
       <CommentInfo />
-
-      <test />
     </div>
   </div>
 </template>
@@ -80,14 +78,11 @@ import CourseInfo from "../components/homepage/CourseInfo";
 import CommentInfo from "../components/homepage/CommentInfo";
 import { mapState } from "vuex";
 
-import test from "../components/test";
-
 export default {
   components: {
     // TeacherInfo,
     CommentInfo,
     CourseInfo,
-    test,
   },
 
   data() {
