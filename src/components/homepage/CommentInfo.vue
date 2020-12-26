@@ -35,7 +35,6 @@
             >
               <q-btn
                 flat
-                :to="{ name: 'courseInfo', params: { courseId: i.courseId, teacherId: i.teacherId } }"
                 style="text-align: left"
               >
                 {{ i.courseName }}
@@ -51,7 +50,7 @@
               i.uselessNum
             }}</q-item-section>
             <q-item-section class="justify-evenly" style="text-align: left">{{
-              i.date.slice(0, 10)
+              i.date
             }}</q-item-section>
           </q-item>
         </q-scroll-area>
@@ -61,7 +60,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+//import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -70,14 +69,18 @@ export default {
       Like: 100,
       Reply: 5,
       Time: "2020.8.31",
+      commentInfo:[
+        {courseName:"数据库原理与应用",overall:"10",usefulNum:"3",uselessNum:"10",data:"100"},
+        {courseName:"数据库原理与应用",overall:"10",usefulNum:"3",uselessNum:"10",data:"100"},
+      ]
     };
   },
-  computed: {
-    ...mapState("userInfo", ["userInfo", "historyComment"]),
-    commentInfo() {
-      return this.historyComment;
-    },
-  },
+  //computed: {
+    //...mapState("userInfo", ["userInfo", "historyComment"]),
+    //commentInfo() {
+     // return this.historyComment;
+    //},
+  //},
   methods: {
     click() {
       alert("ok!");
@@ -85,7 +88,7 @@ export default {
   },
 
   created() {
-    console.log('sadgbasdkjhfghiuwdhjlsaoghfuhsdijhfpuijksadbfiubjlnio',this.commentInfo)
+    console.log('sadgbasdkjhfghiuwdhjlsaoghfuhsdijhfpuijksadbfiubjlnio')
   },
 };
 </script>
