@@ -1,9 +1,9 @@
 export default {
     routes: [
         {
-            path: "/",
+            path: "/:postId",
             name: 'index',
-            component: () => import("@/components/courseInfo/CourseComment"),
+            component: () => import("@/pages/Forum"),
         },
 
         {
