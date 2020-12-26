@@ -1,154 +1,107 @@
 <template>
-  <div class="card" style="width: 400pt; margin: 0 auto; margin-top: 50pt">
-    <q-card class="my-card">
-      <q-card-section>
-        <div class="text-h6">个人信息</div>
-      </q-card-section>
-
-      <q-separator />
-
-      <q-card-section class="background">
-        <!-- <div class='background' style="z-index:-1; ">
-          <img :src="LogoImg" width="100%" height="100%" alt="" />
-        </div> -->
-
-        <div style="z-index: 1">
-          <div class="text-subtitle2" style="height: 20pt; margin-top: 10pt">
-            <div class="row items-center">
-              <div class="col-6 justify-evenly" style="text-align: center">
-                昵称
-              </div>
-              <div class="col-6 justify-evenly" style="text-align: center">
-                <q-input
-                  rounded
-                  outlined
-                  v-model="Nickname"
-                  label="Nickname"
-                  value="Nickname"
-                  style="width: 150pt"
-                />
-              </div>
+  <div class="row q-gutter-md q-pa-md flex-center no-wrap items-stretch">
+    <div class="col-8">
+      <q-card class="my-card" bordered>
+        <q-item>
+          <div class="text-h6">个人信息</div>
+        </q-item>
+        <q-separator />
+        <q-card-section horizontal class="items-center">
+          <q-card-section class="q-gutter-xl">
+            <q-avatar size="200px" class="q-gutter-x-xl q-gutter-y-md">
+              <img :src="avatarPath" />
+            </q-avatar>
+            <div style="width: 300px">
+              <q-file filled v-model="model" label="上传头像" counter>
+                <template v-slot:before>
+                  <q-icon name="folder_open" />
+                </template>
+                <template v-slot:append>
+                  <q-btn round dense flat icon="add" @click.stop />
+                </template>
+              </q-file>
             </div>
-          </div>
+          </q-card-section>
 
-          <div class="text-subtitle2" style="height: 20pt">
-            <div class="row items-center">
-              <div class="col-6 justify-evenly" style="text-align: center">
-                性别
-              </div>
-              <div class="col-6 justify-evenly" style="text-align: center">
-                <q-select
-                  rounded
-                  outlined
-                  v-model="Gender"
-                  :options="OptionGender"
-                  label="Gender"
-                  style="width: 150pt"
-                />
-              </div>
-            </div>
-          </div>
+          <q-card-section class="col-7 q-gutter-y-md">
+            <q-form class="q-gutter-md q-px-lg">
+              <q-input
+              label-color="primary"
+                id="nickname"
+                v-model="Nickname"
+                outlined
+                label="昵称"
+                hint="对昵称进行修改，最长不能超过10位"
+              />
+              <q-select
+              label-color="primary"
+                color="primary"
+                filled
+                v-model="Gender"
+                :options="OptionGender"
+                label="性别"
+              >
+              </q-select>
+              <q-input
+              label-color="primary"
+                id="phone"
+                v-model="phoneNumber"
+                outlined
+                label="手机号"
+              />
+              <q-select
+              label-color="primary"
+                color="primary"
+                filled
+                v-model="Grade"
+                :options="OptionGrade"
+                label="年级"
+              >
+              </q-select>
+              <q-select
+              label-color="primary"
+                outlined
+                v-model="Major"
+                :options="OptionMajor"
+                label="专业"
+              />
+              <q-select
+              label-color="primary"
+                color="primary"
+                filled
+                v-model="Degree"
+                :options="OptionDegree"
+                label="学历"
+              >
+              </q-select>
+            </q-form>
+          </q-card-section>
+        </q-card-section>
+        <br />
+        <br />
+        <q-separator />
 
-          <div class="text-subtitle2" style="height: 20pt">
-            <div class="row items-center">
-              <div class="col-6 justify-evenly" style="text-align: center">
-                手机号
-              </div>
-              <div class="col-6 justify-evenly" style="text-align: center">
-                <q-input
-                  rounded
-                  outlined
-                  v-model="phoneNumber"
-                  :options="phoneNumber"
-                  label="phoneNumber"
-                  style="width: 150pt"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="text-subtitle2" style="height: 20pt">
-            <div class="row items-center">
-              <div class="col-6 justify-evenly" style="text-align: center">
-                年级
-              </div>
-              <div class="col-6 justify-evenly" style="text-align: center">
-                <q-select
-                  rounded
-                  outlined
-                  v-model="Grade"
-                  :options="OptionGrade"
-                  label="Grade"
-                  style="width: 150pt"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="text-subtitle2" style="height: 20pt">
-            <div class="row items-center">
-              <div class="col-6 justify-evenly" style="text-align: center">
-                主修专业
-              </div>
-              <div class="col-6 justify-evenly" style="text-align: center">
-                <q-select
-                  rounded
-                  outlined
-                  v-model="Major"
-                  :options="OptionMajor"
-                  label="Major"
-                  style="width: 150pt"
-                  value="OptionMajor"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="text-subtitle2" style="height: 20pt; margin-bottom: 30pt">
-            <div class="row items-center">
-              <div class="col-6 justify-evenly" style="text-align: center">
-                学历
-              </div>
-              <div class="col-6 justify-evenly" style="text-align: center">
-                <q-select
-                  rounded
-                  outlined
-                  v-model="Degree"
-                  :options="OptionDegree"
-                  label="Degree"
-                  style="width: 150pt"
-                />
-              </div>
-            </div>
-          </div>
+        <!-- 这里跳转回主页之后主页的信息不会刷新 -->
+        <div class="row">
+          <q-btn
+            label="Submit"
+            type="submit"
+            color="primary"
+            class="col-6"
+            @click="submit()"
+            :to="{ name: 'Homepage' }"
+          />
+          <q-btn
+            label="Reset"
+            type="reset"
+            color="primary"
+            flat
+            class="q-ml-sm col-5"
+            @click="reset()"
+          />
         </div>
-      </q-card-section>
-
-      <q-separator />
-      <!-- 这里跳转回主页之后主页的信息不会刷新 -->
-      <div class="row">
-        <q-btn
-          label="Submit"
-          type="submit"
-          color="primary"
-          class="col-6"
-          @click="submit()"
-          :to="{ name: 'Homepage' }"
-        />
-        <q-btn
-          label="Reset"
-          type="reset"
-          color="primary"
-          flat
-          class="q-ml-sm col-5"
-          @click="reset()"
-        />
-      </div>
-    </q-card>
-    <br />
-    <br />
-    <br />
-    <br />
+      </q-card>
+    </div>
   </div>
 </template>
 
@@ -174,7 +127,7 @@ export default {
   data() {
     return {
       LogoImg: require("../assets/TJU.png"),
-
+      avatarPath: require("../assets/boy-avatar.png"),
       OptionGender: ["男", "女"],
       OptionGrade: ["大一", "大二", "大三", "大四", "研一", "研二", "博士"],
       OptionMajor: ["软件工程", "土木工程", "经济与管理"],
@@ -328,22 +281,11 @@ export default {
       console.log("put action", res);
     },
   },
-  computed: mapState("userInfo", ["userInfo", 'token']),
+  computed: mapState("userInfo", ["userInfo", "token"]),
   created() {
     this.InitInfo();
   },
 };
 </script>
-
-
 <style >
-.text-subtitle2 {
-  margin-top: 40pt;
-}
-.background {
-  background: url("../assets/TJU_2.png");
-  background-size: 300px 300px;
-  background-repeat: no-repeat;
-  background-position: center;
-}
 </style>
