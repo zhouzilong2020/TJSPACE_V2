@@ -54,15 +54,13 @@
         </q-btn-group>
       </q-form>
     </q-card-section>
-
-    
   </q-card>
-  
 </template>
 
 <script>
 // import popDialog from "../popDialog";
 import { mapState } from "vuex";
+
 export default {
   components: {
     // popDialog,
@@ -75,6 +73,7 @@ export default {
       account: {
         email: "",
         password: "",
+        phoneNumber: "",
       },
       warning: false,
     };
@@ -92,9 +91,6 @@ export default {
     if (this.userInfo) {
       this.$router.push({
         name: "Homepage",
-        params: {
-          userId: this.userInfo.userid,
-        },
       });
     }
     if (localStorage.getItem("TJSPACE-email")) {
@@ -104,32 +100,32 @@ export default {
   },
 
   methods: {
-    async handleLogin() {
-      await this.$store.dispatch("userInfo/loginUser", {
-        account: this.account,
-        remember: this.remember,
-      });
-      if (this.token) {
+   handleLogin() {
+       this.$store.dispatch("userInfo/loginUser", {
+        account:this.account,
+        remember:this.remember
+      }).then(()=>
+      {
+        if (this.token) {
         // 成功获取token 表示成功登录
-        // console.log("get user token")
-        setTimeout(() => {
-          console.log("in login page", this.userInfo);
+        console.log("get user token",this.token)
+        setTimeout(() => {         
+          console.log("in login page");
           this.$router.push({
             name: "Homepage",
-            params: {
-              userId: this.userInfo.userid,
-            },
           });
-        }, 2000);
-      } else {
-        //密码错误
-        console.log("密码错误");
-        this.$q.notify({
-            message: "密码错误",
-            position: "center",
-            timeout: "2000",
-          });
-      }
+        }, 500);
+          } else {
+            //密码错误
+            console.log("密码错误");
+            this.$q.notify({
+              message: "密码错误",
+              position: "center",
+              timeout: "500",
+            });
+          }
+      })
+      
     },
   },
 };
