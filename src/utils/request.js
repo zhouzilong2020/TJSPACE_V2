@@ -2,59 +2,19 @@ import axios from 'axios'
 import qs from 'qs'
 // import { Message } from 'element-ui'
 import cookie from 'js-cookie'
-import {
-  Loading,
-  Notify
-} from 'quasar'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: 'http://localhost:8002/tjspace/api', //'http://139.224.53.131:8002/tjspace/api', // base_url
-  timeout: 5000 // 请求超时时间
+  baseURL: 'http://139.224.53.131:8002/tjspace/api', // base_url
+  timeout: 20000 // 请求超时时间
 });
 
 var isLoading = 0
 const CancelToken = axios.CancelToken
-var timer;
 var cancel
 var cancelToken = new CancelToken(function executor(c){
     cancel = c;
 })
-
-/**
- * 增加一个加载中的请求，有加载中的请求时显示Loading
- */
-function setLoading(){
-  if (isLoading == 0) {
-      Loading.show()
-      timer = setTimeout(()=>{
-          if(isLoading>0){
-              Notify.create({
-                  message: '请求超时，请重试',
-                  position: 'center',
-                  timeout: '2000'
-              })
-              cancel('TimeOut')
-          }
-      },5000) 
-  }
-  isLoading++;
-}
-/**
-* 减少一个加载中的请求，无加载中的请求时隐藏Loading
-*/
-function unsetLoading(){
-  isLoading--;
-  if (isLoading == 0) {
-      Loading.hide()
-      isLoading = 0
-      if (timer != void 0) {
-          clearTimeout(timer)
-          Loading.hide()
-          timer = void 0
-      }
-  }
-}
 
 //第三步 创建拦截器  http request 拦截器
 service.interceptors.request.use(
@@ -69,7 +29,7 @@ service.interceptors.request.use(
       return qs.stringify(params, { indices: false })
     }
     config.cancelToken = cancelToken;
-    setLoading();
+    isLoading++;
     return config
   },
   err => {
@@ -80,10 +40,11 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   // 这将会在之后统一进行配置
   response => {
-    if(response.data.data.token){
+    if(response.data&&response.data.data&&response.data.data.token){
       cookie.set('TJSPACE_token',response.data.data.token)
+      console.log("token",cookie.get('TJSPACE_token'))
     }
-    unsetLoading();
+    isLoading--;
     // //debugger
     // if (response.data.code == 28004) {
     //   console.log("response.data.resultCode是28004")
@@ -106,7 +67,8 @@ service.interceptors.response.use(
     // }
   },
   error => {
-    unsetLoading();
+    isLoading--;
+    
     return Promise.reject(error.response)   // 返回接口返回的错误信息
   });
 
