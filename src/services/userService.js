@@ -1,30 +1,18 @@
-// 远程登录用户！哈哈
+import request from "@/utils/request";
 import axios from "axios";
-import { URL } from "./config";
 
 /**
- * 登录用户的API接口，如果成功返回token以及userId，并将token，userId保存在浏览器的localstorage中；
- * @param {Object} payload payload需要传入account{email，password}, remember
+ * 登录用户的API接口，如果成功返回token
  */
-export async function loginUser(payload) {
-  console.log("in userSevice::login user", payload.account);
-  var resp = await axios.get(`${URL}Login/login`, {
-    params: {
-      email: payload.account.email,
-      password: payload.account.password,
-    },
-  });
-  console.log('in login service', resp);
 
-  // 登录成功，用户选择记住账号
-  if (resp.data.status && payload.remember) {
-    localStorage.setItem('TJSPACE-email', payload.account.email)
-  }
-  //如果用户没有选择记住用户账号
-  if (resp.data.status && !payload.remember) {
-    localStorage.removeItem('TJSPACE-email')
-  }
-  return resp.data;
+
+export async function loginUser(userInfo){
+  console.log("in login api",userInfo)
+  return request({
+    url: 'ucenterservice/login',
+    method: "post",
+    data: userInfo
+  })
 }
 
 /**
@@ -46,14 +34,7 @@ export async function registerUser(payload) {
   return resp.data;
 }
 
-/**
- * 生成一个验证码
- */
-function getCode(digit) {
-  let min = Math.pow(10, digit);
-  let max = min * 10;
-  return Math.floor(Math.random() * (max - min - 1)) + min;
-}
+
 
 /**
  * 向用户的邮箱发送验证码
@@ -61,33 +42,23 @@ function getCode(digit) {
  */
 export async function sentAuthCode(payload) {
   console.log("in sending AuthCode", payload);
-  let code =
-    "TJSPACE-" +
-    getCode(3).toString() +
-    "-" +
-    getCode(3).toString()
-  var resp = await axios.get(`${URL}Register/email`, {
-    params: {
-      email: payload.email,
-      code: code,
-    },
-  });
-  console.log('in services after sending authCode:', resp);
-  return { data: { ...resp.data, authCode: code } };
+  return request({
+    url: 'emailservice/send',
+    method: "post",
+    data: payload
+  })
 }
 
-
-export async function getUserInfo(payload) {
-  console.log(payload);
-  var resp = await axios.get(`${URL}Show/user`, {
-    headers: {
-      Authorization: payload.token,
-    },
-    params: {
-      userId: payload.userId,
-    },
-  });
-  return resp.data.data[0];
+/**
+ * 获取登陆用户的信息
+ * @param {Object} payload
+ */
+export function getUserInfo() {
+  console.log("getUserInfo")
+  return request({
+    url: 'ucenterservice/getUserInfo',
+    method: "get",
+  })
 }
 
 /**
