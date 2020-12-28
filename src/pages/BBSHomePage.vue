@@ -18,6 +18,14 @@
         <!-- 发布主题贴 -->
         <div v-show="isMakingPost">
           <q-input
+            v-model="postHeader"
+            label="输入标题"
+            maxlength="20"
+            counter
+            filled
+          >
+          </q-input>
+          <q-input
             v-model="postContent"
             label="输入你的想法"
             type="textarea"
@@ -59,6 +67,54 @@
       </div>
     </div>
 
+    <!--帖子 我写的-->
+    <div class="row justify-center">
+      <div class="col-8">
+        <div v-for="(o, index) in 3" :key="o" :offset="index> 0 ? 3 : 0" style="padding:5px">
+          <q-card class="col-8" style="padding:5px">
+            <q-item clickable>
+              <q-item-section avatar>
+                <q-avatar style="height:2em; width:2em">
+                  <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+                </q-avatar>
+                <q-item-label style="margin:auto; padding-top:5px">{{name}}</q-item-label>
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label style="font-size:1.125rem">{{header}}</q-item-label>
+                <q-item-label caption style="font-size:1rem">
+                  {{content}}
+                </q-item-label>
+                <br />
+                <q-item-label caption>
+                  最新评论于{{comment_time}}
+                  <br />
+                  {{comment_num}}评论
+                </q-item-label>
+              </q-item-section>
+
+              <!-- 交互 -->
+              <q-item-section side top>
+                  <q-item-label>
+                    <q-btn
+                      flat
+                      icon="thumb_up"
+                      color="red"
+                    />
+                    1
+                    <q-btn
+                      flat
+                      icon="thumb_down"
+                      color="black"
+                    />
+                  </q-item-label>
+                </q-item-section>
+            </q-item>
+          </q-card>
+        </div>
+      </div>
+    </div>
+  
     <!-- 帖子  放在list中显示-->
     <div class="row justify-center">
       <div class="col-8">
@@ -154,7 +210,13 @@ export default {
       bgPath: require("../assets/bbsBackground.png"),
       tjuLogo: require("../assets/TJU.png"),
       isMakingPost: false,
+      postHeader:"",
       postContent: "",
+      name:"Name",
+      header:"Title",
+      content:"Content",
+      comment_num:"1",
+      comment_time:"2020-12-8 9:32",
       postInfo: [],
       //默认以发帖时间排序
       orderType: 3,
@@ -192,7 +254,7 @@ export default {
             Authorization: this.token,
           },
           params: {
-            title: this.postContent.substr(0, 40),
+            title: this.postHeader.substr(0, 40),
             content: this.postContent,
             userId: this.userId,
           },
