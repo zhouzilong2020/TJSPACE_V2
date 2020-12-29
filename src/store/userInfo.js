@@ -130,11 +130,11 @@ export default {
             let userId = getCookie('TJSPACE_userId')
             if (token&&userId) {
                 // 如果cookie中有保存用户信息，则使用cookie登录
-                await getUserInfo().then((resp)=>{
+                await getUserInfo({attributes:["nickname"]}).then((resp)=>{
                     console.log('after cookie resp', resp.data)
                     context.commit("setUserInfo", resp.data)
                     context.commit("setToken", token)
-                    setCookie('TJSPACE_userId', resp.data.nickname) 
+                    setCookie('TJSPACE_userId', resp.data) 
                 })             
                 }
             else {
@@ -156,11 +156,12 @@ export default {
                     context.commit("setToken", resp1.data.token)
                     console.log("setToken",resp1.data.token);
                     // 使用token获取用户个人信息
-                    await getUserInfo().then((resp2)=>{
+                   
+                    await getUserInfo({attributes:["nickname"]}).then((resp2)=>{
                      //成功获取到了用户信息
                     context.commit("setUserInfo", resp2.data)
                     console.log("setUserInfo",resp2.data);
-                    setCookie('TJSPACE_userId', resp2.data.nickname)
+                    setCookie('TJSPACE_userId', resp2.data)
                     })             
                     }
                 })             
