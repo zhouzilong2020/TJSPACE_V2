@@ -51,14 +51,14 @@ export default {
             name: 'MakeComment',
             component: () => import("@/pages/MakeComment"),
         },
-        // {
-        //     path: "/",  //表示匹配所有路径
-        //     name: 'index',
-        //     component: () => import("@/pages/index"),
-        // }, 
+         {
+             path: "/",  //表示匹配所有路径
+             name: 'index',
+             component: () => import("@/pages/index"),
+         }, 
         {
             path: "*",  //表示匹配所有路径
-            component: () => import("@/pages/Error404"),
+            component: () => import("@/pages/index"),
         }
     ],
     mode: "history",

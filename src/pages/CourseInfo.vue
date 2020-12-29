@@ -117,7 +117,7 @@ export default {
     };
   },
   async created() {
-    if (this.token) {
+    
       // 加载效果
       this.isLoading = true;
       this.$q.loading.show();
@@ -136,12 +136,10 @@ export default {
 
       var courseResp = await getCourseInfo({
         courseId: this.$route.params.courseId,
-        teacherId: this.$route.params.teacherId,
-        token: this.token,
       });
 
       console.log("in receiving courseResp ", courseResp);
-      if (courseResp.status) {
+      if (courseResp.success) {
         this.courseInfo = {
           teacher: courseResp.teacherName,
           teacherId: this.$route.params.teacherId,
@@ -173,7 +171,7 @@ export default {
       this.$q.loading.hide();
 
       console.log(this.isLoading);
-    }
+    
   },
 };
 </script>

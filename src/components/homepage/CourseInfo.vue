@@ -52,12 +52,12 @@
 export default {
   data() {
     return {
-      Name: "数据库原理与应用",
-      CourseID: 42024403,
-      College: "软件学院",
-      Semester: "大二下",
-      Credit: "4.0",
-      Teacher: "袁时金",
+      //Name: "数据库原理与应用",
+      //CourseID: 42024403,
+      //College: "软件学院",
+      //Semester: "大二下",
+      //Credit: "4.0",
+      //Teacher: "袁时金",
       coursePath: require("../../assets/user-info-icon/chakanyuanwenlianjie.svg"),
       collectedcourse: [
         {courseName:"数据库原理与应用",teacherName:"袁时金"},

@@ -19,11 +19,13 @@ var cancelToken = new CancelToken(function executor(c){
 //第三步 创建拦截器  http request 拦截器
 service.interceptors.request.use(
   config => {
+    config.headers['Access-Control-Allow-Origin'] = "*";
     //debugger
     //判断cookie里面是否有名称是guli_token数据
     if (cookie.get('TJSPACE_token')) {
       //把获取cookie值放到header里面
       config.headers['token'] = cookie.get('TJSPACE_token');
+    
     }
     config.paramsSerializer = params => {
       return qs.stringify(params, { indices: false })
