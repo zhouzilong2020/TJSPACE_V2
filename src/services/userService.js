@@ -108,11 +108,12 @@ export function validateMsmAuthCode(payload){
  * 获取登陆用户的信息
  * @param {Object} payload
  */
-export function getUserInfo() {
+export function getUserInfo(payload) {
   console.log("getUserInfo")
   return request({
     url: 'infoservice/info',
     method: "get",
+    params: payload,
   })
 }
 
