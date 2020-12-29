@@ -9,15 +9,21 @@
         <q-card-section horizontal class="items-center">
           <q-card-section class="q-gutter-xl">
             <q-avatar size="200px" class="q-gutter-x-xl q-gutter-y-md">
-              <img :src="avatarPath" />
+              <img :src="information.avatar" />
             </q-avatar>
             <div style="width: 300px">
-              <q-file filled v-model="model" label="上传头像" counter>
+              <q-file
+                filled
+                v-model="avatar"
+                accept=".jpg, image/*"
+                label="上传头像"
+                counter
+              >
                 <template v-slot:before>
                   <q-icon name="folder_open" />
                 </template>
                 <template v-slot:append>
-                  <q-btn round dense flat icon="add" @click.stop />
+                  <q-btn round dense flat icon="add" />
                 </template>
               </q-file>
             </div>
@@ -26,50 +32,58 @@
           <q-card-section class="col-7 q-gutter-y-md">
             <q-form class="q-gutter-md q-px-lg">
               <q-input
-              label-color="primary"
+                label-color="primary"
                 id="nickname"
-                v-model="Nickname"
+                v-model="information.nickname"
                 outlined
                 label="昵称"
                 hint="对昵称进行修改，最长不能超过10位"
               />
               <q-select
-              label-color="primary"
+                label-color="primary"
                 color="primary"
                 filled
-                v-model="Gender"
+                v-model="information.gender"
                 :options="OptionGender"
                 label="性别"
               >
               </q-select>
-              <q-input
-              label-color="primary"
+              <q-input>
+                label-color="primary"
                 id="phone"
-                v-model="phoneNumber"
+                v-model="information.phoneNumber"
                 outlined
                 label="手机号"
-              />
-              <q-select
-              label-color="primary"
+              </q-input>
+              <q-select>
+                label-color="primary"
                 color="primary"
                 filled
-                v-model="Grade"
+                v-model="information.grade"
                 :options="OptionGrade"
                 label="年级"
+              </q-select>>
+              <q-select
+                label-color="primary"
+                outlined
+                v-model="information.majorId"
+                :options="OptionDept"
+                label="院系"
               >
               </q-select>
               <q-select
-              label-color="primary"
+                label-color="primary"
                 outlined
-                v-model="Major"
+                v-model="information.majorId"
                 :options="OptionMajor"
                 label="专业"
-              />
+              >
+              </q-select>
               <q-select
-              label-color="primary"
+                label-color="primary"
                 color="primary"
                 filled
-                v-model="Degree"
+                v-model="information.degree"
                 :options="OptionDegree"
                 label="学历"
               >
@@ -109,179 +123,88 @@
 
 
 <script>
-import { mapState } from "vuex";
-// import { token } from "../services/config";
-import axios from "axios";
-// import axios from 'axios'
+import { getUserInfo } from "../services/userService";
+import { getDepts } from "../services/infoModifyService";
 export default {
   components: {},
   name: "SelfInfoModify",
-  props: {
-    SelfInfo: {
-      type: Object,
-      default: () => {
-        return {};
-      },
-    },
-  },
   data() {
     return {
       LogoImg: require("../assets/TJU.png"),
-      avatarPath: require("../assets/boy-avatar.png"),
+      //     avatarPath: require("../assets/boy-avatar.png"),
       OptionGender: ["男", "女"],
       OptionGrade: ["大一", "大二", "大三", "大四", "研一", "研二", "博士"],
-      OptionMajor: ["软件工程", "土木工程", "经济与管理"],
+      OptionMajor: [],
       OptionDegree: ["本科生", "研究生", "博士生"],
-      Nickname: "",
-      Gender: "",
-      phoneNumber: "",
-      Grade: "",
-      Major: "",
-      Degree: "",
+      avatar: null,
       information: {
-        userId: "",
         nickname: "",
-        gender: -1,
+        gender: "",
         phoneNumber: "",
-        majorId: "",
-        year: -1,
-        degree: -1,
+        majorId: null,
+        year: null,
+        degree: null,
+        grade: null,
+        avatar: "",
       },
     };
   },
+  watch: {
+    avatar: function (newval) {
+      //当上传文件后转换为blob预览头像
+      if (this.avatar != null) {
+        if (window.createObjectURL != undefined) {
+          // basic
+          this.information.avatar = window.createObjectURL(newval);
+        } else if (window.URL != undefined) {
+          // mozilla(firefox)
+          this.information.avatar = window.URL.createObjectURL(newval);
+        } else if (window.webkitURL != undefined) {
+          // webkit or chrome
+          this.information.avatar = window.webkitURL.createObjectURL(newval);
+        }
+      }
+      console.log(this.information.avatar);
+    },
+  },
   methods: {
     submit() {
-      // console.log('token：',token)
       this.getInfo();
       this.$store.dispatch("userInfo/modifyUserInfo", {
         ...this.information,
         token: this.token,
       });
       console.log("in selfinfo", this.information);
-      alert("Information Modified!");
+      this.$q.notify({
+        message: "信息已修改",
+        position: "center",
+        timeout: "500",
+      });
     },
     reset() {
       this.InitInfo();
     },
-    getInfo() {
-      this.information.userId = this.userInfo.userid;
-      this.information.nickname = this.Nickname;
-      switch (this.Gender) {
-        case "男":
-          this.information.gender = 0;
-          break;
-        case "女":
-          this.information.gender = 1;
-          break;
-      }
-      this.information.phoneNumber = this.phoneNumber;
-      switch (this.Major) {
-        case "软件工程":
-          this.information.majorId = "1";
-          break;
-        case "土木工程":
-          this.information.majorId = "2";
-          break;
-        case "经济与管理":
-          this.information.majorId = "3";
-          break;
-      }
-      switch (this.Grade) {
-        case "大一":
-          this.information.year = 1;
-          break;
-        case "大二":
-          this.information.year = 2;
-          break;
-        case "大三":
-          this.information.year = 3;
-          break;
-        case "大四":
-          this.information.year = 4;
-          break;
-      }
-      switch (this.Degree) {
-        case "本科生":
-          this.information.degree = 1;
-          break;
-        case "研究生":
-          this.information.degree = 2;
-          break;
-        case "博士生":
-          this.information.degree = 3;
-          break;
-      }
-    },
     InitInfo() {
-      this.Nickname = this.userInfo.nickname;
-      switch (this.userInfo.gender) {
-        case 0:
-          this.Gender = "男";
-          break;
-        case 1:
-          this.Gender = "女";
-          break;
-      }
-      this.phoneNumber = this.userInfo.phonenumber;
-      switch (this.userInfo.majorid) {
-        case "1":
-          this.Major = "软件工程";
-          break;
-        case "2":
-          this.Major = "土木工程";
-          break;
-        case "3":
-          this.Major = "经济与管理";
-          break;
-      }
-      switch (this.userInfo.year) {
-        case 1:
-          this.Grade = "大一";
-          break;
-        case 2:
-          this.Grade = "大二";
-          break;
-        case 3:
-          this.Grade = "大三";
-          break;
-        case 4:
-          this.Grade = "大四";
-          break;
-      }
-      switch (this.userInfo.degree) {
-        case 1:
-          this.Degree = "本科生";
-          break;
-        case 2:
-          this.Degree = "研究生";
-          break;
-        case 3:
-          this.Degreer = "博士生";
-          break;
-      }
-    },
-    async changeInfo() {
-      let res = await axios({
-        method: "post",
-        url: "http://175.24.115.240:8080/api/Modify/Info",
-        headers: {
-          Authorization: this.token,
-        },
-        data: {
-          userid: this.information.userId,
-          nickname: this.information.nickname,
-          gender: this.information.gender,
-          phonenumber: this.information.phoneNumber,
-          majorid: this.information.majorId,
-          year: this.information.year,
-          degree: this.information.degree,
-        },
+      getUserInfo().then((resp) => {
+        if (resp.success)
+          this.information.nickname = resp.data.userInfo.nickname;
+        if (resp.data.userInfo.gender) this.information.gender = "女";
+        else this.information.gender = "男";
+        this.information.phoneNumber = resp.data.userInfo.phoneNumber;
+        this.information.majorId = resp.data.userInfo.majorId;
+        this.information.year = resp.data.userInfo.year;
+        this.information.grade = resp.data.userInfo.grade;
+        this.information.degree = resp.data.userInfo.degree;
+        this.information.avatar = resp.data.userInfo.avatar;
+        this.avatar = null;
       });
-      console.log("new phone:", this.information.phoneNumber);
-      console.log("put action", res);
+      getDepts().then((resp) => {
+        console.log("deptName", resp.data.deptNameList.name);
+        this.OptionMajor = resp.data.deptNameList.name;
+      });
     },
   },
-  computed: mapState("userInfo", ["userInfo", "token"]),
+
   created() {
     this.InitInfo();
   },
