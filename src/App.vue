@@ -12,6 +12,7 @@
 import layout from "./components/layout/layout";
 // import { checkCookie } from "./utils/utils";
 import { mapState } from "vuex";
+import { test } from "./services/userService";
 export default {
   name: "APP",
   components: {
@@ -22,6 +23,9 @@ export default {
   },
   computed: mapState("userInfo", ["userInfo", "isLoading"]),
   methods: {},
+  mounted() {
+    test("1", "1");
+  },
   // async beforeCreate() {
   //   if (!this.userInfo) {
   //     //如果当前用户信息没有，先检查cookie中是否含有信息

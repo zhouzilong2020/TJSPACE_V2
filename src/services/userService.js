@@ -1,6 +1,20 @@
 // 远程登录用户！哈哈
 import axios from "axios";
-import { URL } from "./config";
+import { URL } from "./config"
+import request from '@/utils/request'
+
+export async function test(email, password) {
+  return request({
+    url: '/ucenterservice/login',
+    method: 'post',
+    data: {
+      "email": email,
+      "password": password
+    }
+  })
+}
+
+
 
 /**
  * 登录用户的API接口，如果成功返回token以及userId，并将token，userId保存在浏览器的localstorage中；
