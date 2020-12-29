@@ -23,7 +23,7 @@
           label="邮箱："
           hint="邮箱将作为您的唯一登录凭证"
           lazy-rules
-          :rules="[(val) => (val && val.length > 0) || '请输入您的同济邮箱']"
+          :rules="[(val) => (val && val.length > 0) || '请输入您的邮箱']"
         >
           <template v-slot:after>
             <q-btn
@@ -106,8 +106,11 @@
 
 <script>
 import popDialog from "../popDialog";
-import { sentAuthCode } from "../../services/userService";
-import { mapState } from "vuex";
+import {
+  sentAuthCode,
+  validateAuthCode,
+  validateNickname,
+} from "../../services/userService";
 export default {
   components: {
     popDialog,
@@ -154,7 +157,6 @@ export default {
     accountEmail() {
       return this.model.email + "@tongji.edu.cn";
     },
-    ...mapState("userInfo", ["token", "userInfo"]),
     sentIsDisabled() {
       if (this.model.email && !this.timer) {
         return false;
@@ -186,14 +188,16 @@ export default {
 
     async handleAuthCode() {
       if (this.isSendingAuthCode) {
-        await this.popWarning("验证吗已发送，请稍后再试！");
+        await this.popWarning("验证码已发送，请稍后再试！");
       } else {
         var resp = await sentAuthCode({
-          email: this.accountEmail,
+          emailAddr: this.accountEmail,
+          expireTime: 60,
+          operationType: "邮箱验证",
+          subject: "TJSPACE·同济大学社群邮箱验证",
         });
-
         console.log("in receiving authCode", resp);
-        if (resp.data.status) {
+        if (resp.success) {
           //设置倒计时
           this.timer = setInterval(() => {
             if (this.downCnt == 0) {
@@ -203,42 +207,47 @@ export default {
               this.downCnt -= 1;
             }
           }, 1000);
-
-          this.authCode = resp.data.authCode;
-          console.log("set authCode", resp.data.authCode);
         } else {
-          await this.popWarning("服务器错误，请稍后再试！");
+          await this.popWarning(resp.message);
         }
       }
     },
 
     async handleRegister() {
-      if (this.model.authCode != this.authCode) {
-        await this.popWarning("验证码错误！");
+      var resp = await validateAuthCode({
+        addr: this.accountEmail,
+        code: this.model.authCode,
+      });
+      console.log("resp", resp);
+      if (!resp.success) {
+        await this.popWarning(resp.message);
       } else {
-        console.log("in sent reg form", this.model);
-        var resp = await this.$store.dispatch("userInfo/registerUser", {
-          email: this.model.email,
+        var resp1 = await validateNickname({
           nickname: this.model.nickname,
-          password: this.model.password,
         });
-        if (resp.status) {
-          // 成功获取token 表示成功登录
-          // console.log("get user token")
-          console.log(this.userInfo);
-          this.$router.push({
-            name: "SelfInfoModify",
-            params: {
-              userId: this.userInfo.userid,
-            },
+        if (resp1.success) {
+          console.log("in sent reg form", this.model);
+          var resp2 = await this.$store.dispatch("userInfo/registerUser", {
+            email: this.model.email,
+            password: this.model.password,
+            nickname: this.model.nickname,
           });
-        } else {
-          // 目前只有昵称重复的问题
-          this.popWarning(resp.msg);
-          if (resp.msg == "昵称重复") {
-            this.model.nickname = ''
-            document.getElementById('nickname').focus()
-
+          if (resp2.success) {
+            // 成功获取token 表示成功登录
+            // console.log("get user token")
+            this.$router.push({
+              name: "SelfInfoModify",
+            });
+          } else {
+            this.popWarning(resp2.message);
+          }
+        }
+        //昵称重复
+        else {
+          this.popWarning(resp1.message);
+          if (resp1.message == "昵称重复") {
+            this.model.nickname = "";
+            document.getElementById("nickname").focus();
           }
         }
       }
