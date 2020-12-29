@@ -2,7 +2,7 @@ import request from "@/utils/request";
 import axios from "axios";
 
 /**
- * 登录用户的API接口，如果成功返回token
+ * 邮箱登录用户的API接口，如果成功返回token
  */
 
 
@@ -14,24 +14,40 @@ export async function loginUser(userInfo){
     data: userInfo
   })
 }
+/**
+ * 手机登录用户的API接口，如果成功返回token
+ */
 
+
+export async function MsmloginUser(userInfo){
+  console.log("in login api",userInfo)
+  return request({
+    url: 'ucenterservice/login/'+userInfo,
+    method: "post",
+  })
+}
 /**
  * 注册用户API，如果成功返回token以及userId，并将token，userId保存在浏览器的localstorage中；
  * @param {Object} payload payload需要传入 email，password，nickname，以及邮箱的相关验证码
  */
 export async function registerUser(payload) {
   console.log("in userSevice::reg", payload);
-  var resp = await axios.post(`${URL}Register/register`, {},
-    {
-      params: {
-        email: payload.email,
-        password: payload.password,
-        nickname: payload.nickname,
-      },
-    }
-  );
-  console.log(resp);
-  return resp.data;
+  return request({
+    url: 'ucenterservice/register',
+    method: "post",
+    data: payload
+  })
+}
+
+/**
+ * 验证用户昵称是否重复
+ */
+export async function validateNickname(userInfo){
+  console.log("in reg api",userInfo)
+  return request({
+    url: 'ucenterservice/register/validate'+userInfo,
+    method: "get",
+  })
 }
 
 
@@ -50,13 +66,52 @@ export async function sentAuthCode(payload) {
 }
 
 /**
+ * 确认邮箱验证码
+ * @param {Object} payload
+ */
+export async function validateAuthCode(payload) {
+  console.log("validate AuthCode", payload.addr+'/'+payload.code);
+  return request({
+    url: 'emailservice/validate/'+payload.addr+'/'+payload.code,
+    method: "get",
+  })
+}
+/**
+ * 向用户的手机发送验证码
+ * @param {Object} payload
+ */
+export async function sentMsmAuthCode(payload) {
+  console.log("in sending AuthCode", payload.phone);
+  return request({
+    url: 'msmservice/send/'+payload.phone,
+    method: "post",
+  })
+}
+
+/**
+ * 确认手机验证码
+ * @param {Object} payload
+ */
+export function validateMsmAuthCode(payload){
+  console.log("validate AuthCode", payload);
+  return request({
+    url: 'msmservice/validate/'+payload.code+'/'+payload.phone,
+    method: "get",
+  })
+}
+/**
+ * 用手机号登陆用户
+ * @param {Object} payload
+ * 
+ */
+/**
  * 获取登陆用户的信息
  * @param {Object} payload
  */
 export function getUserInfo() {
   console.log("getUserInfo")
   return request({
-    url: 'ucenterservice/getUserInfo',
+    url: 'infoservice/info',
     method: "get",
   })
 }
