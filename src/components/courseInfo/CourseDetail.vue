@@ -72,22 +72,21 @@
       </q-list>
     </q-card-section>
     <q-card-section style="padding: 0 auto">
-      <CourseAttitute />
+      <CourseAttitudeChart :courseInfo="this.courseInfo" />
     </q-card-section>
     <q-card-section>
       <course-statistic class="q-my-sm" :commentStatistic="commentStatistic" />
       <!-- 这里需要有id才能展示 记得去掉zhushi -->
-      <!-- <q-btn
+      <q-btn
         stretch
-        class="full-width btn gt-sm"
+        class="full-width"
         color="primary"
         icon-right="comment"
         :disable="!canMakeComment"
         :to="{
           name: 'MakeComment',
           params: {
-            userId: this.userInfo.userid,
-            courseId: this.courseInfo.courseId,
+            courseId: this.$route.params.courseId,
           },
         }"
         label="撰写评论"
@@ -97,33 +96,13 @@
           canMakeComment ? "现在就撰写你的评论吧！" : "你已经评价过该课程！"
         }}</q-tooltip>
       </q-btn>
-
-      <q-btn
-        stretch
-        class="full-width btn lt-md"
-        color="primary"
-        icon-right="comment"
-        :disable="!canMakeComment"
-        :to="{
-          name: 'MakeComment',
-          params: {
-            teacherId: this.courseInfo.teacherId,
-            courseId: this.courseInfo.courseId,
-          },
-        }"
-        unelevated
-      >
-        <q-tooltip content-class="bg-accent">{{
-          canMakeComment ? "现在就撰写你的评论吧！" : "你已经评价过该课程！"
-        }}</q-tooltip>
-      </q-btn> -->
     </q-card-section>
   </q-card>
 </template>
 
 <script>
 import CourseStatistic from "./CourseStatistic";
-import CourseAttitute from "./CourseAttitute";
+import CourseAttitudeChart from "./CourseAttituteChart";
 //    这里需要有id才能展示 记得去掉zhushi
 // import { canMakeComment } from "../../services/commentService";
 import { mapState } from "vuex";
@@ -131,7 +110,7 @@ export default {
   name: "CourseDetail",
   components: {
     CourseStatistic,
-    CourseAttitute,
+    CourseAttitudeChart,
   },
   computed: {
     ...mapState("userInfo", ["userInfo"]),
@@ -175,11 +154,10 @@ export default {
   data() {
     return {
       path: require("../../assets/TJU.png"),
-      canMakeComment: false,
+      canMakeComment: true,
     };
   },
-   mounted() {
-   },
+  mounted() {},
 };
 </script>
 

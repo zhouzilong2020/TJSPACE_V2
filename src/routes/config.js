@@ -1,7 +1,7 @@
 export default {
     routes: [
         {
-            path: "/courseInfo/:courseId",
+            path: "/courseInfo/:courseId/:currentPage",
             name: 'courseInfo',
             component: () => import("@/pages/CourseInfo"),
         }, {
@@ -41,7 +41,7 @@ export default {
             name: 'SelfInfoModify',
             component: () => import("@/pages/SelfInfoModify"),
         }, {
-            path: "/makeComment/:courseId/:teacherId",
+            path: "/makeComment/:courseId",
             name: 'MakeComment',
             component: () => import("@/pages/MakeComment"),
         },

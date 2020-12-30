@@ -16,7 +16,7 @@ var cancelToken = new CancelToken(function executor(c) {
   cancel = c;
 })
 
-//第三步 创建拦截器  http request 拦截器
+//创建拦截器  http request 拦截器
 service.interceptors.request.use(
   config => {
     config.headers['Access-Control-Allow-Origin'] = "*";
@@ -53,9 +53,13 @@ service.interceptors.response.use(
       // 返回 错误代码-1 清除token信息并跳转到登录页面
       Notify.create({ color: 'negative', message: response.data.message, icon: 'report_problem' })
       return Promise.reject(response.data)   // 返回接口返回的错误信息
-    } else {
-      return response.data;
+    } else if(response.data.code == 20003){
+      cookie.remove('TJSPACE_token')
+      // 返回 错误代码-1 清除token信息并跳转到登录页面
+      Notify.create({ color: 'negative', message: "您已长时间未登录，请重新登录", icon: 'report_problem' })
+      return Promise.reject(response.data)   // 返回接口返回的错误信息
     }
+    return response.data;
   },
   error => {
     isLoading--;

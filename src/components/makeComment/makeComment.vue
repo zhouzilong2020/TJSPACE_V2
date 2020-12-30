@@ -9,13 +9,7 @@
       animated
     >
       <!-- 课程选项 -->
-      <q-step
-        :name="0"
-        :title="title[0]"
-        icon="settings"
-        
-        :done="step > 0"
-      >
+      <q-step :name="0" :title="title[0]" icon="settings" :done="step > 0">
         <q-item-label class="text-overline">{{ content[0] }}</q-item-label>
         <div class="q-gutter-sm">
           <q-item
@@ -315,7 +309,7 @@
           content[5][1]
         }}</q-item-label>
 
-        <course-comment
+        <!-- <course-comment
           v-if="isFinish"
           :apiData="apiInterface"
           :taker="{
@@ -324,7 +318,7 @@
             major: userInfo.majorid,
           }"
           :needGetEva="false"
-        />
+        /> -->
 
         <q-stepper-navigation class="q-gutter-sm">
           <div class="row flex-center">
@@ -349,21 +343,11 @@
 </template>
 
 <script>
-import CourseComment from "../courseInfo/CourseComment";
 import { makeComment } from "../../services/commentService";
 import { mapState } from "vuex";
 export default {
-  components: {
-    CourseComment,
-  },
-  props: {
-    courseInfo: {
-      type: Object,
-    },
-  },
-
   computed: {
-    ...mapState("userInfo", ["userInfo", "token"]),
+    ...mapState("userInfo", ["userInfo"]),
     isFinish() {
       if (
         this.comment[0] != "" &&
@@ -383,86 +367,41 @@ export default {
         grade: this.comment[2],
         homework: this.comment[3],
 
-        midterm: this.selection.includes("midterm") ? 1 : 0,
-        final: this.selection.includes("final") ? 1 : 0,
-        quiz: this.selection.includes("quiz") ? 1 : 0,
-        assignment: this.selection.includes("assignment") ? 1 : 0,
-        essay: this.selection.includes("essay") ? 1 : 0,
-        project: this.selection.includes("project") ? 1 : 0,
-        attendance: this.selection.includes("attendance") ? 1 : 0,
-        reading: this.selection.includes("reading") ? 1 : 0,
-        presentation: this.selection.includes("presentation") ? 1 : 0,
+        isMidterm: this.selection.includes("midterm") ? 1 : 0,
+        isFinal: this.selection.includes("final") ? 1 : 0,
+        isQuiz: this.selection.includes("quiz") ? 1 : 0,
+        isAssignment: this.selection.includes("assignment") ? 1 : 0,
+        isEssay: this.selection.includes("essay") ? 1 : 0,
+        isProject: this.selection.includes("project") ? 1 : 0,
+        isAttendance: this.selection.includes("attendance") ? 1 : 0,
+        isReading: this.selection.includes("reading") ? 1 : 0,
+        isPresentation: this.selection.includes("presentation") ? 1 : 0,
 
-        overall: this.score[0],
-        instructor: this.score[1],
-        grading: this.score[2],
-        workload: this.score[3],
+        contentScore: this.score[0],
+        teachingScore: this.score[1],
+        gradingScore: this.score[2],
+        workloadScore: this.score[3],
 
-        anomymous: 0,
-
-        userId: this.userInfo.userid,
-
-        usefulnum: 0,
-        uselessnum: 0,
-        date: Date(),
-
-        courseId: this.courseInfo.courseId,
-
-        teacherId: this.courseInfo.teacherId,
+        courseId: this.$route.params.courseId,
       };
     },
   },
   methods: {
     async handleSubmit() {
-      // 加载效果
-      this.isLoading = true;
-      this.$q.loading.show();
-      // 设置定时器
-      setTimeout(() => {
-        if (this.isLoading) {
-          // 如果到了时间还没有加载成功
-          this.$q.notify({
-            message: "请求超时，请重试",
-            position: "center",
-            timeout: "2000",
+      makeComment(this.apiInterface)
+        .then((resp) => {
+          console.log(resp);
+          this.$router.push({
+            name: "courseInfo",
+            params: {
+              courseId: this.$route.params.courseId,
+              currentPage: 0,
+            },
           });
-          this.$q.loading.hide();
-        }
-      }, 5000);
-
-      console.log("before commenting userInfo", this.userInfo);
-
-      var resp = await makeComment({
-        token: this.token,
-        apiInterface: this.apiInterface,
-      });
-
-
-      console.log("after making comment ", resp);
-
-      if (resp.status) {
-        this.isLoading = false;
-        this.$q.loading.hide();
-        this.$q.notify({
-          message: "评价成功",
-          position: "center",
-          timeout: "1000",
+        })
+        .catch((e) => {
+          console.log(e);
         });
-        this.$router.push({
-          name: "courseInfo",
-          params: {
-            courseId: this.courseInfo.courseId,
-          },
-        });
-      } else {
-        this.isLoading = false;
-        this.$q.loading.hide();
-        this.$q.notify({
-          message: "评价失败，请稍后再试",
-          position: "center",
-          timeout: "1000",
-        });
-      }
     },
   },
   data() {
@@ -470,7 +409,7 @@ export default {
       isLoading: false,
       step: 0,
       score: [5, 5, 5, 5],
-      comment: ["", "", "", ""],
+      comment: ["1", "1", "1", "1"],
       selection: [],
       title: [
         "请选择本门课程的相应情况",

@@ -11,19 +11,19 @@
         <course-head :courseInfo="courseInfo" />
       </div>
       <!-- 搜索栏 -->
-      <!-- <div class="option-group row justify-start q-gutter-sm">
+      <!-- <div class="option-group col justify-start q-gutter-sm">
         <q-select
           v-model="order"
           label="选择排序方式"
           :options="orderOptions"
-          style="width: 250px"
+          style="width: 200px"
           behavior="menu"
         />
         <q-select
           v-model="dept"
           label="选择其他学院"
           :options="deptsOptions"
-          style="width: 250px"
+          style="width: 200px"
           behavior="menu"
         />
       </div> -->
@@ -31,10 +31,9 @@
       <div class="course-comment">
         <template v-if="comments.length > 0">
           <course-comment
-            v-for="(comment, i) in comments"
-            :key="comment.commentid"
+            v-for="(comment) in comments"
+            :key="comment.commentId"
             :apiData="comment"
-            :taker="commentor[i]"
           />
         </template>
         <template v-else class="row justify-between">
@@ -97,14 +96,12 @@ export default {
       courseId: this.$route.params.courseId,
     })
       .then((resp) => {
-        console.log("in receiving courseResp ", resp);
         if (resp.success) {
-          console.log(resp)
+          console.log(resp);
           this.courseInfo = {
             ...resp.data,
-            schoolTime:resp.data.historyTeachingList[0].schoolTime
-          }
-          
+            schoolTime: resp.data.historyTeachingList[0].schoolTime,
+          };
           this.$store.commit("courseInfo/setCourseInfo", this.courseInfo);
         }
       })
@@ -114,19 +111,16 @@ export default {
 
     getComment({
       courseId: this.$route.params.courseId,
+      currentPage: this.$route.params.currentPage,
+      limit: 20,
     })
       .then((resp) => {
-        this.comments = resp.data1;
-        this.commentor = resp.data2;
+        console.log(resp);
+        this.comments = resp.data.commentList;
       })
       .catch((e) => {
         console.log(e);
       });
-
-    this.$store.commit("courseInfo/setCourseInfo", {
-      courseInfo: this.courseInfo,
-      statistic: this.commentStatistic,
-    });
   },
 };
 </script>

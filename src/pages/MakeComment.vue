@@ -1,11 +1,7 @@
 <template>
   <div class="row q-gutter-md q-pa-md flex-center no-wrap items-stretch">
-    <course-detail
-      :courseInfo="courseInfo.courseInfo"
-      :commentStatistic="courseInfo.statistic"
-      class="detail"
-    />
-    <make-comment :courseInfo="courseInfo.courseInfo" class="makeComment" />
+    <course-detail :courseInfo="courseInfo" class="detail" />
+    <make-comment :courseInfo="courseInfo" class="makeComment" />
   </div>
 </template>
 
@@ -29,7 +25,7 @@ export default {
         name: "courseInfo",
         params: {
           courseId: this.$route.params.courseId,
-          teacherId: this.$route.params.teacherId,
+          currentPage: 0,
         },
       });
     }

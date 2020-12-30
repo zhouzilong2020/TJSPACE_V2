@@ -14,7 +14,7 @@
           </q-item-label>
 
           <q-item-label class="grade text-center" caption>
-            {{ commentInfo.userInfo.grade +'年级'}}
+            {{ commentInfo.userInfo.grade + "年级" }}
           </q-item-label>
           <q-item-label class="major text-center" caption>
             {{ commentInfo.userInfo.major }}
@@ -203,23 +203,31 @@
     <q-item class="course-review-body" horizontal>
       <div class="col-6 q-gutter-sm">
         <q-card-section>
-          <div class="text-h6">课程内容</div>
-          <p class="tetx-body2">{{ commentInfo.commentDetail.content }}</p>
+          <div class="text-h6 text-center">课程内容</div>
+          <p class="tetx-body2 text-justify">
+            {{ commentInfo.commentDetail.content }}
+          </p>
         </q-card-section>
 
         <q-card-section>
-          <div class="text-h6">教学水平</div>
-          <p class="tetx-body2">{{ commentInfo.commentDetail.teaching }}</p>
+          <div class="text-h6 text-center">教学水平</div>
+          <p class="tetx-body2 text-justify">
+            {{ commentInfo.commentDetail.teaching }}
+          </p>
         </q-card-section>
       </div>
       <div class="col-6 q-gutter-sm">
         <q-card-section>
-          <div class="text-h6">评分情况</div>
-          <p class="tetx-body2">{{ commentInfo.commentDetail.grading }}</p>
+          <div class="text-h6 text-center">评分情况</div>
+          <p class="tetx-body2 text-justify">
+            {{ commentInfo.commentDetail.grading ? 1 : 2 }}
+          </p>
         </q-card-section>
         <q-card-section>
-          <div class="text-h6">课程作业</div>
-          <p class="tetx-body2">{{ commentInfo.commentDetail.workload }}</p>
+          <div class="text-h6 text-center">课程作业</div>
+          <p class="tetx-body2 text-justify">
+            {{ commentInfo.commentDetail.workload ? 1 : 2 }}
+          </p>
         </q-card-section>
       </div>
     </q-item>
@@ -263,7 +271,6 @@
 <script>
 import {
   evaluateComment,
-  getEvaluate,
   cancelEvaluation,
 } from "../../services/commentService";
 import { mapState } from "vuex";
@@ -412,53 +419,42 @@ export default {
   },
 
   async created() {
-    // console.log(this.apiData)
-    // var resp = await getUserInfo({userID:this.apiData.userId})
-    // console.log(resp)
-    console.log("inasifdgaksdyfgsdfgasd", this.taker)
     this.commentInfo = {
-      commentId: this.apiData.commentid,
+      commentId: this.apiData.commentId,
       courseStatistic: {
-        content: this.apiData.overall,
-        teaching: this.apiData.instructor,
-        grading: this.apiData.grading,
-        workload: this.apiData.workload,
+        content: this.apiData.contentScore,
+        teaching: this.apiData.teachingScore,
+        grading: this.apiData.gradingScore,
+        workload: this.apiData.workloadScore,
       },
       userInfo: {
-        nickname: this.taker.nickname,
-        grade: this.taker.grade,
-        major: this.taker.major,
+        nickname: "this.taker.nickname",
+        grade: "this.taker.grade",
+        major: "this.taker.major",
       },
       courseDetail: {
         // year:"2020-2021",
         // semester:"春",
-        midterm: this.apiData.midterm,
-        final: this.apiData.final,
-        quiz: this.apiData.quiz,
-        assignment: this.apiData.assignment,
-        essay: this.apiData.essay,
-        project: this.apiData.project,
-        attendance: this.apiData.attendance,
-        reading: this.apiData.reading,
-        presentation: this.apiData.presentation,
+        midterm: this.apiData.isMidterm,
+        final: this.apiData.idFinal,
+        quiz: this.apiData.isQuiz,
+        assignment: this.apiData.isAssignment,
+        essay: this.apiData.isEssay,
+        project: this.apiData.isProject,
+        attendance: this.apiData.isAttendance,
+        reading: this.apiData.isReading,
+        presentation: this.apiData.isPresentation,
       },
       commentDetail: {
         content: this.apiData.content,
         teaching: this.apiData.teaching,
         grading: this.apiData.grade,
-        workload: this.apiData.homework,
-        date: this.apiData.date.slice(0, 10),
-        useful: this.apiData.usefulnum,
-        useless: this.apiData.uselessnum,
+        workload: this.apiData.workload,
+        date: this.apiData.createTime.slice(0, 10),
+        useful: this.apiData.positiveCount,
+        useless: this.apiData.negativeCount,
       },
     };
-    if (this.needGetEva) {
-      this.isEvaluated = await getEvaluate({
-        token: this.token,
-        userId: this.userInfo.userid,
-        commentId: this.commentInfo.commentId,
-      });
-    }
     // console.log(this.isEvaluated)
   },
 };
@@ -468,12 +464,6 @@ export default {
 .course-review {
   margin-bottom: 20px;
   max-width: 800px;
-}
-
-.course-review-body {
-  padding: 0px;
-  margin: 0px;
-  border: 0px;
 }
 .nickname {
   margin-top: 10px;

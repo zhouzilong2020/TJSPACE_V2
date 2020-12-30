@@ -64,6 +64,7 @@ export default {
     };
   },
   props: {
+    courseInfo: {},
     thisAvg: {
       type: Array,
       default: function () {
@@ -80,14 +81,20 @@ export default {
   computed: {
     myAvg() {
       var avg = [];
-      for (let i = 0; i < this.thisAvg.length; i++) {
-        avg.push(this.thisAvg[i] * 100);
-      }
+      // console.log(this.courseInfo);
+      // { name: "内容质量", max: 1000 },
+      // { name: "授课质量", max: 1000 },
+      // { name: "课业压力", max: 1000 },
+      // { name: "评分情况", max: 1000 },
+      avg.push(Number(this.courseInfo.avgContentScore) * 100);
+      avg.push(Number(this.courseInfo.avgTeachingScore) * 100);
+      avg.push(Number(this.courseInfo.avgWorkloadScore) * 100);
+      avg.push(Number(this.courseInfo.avgGradingScore) * 100);
       return avg;
     },
     elseAvg() {
       var avg = [];
-      for (let i = 0; i < this.thisAvg.length; i++) {
+      for (let i = 0; i < this.otherAvg.length; i++) {
         avg.push(this.otherAvg[i] * 100);
       }
       return avg;
@@ -122,7 +129,7 @@ export default {
     const that = this;
     this.echarts = require("echarts");
     this.init();
-    window.onresize = () => {
+    this.window.onresize = () => {
       that.myMap.resize();
     };
   },

@@ -1,4 +1,4 @@
-// 获取评论 ！哈哈
+
 import request from "../utils/request"
 import axios from "axios";
 // import Qs from  'qs'

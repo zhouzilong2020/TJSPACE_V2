@@ -9,11 +9,12 @@ import {
   Quasar, Loading
 } from 'quasar'
 
-Vue.use(Quasar,{
-  plugins:{
+Vue.use(Quasar, {
+  plugins: {
     Loading
   },
 })
+Vue.prototype.window = window;
 new Vue({
   render: h => h(App),
   router,

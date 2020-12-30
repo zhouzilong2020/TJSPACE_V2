@@ -249,6 +249,7 @@ export default {
         name: "courseInfo",
         params: {
           courseId: data.courseId,
+          currentPage:0,
         },
       });
     },

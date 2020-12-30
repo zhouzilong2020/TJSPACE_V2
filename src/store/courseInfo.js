@@ -7,7 +7,6 @@ export default {
         courseInfo: null,
         isLoading: false,
         searchText : '',
-        
     },
     mutations: {
       setCourseInfo(state, payload) {

@@ -2,23 +2,22 @@
 import axios from "axios";
 // import Qs from  'qs'
 import { URL } from './config'
+import request from '../utils/request'
 
 
 /**
- * 获取用户评论评论
+ * 分页查询课程评价
  */
 export async function getComment(payload) {
     console.log("in get comment", payload)
-    var resp = await axios.get(`${URL}Show/comment`, {
-        headers: {
-            Authorization: payload.token,
-        },
+
+    return request({
+        url: `evlservice/courses/${payload.courseId}/comments/${payload.currentPage}`,
+        method: 'get',
         params: {
-            courseId: payload.courseId,
-        },
-    });
-    console.log("in getComment response", resp);
-    return resp.data;
+            limit: payload.limit
+        }
+    })
 }
 
 /**
@@ -113,18 +112,13 @@ export async function getCommentInfo(payload) {
  * @param {*} payload  
  */
 export async function makeComment(payload) {
-    console.log('in commit comment', { ...payload.apiInterface })
-    var resp = await axios.post(`${URL}Comment/PostComment`, {}, {
-        headers: {
-            Authorization: payload.token
-        },
-        params: {
-            ...payload.apiInterface
-        }
-
+    console.log('in commit comment', payload)
+    return request({
+        url: `evlservice/courses/${payload.courseId}/comment/`,
+        method: "post",
+        data: payload,
     })
-    console.log('after submit:', resp)
-    return resp.data
+
 }
 
 

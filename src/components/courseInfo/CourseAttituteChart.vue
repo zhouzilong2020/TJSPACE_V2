@@ -1,6 +1,6 @@
 <template>
   <div
-    id="CourseAttitude"
+    id="CourseAttitudeChart"
     style="
       width: 100%;
       height: 100%;
@@ -12,9 +12,8 @@
 </template>
 
 <script>
-// import echarts from "echarts";
 export default {
-  name: "CourseAttitude",
+  name: "CourseAttitudeChart",
   data: () => {
     return {
       echarts: null,
@@ -67,7 +66,7 @@ export default {
   methods: {
     init() {
       var myChart = this.echarts.init(
-        document.getElementById("CourseAttitude"),
+        document.getElementById("CourseAttitudeChart"),
         "light"
       );
       // 绘制图表
@@ -93,7 +92,7 @@ export default {
     const that = this;
     this.echarts = require("echarts");
     this.init();
-    window.onresize = () => {
+    this.window.onresize = () => {
       that.myMap.resize();
     };
   },

@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="col">
-        <CourseScoreChart />
+        <CourseScoreChart :courseInfo="courseInfo" />
       </div>
     </q-card-section>
 
@@ -87,29 +87,18 @@
 
 <script>
 import CourseScoreChart from "./CourseScoreChart";
-import { mapState } from "vuex";
+
 export default {
   name: "CourseHead",
   components: { CourseScoreChart },
-  created() {
-    console.log( this.courseInfo);
-  },
+  created() {},
   computed: {
-    ...mapState("userInfo", ["collectedCourse"]),
     isCollected() {
-      // let that = this;
-      // let res = this.collectedCourse.filter((obj) => {
-      //   return (
-      //     obj.courseId == that.$route.params.courseId &&
-      //     obj.teacherId == that.$route.params.teacherId
-      //   );
-      // });
-      // if (res.length > 0) {
-      //   return "red";
-      // } else {
-      //   return "grey";
-      // }
-      return 'grey';
+      if (this.courseInfo.favorite) {
+        return "red";
+      } else {
+        return "grey";
+      }
     },
   },
   methods: {
