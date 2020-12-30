@@ -1,31 +1,13 @@
 import request from "@/utils/request";
 import axios from "axios";
-<<<<<<< HEAD
-import { URL } from "./config"
-import request from '@/utils/request'
-
-export async function test(email, password) {
-  return request({
-    url: '/ucenterservice/login',
-    method: 'post',
-    data: {
-      "email": email,
-      "password": password
-    }
-  })
-}
-
-
-=======
->>>>>>> f7c72e8c997b8ab6cc47e514967164d2e7259f43
 
 /**
  * 邮箱登录用户的API接口，如果成功返回token
  */
 
 
-export async function loginUser(userInfo){
-  console.log("in login api",userInfo)
+export async function loginUser(userInfo) {
+  console.log("in login api", userInfo)
   return request({
     url: 'ucenterservice/login',
     method: "post",
@@ -37,10 +19,10 @@ export async function loginUser(userInfo){
  */
 
 
-export async function MsmloginUser(userInfo){
-  console.log("in login api",userInfo)
+export async function MsmloginUser(userInfo) {
+  console.log("in login api", userInfo)
   return request({
-    url: 'ucenterservice/login/'+userInfo,
+    url: 'ucenterservice/login/' + userInfo,
     method: "post",
   })
 }
@@ -60,10 +42,10 @@ export async function registerUser(payload) {
 /**
  * 验证用户昵称是否重复
  */
-export async function validateNickname(userInfo){
-  console.log("in reg api",userInfo)
+export async function validateNickname(userInfo) {
+  console.log("in reg api", userInfo)
   return request({
-    url: 'ucenterservice/register/validate'+userInfo,
+    url: 'ucenterservice/register/validate' + userInfo,
     method: "get",
   })
 }
@@ -88,9 +70,9 @@ export async function sentAuthCode(payload) {
  * @param {Object} payload
  */
 export async function validateAuthCode(payload) {
-  console.log("validate AuthCode", payload.addr+'/'+payload.code);
+  console.log("validate AuthCode", payload.addr + '/' + payload.code);
   return request({
-    url: 'emailservice/validate/'+payload.addr+'/'+payload.code,
+    url: 'emailservice/validate/' + payload.addr + '/' + payload.code,
     method: "get",
   })
 }
@@ -101,7 +83,7 @@ export async function validateAuthCode(payload) {
 export async function sentMsmAuthCode(payload) {
   console.log("in sending AuthCode", payload.phone);
   return request({
-    url: 'msmservice/send/'+payload.phone,
+    url: 'msmservice/send/' + payload.phone,
     method: "post",
   })
 }
@@ -110,10 +92,10 @@ export async function sentMsmAuthCode(payload) {
  * 确认手机验证码
  * @param {Object} payload
  */
-export function validateMsmAuthCode(payload){
+export function validateMsmAuthCode(payload) {
   console.log("validate AuthCode", payload);
   return request({
-    url: 'msmservice/validate/'+payload.code+'/'+payload.phone,
+    url: 'msmservice/validate/' + payload.code + '/' + payload.phone,
     method: "get",
   })
 }

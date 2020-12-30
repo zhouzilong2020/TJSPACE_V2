@@ -1,5 +1,5 @@
 <template>
-  <div id="main" style="width: 100%; height: 100%; min-height:200px"></div>
+  <div id="main" style="width: 100%; height: 100%; min-height: 200px"></div>
 </template>
 
 <script>
@@ -13,7 +13,7 @@ export default {
         legend: {
           // right: 0,
           bottom: 0,
-          
+
           data: ["本课程平均评价", "同类课程平均评价"],
         },
         radar: {
@@ -47,7 +47,7 @@ export default {
             name: "radar",
             type: "radar",
             areaStyle: { normal: {} },
-            
+
             data: [
               {
                 // value: [830, 280, 350, 500],
@@ -67,17 +67,32 @@ export default {
     thisAvg: {
       type: Array,
       default: function () {
-        return [800, 854, 896, 754];
+        return [8.0, 8.54, 8.96, 7.54];
       },
     },
     otherAvg: {
       type: Array,
       default: function () {
-        return [780, 654, 496, 54];
+        return [7.8, 6.54, 4.96, 0.54];
       },
     },
   },
-  computed: {},
+  computed: {
+    myAvg() {
+      var avg = [];
+      for (let i = 0; i < this.thisAvg.length; i++) {
+        avg.push(this.thisAvg[i] * 100);
+      }
+      return avg;
+    },
+    elseAvg() {
+      var avg = [];
+      for (let i = 0; i < this.thisAvg.length; i++) {
+        avg.push(this.otherAvg[i] * 100);
+      }
+      return avg;
+    },
+  },
   methods: {
     init() {
       var myChart = this.echarts.init(document.getElementById("main"), "light");
@@ -91,11 +106,11 @@ export default {
             data: [
               {
                 name: "本课程平均评价",
-                value: this.thisAvg,
+                value: this.myAvg,
               },
               {
                 name: "同类课程平均评价",
-                value: this.otherAvg,
+                value: this.elseAvg,
               },
             ],
           },

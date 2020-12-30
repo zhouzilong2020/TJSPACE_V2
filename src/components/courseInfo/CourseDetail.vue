@@ -1,5 +1,5 @@
 <template>
-  <q-card elevated class="course-detail">
+  <q-card elevated class="course-detail row">
     <img :src="path" class="course-detail-img" />
 
     <q-card-section horizontal>
@@ -58,10 +58,13 @@
         </q-item>
       </q-list>
     </q-card-section>
-
+    <q-card-section style="padding: 0 auto">
+      <CourseAttitute />
+    </q-card-section>
     <q-card-section>
       <course-statistic class="q-my-sm" :commentStatistic="commentStatistic" />
-      <q-btn
+      <!-- 这里需要有id才能展示 记得去掉zhushi -->
+      <!-- <q-btn
         stretch
         class="full-width btn gt-sm"
         color="primary"
@@ -77,7 +80,9 @@
         label="撰写评论"
         unelevated
       >
-        <q-tooltip content-class="bg-accent">{{canMakeComment ? '现在就撰写你的评论吧！' : '你已经评价过该课程！'}}</q-tooltip>
+        <q-tooltip content-class="bg-accent">{{
+          canMakeComment ? "现在就撰写你的评论吧！" : "你已经评价过该课程！"
+        }}</q-tooltip>
       </q-btn>
 
       <q-btn
@@ -95,24 +100,28 @@
         }"
         unelevated
       >
-        <q-tooltip content-class="bg-accent">{{canMakeComment ? '现在就撰写你的评论吧！' : '你已经评价过该课程！'}}</q-tooltip>
-      </q-btn>
-
+        <q-tooltip content-class="bg-accent">{{
+          canMakeComment ? "现在就撰写你的评论吧！" : "你已经评价过该课程！"
+        }}</q-tooltip>
+      </q-btn> -->
     </q-card-section>
   </q-card>
 </template>
 
 <script>
 import CourseStatistic from "./CourseStatistic";
-import { canMakeComment } from "../../services/commentService";
+import CourseAttitute from "./CourseAttitute";
+//    这里需要有id才能展示 记得去掉zhushi
+// import { canMakeComment } from "../../services/commentService";
 import { mapState } from "vuex";
 export default {
   name: "CourseDetail",
   components: {
     CourseStatistic,
+    CourseAttitute,
   },
   computed: {
-    ...mapState("userInfo", ["userInfo", "token"]),
+    ...mapState("userInfo", ["userInfo"]),
     openTime() {
       let index = this.courseInfo.section.length - 1;
       return (
@@ -137,6 +146,15 @@ export default {
     },
     commentStatistic: {
       type: Object,
+      default: () => {
+        return {
+          reveiwCnt: 0,
+          content: "0",
+          teaching: "0",
+          grading: "0",
+          workload: "0",
+        };
+      },
     },
   },
   data() {
@@ -148,16 +166,16 @@ export default {
   watch: {
     async courseInfo() {
       console.log(this.courseInfo.teacherid);
-      var resp = await canMakeComment({
-        token: this.token,
-        userId: this.userInfo.userid,
-        teacherId: this.$route.params.teacherId,
-        courseId : this.$route.params.courseId
-      });
-      if (resp.status) {
-        this.canMakeComment = resp.canPostComment;
-        console.log(this.canMakeComment)
-      }
+      // var resp = await canMakeComment({
+      //   token: this.token,
+      //   userId: this.userInfo.userid,
+      //   teacherId: this.$route.params.teacherId,
+      //   courseId: this.$route.params.courseId,
+      // });
+      // if (resp.status) {
+      //   this.canMakeComment = resp.canPostComment;
+      //   console.log(this.canMakeComment);
+      // }
     },
   },
   async mounted() {},

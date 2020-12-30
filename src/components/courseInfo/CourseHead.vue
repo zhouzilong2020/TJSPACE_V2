@@ -90,20 +90,21 @@ export default {
     // console.log("asdasd", this.courseInfo);
   },
   computed: {
-    ...mapState("userInfo", ["collectedCourse", "token", "userInfo"]),
+    ...mapState("userInfo", ["collectedCourse"]),
     isCollected() {
-      let that = this;
-      let res = this.collectedCourse.filter((obj) => {
-        return (
-          obj.courseId == that.$route.params.courseId &&
-          obj.teacherId == that.$route.params.teacherId
-        );
-      });
-      if (res.length > 0) {
-        return "red";
-      } else {
-        return "grey";
-      }
+      // let that = this;
+      // let res = this.collectedCourse.filter((obj) => {
+      //   return (
+      //     obj.courseId == that.$route.params.courseId &&
+      //     obj.teacherId == that.$route.params.teacherId
+      //   );
+      // });
+      // if (res.length > 0) {
+      //   return "red";
+      // } else {
+      //   return "grey";
+      // }
+      return false;
     },
   },
   methods: {
