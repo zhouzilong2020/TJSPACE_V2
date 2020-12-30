@@ -61,7 +61,14 @@ export function getPosts(currentPage,params){
     })
 }
 
+/***********************BBS Homepage************************/ 
 
+export function getCurPage(currentPage,order,sort){
+  return request({
+    url:'bbsservice/posts/'+currentPage+'?limit=5'+'&orderBy='+order+'&sort='+sort,
+    method:'get'
+  })
+}
 
 
   
