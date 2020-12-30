@@ -2,27 +2,32 @@
   <q-card bordered flat class="course-detail-head row">
     <!-- 课程信息   -->
 
-    <q-card-section class="course-detail-head-overall">
-      <div class="text-h6">{{ courseInfo.title }}</div>
-      <div class="course-detail-head-credit">
-        <q-chip square color="primary" text-color="white" icon="star">
-          {{ courseInfo.credit }}学分
-        </q-chip>
+    <q-card-section class="row course-detail-head-overall">
+      <div class="col">
+        <div class="text-h6">{{ courseInfo.title }}</div>
+        <div class="course-detail-head-credit">
+          <q-chip square color="primary" text-color="white" icon="star">
+            {{ courseInfo.credit }}学分
+          </q-chip>
+        </div>
+        <div class="course-detail-head-teacher">
+          <q-chip square color="secondary" text-color="white" icon="contacts">{{
+            courseInfo.teacher
+          }}</q-chip>
+        </div>
+        <div class="course-detail-head-sections">
+          <q-chip
+            v-for="(item, i) in courseInfo.section"
+            :key="i"
+            dense
+            color="info"
+            text-color="white"
+            >{{ `${item.year}-${item.semester == 0 ? "春" : "秋"}` }}</q-chip
+          >
+        </div>
       </div>
-      <div class="course-detail-head-teacher">
-        <q-chip square color="secondary" text-color="white" icon="contacts">{{
-          courseInfo.teacher
-        }}</q-chip>
-      </div>
-      <div class="course-detail-head-sections">
-        <q-chip
-          v-for="(item, i) in courseInfo.section"
-          :key="i"
-          dense
-          color="info"
-          text-color="white"
-          >{{ `${item.year}-${item.semester == 0 ? "春" : "秋"}` }}</q-chip
-        >
+      <div class="col">
+        <CourseScoreChart />
       </div>
     </q-card-section>
 
@@ -76,9 +81,11 @@
 </template>
 
 <script>
+import CourseScoreChart from "./CourseScoreChart";
 import { mapState } from "vuex";
 export default {
   name: "CourseHead",
+  components: { CourseScoreChart },
   created() {
     // console.log("asdasd", this.courseInfo);
   },
