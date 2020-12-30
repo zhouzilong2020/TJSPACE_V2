@@ -21,7 +21,7 @@
 
           <q-item-section>
             <q-item-label>授课教师</q-item-label>
-            <q-item-label caption>{{ courseInfo.teacher }}</q-item-label>
+            <q-item-label caption>{{ courseInfo.teacherName }}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -32,7 +32,7 @@
 
           <q-item-section>
             <q-item-label>课程编号</q-item-label>
-            <q-item-label caption>{{ courseInfo.courseId }}</q-item-label>
+            <q-item-label caption>{{ courseInfo.officialId }}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -43,17 +43,30 @@
 
           <q-item-section>
             <q-item-label>开课时间</q-item-label>
-            <q-item-label caption>{{ openTime }}</q-item-label>
+            <q-item-label caption>{{ courseInfo.schoolTime }}</q-item-label>
           </q-item-section>
         </q-item>
 
         <q-item>
           <q-item-section avatar>
-            <q-icon color="grey" name="place" />
+            <q-icon color="green" name="apartment" />
           </q-item-section>
+
           <q-item-section>
             <q-item-label>开设学院</q-item-label>
-            <q-item-label caption>{{ courseInfo.department }}</q-item-label>
+            <q-item-label caption>{{ courseInfo.deptName }}</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item>
+          <q-item-section avatar>
+            <q-icon color="grey" name="spellcheck" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>考察类型</q-item-label>
+            <q-item-label caption>{{
+              courseInfo.checkType == 0 ? "考察" : "考试"
+            }}</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
@@ -122,12 +135,15 @@ export default {
   },
   computed: {
     ...mapState("userInfo", ["userInfo"]),
-    openTime() {
-      let index = this.courseInfo.section.length - 1;
-      return (
-        this.courseInfo.section[index].year +
-        ` ${this.courseInfo.section[index].semester == 0 ? "春" : "秋"}`
-      );
+    commentStatistic() {
+      return {
+        avgContentScore: this.courseInfo.avgContentScore,
+        avgGradingScore: this.courseInfo.avgGradingScore,
+        avgTeachingScore: this.courseInfo.avgTeachingScore,
+        avgTotScore: this.courseInfo.avgTotScore,
+        avgWorkloadScore: this.courseInfo.avgWorkloadScore,
+        commentCount: this.courseInfo.commentCount,
+      };
     },
   },
   props: {
@@ -135,24 +151,23 @@ export default {
       type: Object,
       default: () => {
         return {
-          title: "数据库原理与应用",
-          teacher: "袁时金",
-          teacherId: "0001",
-          courseId: "420244",
-          section: "2020 春",
-          department: "软件学院",
-        };
-      },
-    },
-    commentStatistic: {
-      type: Object,
-      default: () => {
-        return {
-          reveiwCnt: 0,
-          content: "0",
-          teaching: "0",
-          grading: "0",
-          workload: "0",
+          avgContentScore: 4,
+          avgGradingScore: 3,
+          avgTeachingScore: 5,
+          avgTotScore: 3.5,
+          avgWorkloadScore: 2,
+          checkType: 1,
+          commentCount: 0,
+          credit: 3,
+          deptName: "新生院",
+          historyTeachingList: [],
+          majorName: "新生院",
+          officialId: "42034201",
+          period: 3,
+          teacherDeptName: "新生院",
+          teacherName: "杜庆峰",
+          teacherTitle: "教授",
+          title: "软件工程",
         };
       },
     },
@@ -163,22 +178,8 @@ export default {
       canMakeComment: false,
     };
   },
-  watch: {
-    async courseInfo() {
-      console.log(this.courseInfo.teacherid);
-      // var resp = await canMakeComment({
-      //   token: this.token,
-      //   userId: this.userInfo.userid,
-      //   teacherId: this.$route.params.teacherId,
-      //   courseId: this.$route.params.courseId,
-      // });
-      // if (resp.status) {
-      //   this.canMakeComment = resp.canPostComment;
-      //   console.log(this.canMakeComment);
-      // }
-    },
-  },
-  async mounted() {},
+   mounted() {
+   },
 };
 </script>
 

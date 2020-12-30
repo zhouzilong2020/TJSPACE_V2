@@ -44,11 +44,16 @@
           </q-btn>
         </div>
         <q-btn-group flat spread>
-          <q-btn flat color="primary" :to="{ name: 'msmlogin'}" label="手机登陆" />
           <q-btn
             flat
             color="primary"
-            :to="{ name: 'register'}"
+            :to="{ name: 'msmlogin' }"
+            label="手机登陆"
+          />
+          <q-btn
+            flat
+            color="primary"
+            :to="{ name: 'register' }"
             label="现在注册"
           />
         </q-btn-group>
@@ -60,7 +65,7 @@
 <script>
 // import popDialog from "../popDialog";
 import { mapState } from "vuex";
-import {getCookie,setCookie} from "../../utils/utils"
+import { getCookie, setCookie } from "../../utils/utils";
 
 export default {
   components: {
@@ -71,7 +76,7 @@ export default {
     return {
       isPwd: true,
       remember: false,
-      url:"",
+      url: "",
       account: {
         email: "",
         password: "",
@@ -91,17 +96,24 @@ export default {
 
   created() {
     if (this.userInfo) {
-      console.log("跳转了")
-      this.url=getCookie("url")
-      setCookie("url","")
-      if(this.url!=""&&this.url!="/"&&this.url!="/msmlogin"&&this.url!="/login"&&this.url!="/register")
-      this.$router.push({
-        path: this.url
-      });
-      else{//如果在登陆之后跳转回index或者没有前驱页面就跳转到首页
-          this.$router.push({
-        name: "Homepage"
-      });
+      console.log("跳转了");
+      this.url = getCookie("url");
+      setCookie("url", "");
+      if (
+        this.url != "" &&
+        this.url != "/" &&
+        this.url != "/msmlogin" &&
+        this.url != "/login" &&
+        this.url != "/register"
+      )
+        this.$router.push({
+          path: this.url,
+        });
+      else {
+        //如果在登陆之后跳转回index或者没有前驱页面就跳转到首页
+        this.$router.push({
+          name: "Homepage",
+        });
       }
     }
     if (localStorage.getItem("TJSPACE-email")) {
@@ -111,25 +123,24 @@ export default {
   },
 
   methods: {
-   handleLogin() {
-       this.$store.dispatch("userInfo/loginUser", {
-        account:this.account,
-        remember:this.remember
-      }).then(()=>
-      {
-        if (!this.token) {
-       //密码错误
+    handleLogin() {
+      this.$store
+        .dispatch("userInfo/loginUser", {
+          account: this.account,
+          remember: this.remember,
+        }).then(() => {
+          if (!this.token) {
+            //密码错误
             console.log("密码错误");
             this.$q.notify({
               message: "密码错误",
               position: "center",
               timeout: "500",
-          });
-        }
-      });
-          },
-      
+            });
+          }
+        });
     },
+  },
 };
 </script>
 

@@ -12,17 +12,22 @@
         </div>
         <div class="course-detail-head-teacher">
           <q-chip square color="secondary" text-color="white" icon="contacts">{{
-            courseInfo.teacher
+            courseInfo.teacherName
+          }}</q-chip>
+        </div>
+        <div class="course-detail-head-teacher">
+          <q-chip square color="green" text-color="white" icon="group">{{
+            courseInfo.teacherTitle
           }}</q-chip>
         </div>
         <div class="course-detail-head-sections">
           <q-chip
-            v-for="(item, i) in courseInfo.section"
+            v-for="(item, i) in courseInfo.historyTeachingList"
             :key="i"
             dense
             color="info"
             text-color="white"
-            >{{ `${item.year}-${item.semester == 0 ? "春" : "秋"}` }}</q-chip
+            >{{ `${item.year}-${item.semester == 1 ? "春" : "秋"}` }}</q-chip
           >
         </div>
       </div>
@@ -87,7 +92,7 @@ export default {
   name: "CourseHead",
   components: { CourseScoreChart },
   created() {
-    // console.log("asdasd", this.courseInfo);
+    console.log( this.courseInfo);
   },
   computed: {
     ...mapState("userInfo", ["collectedCourse"]),
@@ -104,7 +109,7 @@ export default {
       // } else {
       //   return "grey";
       // }
-      return false;
+      return 'grey';
     },
   },
   methods: {
@@ -166,9 +171,7 @@ export default {
 .btn {
   font-size: 1em;
 }
-.course-detail-head .syllabus {
-  margin: 0 auto;
-}
+
 .course-detail-head .course-detail-head-overall {
   width: 90%;
 }

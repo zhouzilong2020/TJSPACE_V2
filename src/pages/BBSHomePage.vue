@@ -44,13 +44,13 @@
             </q-btn-group>
             <q-btn-group v-else>
               <q-btn
-                style="background:#004080;color:white"
+                style="background: #004080; color: white"
                 label="按主题发布时间排序"
                 id="orderType3"
                 @click="makeOrder(3)"
               />
               <q-btn
-                style="background:#225ca6;color:white"
+                style="background: #225ca6; color: white"
                 label="按最新评论时间排序"
                 id="orderType0"
                 @click="makeOrder(0)"
@@ -71,52 +71,52 @@
     <div class="row justify-center">
       <div class="col-8">
         <!--<div v-for="(o, index) in 3" :key="o" :offset="index> 0 ? 3 : 0" style="padding:5px">-->
-        <div v-for="(post, index) in postInfo" :key=index style="padding:5px">
-          <q-card class="col-8" style="padding:5px">
+        <div
+          v-for="(post, index) in postInfo"
+          :key="index"
+          style="padding: 5px"
+        >
+          <q-card class="col-8" style="padding: 5px">
             <q-item clickable>
               <q-item-section avatar>
-                <q-avatar style="height:2em; width:2em">
-                  <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+                <q-avatar style="height: 2em; width: 2em">
+                  <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
                 </q-avatar>
-                <q-item-label style="margin:auto; padding-top:5px">{{post.nickname}}</q-item-label>
+                <q-item-label style="margin: auto; padding-top: 5px">{{
+                  post.nickname
+                }}</q-item-label>
               </q-item-section>
 
               <q-item-section>
-                <q-item-label style="font-size:1.125rem">{{post.title}}</q-item-label>
-                <q-item-label caption style="font-size:1rem">
-                  {{post.content}}
+                <q-item-label style="font-size: 1.125rem">{{
+                  post.title
+                }}</q-item-label>
+                <q-item-label caption style="font-size: 1rem">
+                  {{ post.content }}
                 </q-item-label>
                 <br />
                 <q-item-label caption>
-                  最新评论于{{post.latestTime}}
+                  最新评论于{{ post.latestTime }}
                   <br />
-                  {{post.replyCount}}评论
+                  {{ post.replyCount }}评论
                 </q-item-label>
               </q-item-section>
 
               <!-- 交互 -->
               <q-item-section side top>
-                  <q-item-label>
-                    <q-btn
-                      flat
-                      icon="thumb_up"
-                      color="red"
-                    />
-                    {{post.positiveCount}}
-                    <q-btn
-                      flat
-                      icon="thumb_down"
-                      color="black"
-                    />
-                    {{post.negativeCount}}
-                  </q-item-label>
-                </q-item-section>
+                <q-item-label>
+                  <q-btn flat icon="thumb_up" color="red" />
+                  {{ post.positiveCount }}
+                  <q-btn flat icon="thumb_down" color="black" />
+                  {{ post.negativeCount }}
+                </q-item-label>
+              </q-item-section>
             </q-item>
           </q-card>
         </div>
       </div>
     </div>
-  
+
     <!-- 帖子  放在list中显示
     <div class="row justify-center">
       <div class="col-8">
@@ -204,10 +204,7 @@
 import axios from "axios";
 import { mapState } from "vuex";
 
-import {
-  getCurPage
-} from "../api/bbsApi";
-
+import { getCurPage } from "../api/bbsApi";
 
 export default {
   components: {},
@@ -216,13 +213,13 @@ export default {
       bgPath: require("../assets/bbsBackground.png"),
       tjuLogo: require("../assets/TJU.png"),
       isMakingPost: false,
-      postHeader:"",
+      postHeader: "",
       postContent: "",
-      name:"Name",
-      header:"Title",
-      content:"Content",
-      comment_num:"1",
-      comment_time:"2020-12-8 9:32",
+      name: "Name",
+      header: "Title",
+      content: "Content",
+      comment_num: "1",
+      comment_time: "2020-12-8 9:32",
       postInfo: [],
       //默认以用户Id升序排序
       order: "",
@@ -239,8 +236,8 @@ export default {
     init() {
       this.currentPage = 1;
       this.order = "desc";
-      this.sort = "userId"
-      getCurPage(this.currentPage,this.order,this.sort)
+      this.sort = "userId";
+      getCurPage(this.currentPage, this.order, this.sort)
         .then((response) => {
           this.postInfo = response.data.postList;
           console.log(response);
@@ -253,20 +250,14 @@ export default {
         top: 0,
       });
     },
-    jumpWhileNotRegister: function() {
-      if (this.userId == "") {
-        console.log("adaaasda");
-        //this.$router.push('index');
-      }
-    },
-    makeNewPost: function() {
+    makeNewPost: function () {
       this.isMakingPost = true;
     },
-    cancelPost: function() {
+    cancelPost: function () {
       this.isMakingPost = false;
       this.postContent = "";
     },
-    submitPost: async function() {
+    submitPost: async function () {
       var resp = await axios.post(
         URL + `Post/post`,
         {},
@@ -289,7 +280,7 @@ export default {
       this.getPosts(this.orderType, this.currPage);
       this.currPage++;
     },
-    makeOrder: function(type) {
+    makeOrder: function (type) {
       if (type == 0) {
         document.getElementById("orderType0").style.background = "#004080";
         document.getElementById("orderType3").style.background = "#225ca6";
@@ -302,13 +293,13 @@ export default {
       this.getPosts(this.orderType, this.currPage);
       this.currPage++;
     },
-    jumpToPost: function(index) {
+    jumpToPost: function (index) {
       this.$router.push({
         name: "Forum",
         params: { postId: this.postInfo[index].postId },
       });
     },
-    thumbUp: async function(index) {
+    thumbUp: async function (index) {
       var evaluatable = true;
       await axios
         .get(URL + `Post/CanEvaluate`, {
@@ -347,7 +338,7 @@ export default {
       this.postInfo[index].agreeAccount++;
       this.postInfo[index].canThumb = 0;
     },
-    thumbDown: async function(index) {
+    thumbDown: async function (index) {
       var evaluatable = true;
       await axios
         .get(URL + `Post/CanEvaluate`, {
@@ -386,12 +377,12 @@ export default {
       this.postInfo[index].agreeAccount--;
       this.postInfo[index].canStep = 0;
     },
-    cleanPage: function() {
+    cleanPage: function () {
       this.postInfo.length = 0;
       this.currPage = 0;
       this.isBottom = false;
     },
-    getPosts: async function(type, page) {
+    getPosts: async function (type, page) {
       console.log(page);
       await axios
         .get(URL + `Show/getPosts`, {
@@ -443,7 +434,6 @@ export default {
   mounted() {
     this.postId = this.$route.params.postId;
     this.init();
-    // this.jumpWhileNotRegister();
   },
 };
 </script>

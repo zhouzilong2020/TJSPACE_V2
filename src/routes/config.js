@@ -1,12 +1,7 @@
 export default {
     routes: [
         {
-            path: "/:postId",
-            name: 'index',
-            component: () => import("@/pages/Forum"),
-        },
-        {
-            path: "/courseInfo/:courseId/:teacherId",
+            path: "/courseInfo/:courseId",
             name: 'courseInfo',
             component: () => import("@/pages/CourseInfo"),
         }, {
@@ -50,11 +45,11 @@ export default {
             name: 'MakeComment',
             component: () => import("@/pages/MakeComment"),
         },
-         {
-             path: "/",  //表示匹配所有路径
-             name: 'index',
-             component: () => import("@/pages/index"),
-         },
+        {
+            path: "/",  //表示匹配所有路径
+            name: 'index',
+            component: () => import("@/pages/index"),
+        },
         {
             path: "*",  //表示匹配所有路径
             component: () => import("@/pages/index"),

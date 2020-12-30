@@ -71,7 +71,6 @@ export default {
             state.historyComment = payload;
         },
 
-        
         /**
          * 设置历史发帖
          * @param {*} state 
@@ -127,15 +126,13 @@ export default {
          async loginUser(context, payload) {
             context.commit("setIsLoading", true);
             let token = getCookie('TJSPACE_token')
-            let userId = getCookie('TJSPACE_userId')
-            if (token&&userId) {
+            if (token) {
                 // 如果cookie中有保存用户信息，则使用cookie登录
                 await getUserInfo({attributes:["nickname"]}).then((resp)=>{
-                    console.log('after cookie resp', resp.data)
+                    console.log('after cookie resp', resp)
                     context.commit("setUserInfo", resp.data)
                     context.commit("setToken", token)
-                    setCookie('TJSPACE_userId', resp.data) 
-                })             
+                }) 
                 }
             else {
                 console.log("logining",payload.account);
@@ -180,7 +177,7 @@ export default {
             if (token&&userId) {
                 // 如果cookie中有保存用户信息，则使用cookie登录
                 await getUserInfo().then((resp)=>{
-                    console.log('after cookie resp', resp.data)
+                    console.log('msm after cookie resp', resp.data)
                     context.commit("setUserInfo", resp.data)
                     context.commit("setToken", token)
                     setCookie('TJSPACE_userId', resp.data.nickname) 

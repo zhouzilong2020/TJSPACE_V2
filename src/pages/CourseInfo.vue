@@ -2,11 +2,7 @@
   <div class="row q-gutter-sm q-pa-md flex-center no-wrap items-stretch">
     <!-- <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 detail body-left"> -->
     <div class="detail body-left q-gutter-sm">
-      <course-detail
-        refs="courseDeatil"
-        :courseInfo="courseInfo"
-        :commentStatistic="commentStatistic"
-      />
+      <course-detail refs="courseDeatil" :courseInfo="courseInfo" />
     </div>
 
     <!-- <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8 body-right"> -->
@@ -66,34 +62,7 @@ export default {
     CourseHead,
   },
   computed: {
-    ...mapState("userInfo", ["token", "userInfo"]),
-    commentStatistic() {
-      let statistic = {
-        reveiwCnt: 0,
-        content: 0,
-        teaching: 0,
-        grading: 0,
-        workload: 0,
-      };
-      statistic.reveiwCnt = this.comments.length;
-      for (let i = 0; i < statistic.reveiwCnt; i++) {
-        statistic.content += +this.comments[i].overall;
-        statistic.teaching += +this.comments[i].instructor;
-        statistic.grading += +this.comments[i].grading;
-        statistic.workload += +this.comments[i].workload;
-      }
-      statistic.content /= statistic.reveiwCnt;
-      statistic.teaching /= statistic.reveiwCnt;
-      statistic.grading /= statistic.reveiwCnt;
-      statistic.workload /= statistic.reveiwCnt;
-
-      statistic.content = statistic.content.toFixed(1);
-      statistic.teaching = statistic.teaching.toFixed(1);
-      statistic.grading = statistic.grading.toFixed(1);
-      statistic.workload = statistic.workload.toFixed(1);
-
-      return statistic;
-    },
+    ...mapState("userInfo", ["userInfo"]),
   },
   data() {
     return {
@@ -101,77 +70,63 @@ export default {
       logoPath: require("../assets/TJU.png"),
       avatarPath: require("../assets/boy-avatar.png"),
       avatarBGPath: require("../assets/material.png"),
-
       courseInfo: {
-        title: "数据库原理与应用",
-        teacher: "袁时金",
-        courseId: "420244",
-        section: "2020 春",
-        department: "软件学院",
-        credit: "4",
-        sections: ["2020-春"],
-        syllabus:
-          "Chapter 1: Introduction Chapter 2: Introducation to the Relational Model Chapter 3: Intoduction to SQL Chapter 4: Intermediate SQLChapter 5: Advanced SQL Sections 5.4 onwards omitted. Chapter 6: Other Relational Languages Section 6.1 (Relational Algebra) covered in brief，Sections 6.2 and 6.3 omitted Chapter 7: Entity-Relationship Model  Chapter 8: Relational Database Design  Chapter 9: Application Design and Development  Chapter 10: Storage and File Structure  Sections 10.3, 10.4 and 10.8 omitted Chapter 11: Indexing and Hashing  Cover only Sections 11.1 through 11.3，with a brief outline of Section 11.5 and 11.6 Chapter 12: Query Processing  Cover only Section 12.1 (Overview)  Chapter 14: Transactions  Transaction Concept, Transaction State, Concurrent Executions, Conflict Serializability Introduction to major database products: Oracle",
+        avgContentScore: 4,
+        avgGradingScore: 3,
+        avgTeachingScore: 5,
+        avgTotScore: 3.5,
+        avgWorkloadScore: 2,
+        checkType: 1,
+        commentCount: 0,
+        credit: 3,
+        deptName: "新生院",
+        historyTeachingList: [],
+        majorName: "新生院",
+        officialId: "42034201",
+        period: 3,
+        teacherDeptName: "新生院",
+        teacherName: "杜庆峰",
+        teacherTitle: "教授",
+        title: "软件工程",
       },
       comments: [],
     };
   },
   async created() {
-    
-      // 加载效果
-      this.isLoading = true;
-      this.$q.loading.show();
-      // 设置定时器
-      setTimeout(() => {
-        if (this.isLoading) {
-          // 如果到了时间还没有加载成功
-          this.$q.notify({
-            message: "请求超时，请重试",
-            position: "center",
-            timeout: "2000",
-          });
-          this.$q.loading.hide();
+    getCourseInfo({
+      courseId: this.$route.params.courseId,
+    })
+      .then((resp) => {
+        console.log("in receiving courseResp ", resp);
+        if (resp.success) {
+          console.log(resp)
+          this.courseInfo = {
+            ...resp.data,
+            schoolTime:resp.data.historyTeachingList[0].schoolTime
+          }
+          
+          this.$store.commit("courseInfo/setCourseInfo", this.courseInfo);
         }
-      }, 5000);
-
-      var courseResp = await getCourseInfo({
-        courseId: this.$route.params.courseId,
+      })
+      .catch((e) => {
+        console.log(e);
       });
 
-      console.log("in receiving courseResp ", courseResp);
-      if (courseResp.success) {
-        this.courseInfo = {
-          teacher: courseResp.teacherName,
-          teacherId: this.$route.params.teacherId,
-          section: courseResp.section,
-          department: courseResp.department,
-          courseId: this.$route.params.courseId,
-          title: courseResp.courseName,
-          intro: courseResp.intro,
-          credit: courseResp.credit,
-          imgPath: courseResp.courseImageUrl,
-        };
-        this.$store.commit("courseInfo/setCourseInfo", this.courseInfo);
-      }
-
-      // 服务器没了！！
-      var resp = await getComment({
-        courseId: this.$route.params.courseId,
-        token: this.token,
-      });
-      this.comments = resp.data1;
-      this.commentor = resp.data2;
-      this.$store.commit("courseInfo/setCourseInfo", {
-        courseInfo: this.courseInfo,
-        statistic: this.commentStatistic,
+    getComment({
+      courseId: this.$route.params.courseId,
+    })
+      .then((resp) => {
+        this.comments = resp.data1;
+        this.commentor = resp.data2;
+      })
+      .catch((e) => {
+        console.log(e);
       });
 
-      // 加载完成
-      this.isLoading = false;
-      this.$q.loading.hide();
-
-      console.log(this.isLoading);
-    
+    this.$store.commit("courseInfo/setCourseInfo", {
+      courseInfo: this.courseInfo,
+      statistic: this.commentStatistic,
+    });
   },
 };
 </script>

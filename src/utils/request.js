@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
-// import { Message } from 'element-ui'
+import { Notify } from 'quasar'
 import cookie from 'js-cookie'
 
 // 创建axios实例
@@ -47,26 +47,15 @@ service.interceptors.response.use(
       console.log("token", cookie.get('TJSPACE_token'))
     }
     isLoading--;
-    // //debugger
-    // if (response.data.code == 28004) {
-    //   console.log("response.data.resultCode是28004")
-    //   // 返回 错误代码-1 清除ticket信息并跳转到登录页面
-    //   //debugger
-    //   window.location.href = "/login"
-    //   return
-    // } else {
-    //   if (response.data.code !== 20000) {
-    //     if (response.data.code != 25000) {
-    //       Message({
-    //         message: response.data.message || 'error',
-    //         type: 'error',
-    //         duration: 5 * 1000
-    //       })
-    //     }
-    //   } else {
-    return response.data;
-    // }
-    // }
+    // 其他地方登录
+    if (response.data.code == 20004) {
+      cookie.remove('TJSPACE_token')
+      // 返回 错误代码-1 清除token信息并跳转到登录页面
+      Notify.create({ color: 'negative', message: response.data.message, icon: 'report_problem' })
+      return Promise.reject(response.data)   // 返回接口返回的错误信息
+    } else {
+      return response.data;
+    }
   },
   error => {
     isLoading--;
@@ -83,5 +72,7 @@ export function RequestCancel() {
     })
   }
 }
+
+this
 
 export default service

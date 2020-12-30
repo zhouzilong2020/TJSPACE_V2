@@ -192,12 +192,11 @@ export default {
       inputSearch: "",
       courseInfo: [
         {
-          name: "数据库技术与应用",
-          teacher: "袁科萍",
+          name: "软件工程",
+          teacher: "杜庆峰",
           intro:
-            "这是一门辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡课程",
-          courseId: "1339926031537233924",
-          teacherId: "0002",
+            "这是一门很好的课",
+          courseId: "1333571301500243969",
           imagePath: "../assets/sjk.jpg",
         },
         {
