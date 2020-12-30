@@ -1,5 +1,6 @@
 <template>
   <!-- 你的内容将会被插入在这里 -->
+  
 
   <div class="main" style="margin-left: 350px">
     <div class="body-right row">
@@ -7,17 +8,17 @@
         <div class="q-pa-md">
           <div class="q-gutter-md">
             <div style="text-align: center">
-              <span class="word">同心同德</span>
+              
               <img
                 :src="path1"
                 style="
-                  height: 130px;
-                  width: 130px;
-                  margin-left: 25px;
-                  margin-right: 25px;
+                  height: 150px;
+                  width: 510px;
+                  margin-left: 20px;
+                  margin-right: 70px;
                 "
               />
-              <span class="word">济人济世</span>
+              
             </div>
             <div class="search-bar">
               <div style="text-align: center">
@@ -109,10 +110,12 @@
 
         <div v-else>
           <div class="wordrec" style="text-align: center">recommendations</div>
+          
 
           <q-separator style="width: 820px" />
 
           <div class="row" style="margin-left: 0px">
+            
             <template
               class="content"
               style="margin-top: 5px"
@@ -132,7 +135,7 @@
                   <q-img
                     :src="path11"
                     basic
-                    style="width: 200px; height: 200px"
+                    style="width: 150px; height: 150px"
                   >
                     <div class="absolute-bottom text-subtitle2 text-center">
                       {{ item.name }}
@@ -143,7 +146,7 @@
                   <q-img
                     :src="path12"
                     basic
-                    style="width: 200px; height: 200px"
+                    style="width: 150px; height: 150px"
                   >
                     <div class="absolute-bottom text-subtitle2 text-center">
                       {{ item.name }}
@@ -154,7 +157,7 @@
                   <q-img
                     :src="path13"
                     basic
-                    style="width: 200px; height: 200px"
+                    style="width: 150px; height: 150px"
                   >
                     <div class="absolute-bottom text-subtitle2 text-center">
                       {{ item.name }}
@@ -184,16 +187,16 @@ export default {
       path11: require("../assets/sjk.jpg"),
       path12: require("../assets/xtjg.jpg"),
       path13: require("../assets/java.jpg"),
-      path1: require("../assets/TJU.png"),
+      path1: require("../assets/tjLogo.jpeg"),
       path: require("../assets/zhuzi.jpeg"),
       inputSearch: "",
       courseInfo: [
         {
-          name: "数据库原理与应用",
-          teacher: "袁时金",
+          name: "数据库技术与应用",
+          teacher: "袁科萍",
           intro:
             "这是一门辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡课程",
-          courseId: "420023",
+          courseId: "1339926031537233924",
           teacherId: "0002",
           imagePath: "../assets/sjk.jpg",
         },
@@ -202,16 +205,16 @@ export default {
           teacher: "范鸿飞",
           intro:
             "这是仍然是一门辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡课程",
-          courseId: "420300",
+          courseId: "1333571322517901314",
           teacherId: "0001",
           imagePath: "../assets/java.jpg",
         },
         {
           name: "操作系统",
-          teacher: "张慧娟",
+          teacher: "方钰",
           intro:
             "这是还是一门辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡辣鸡课程",
-          courseId: "420024",
+          courseId: "1339926761182552067",
           teacherId: "0004",
           imagePath: "../assets/czxt.jpg",
         },
@@ -247,7 +250,6 @@ export default {
         name: "courseInfo",
         params: {
           courseId: data.courseId,
-          teacherId: data.teacherId,
         },
       });
     },

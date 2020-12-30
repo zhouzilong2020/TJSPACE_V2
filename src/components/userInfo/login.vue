@@ -44,25 +44,24 @@
           </q-btn>
         </div>
         <q-btn-group flat spread>
-          <q-btn flat color="primary" label="忘记密码" />
+          <q-btn flat color="primary" :to="{ name: 'msmlogin'}" label="手机登陆" />
           <q-btn
             flat
             color="primary"
-            :to="{ name: 'register' }"
+            :to="{ name: 'register'}"
             label="现在注册"
           />
         </q-btn-group>
       </q-form>
     </q-card-section>
-
-    
   </q-card>
-  
 </template>
 
 <script>
 // import popDialog from "../popDialog";
 import { mapState } from "vuex";
+import {getCookie,setCookie} from "../../utils/utils"
+
 export default {
   components: {
     // popDialog,
@@ -72,9 +71,11 @@ export default {
     return {
       isPwd: true,
       remember: false,
+      url:"",
       account: {
         email: "",
         password: "",
+        phoneNumber: "",
       },
       warning: false,
     };
@@ -90,12 +91,18 @@ export default {
 
   created() {
     if (this.userInfo) {
+      console.log("跳转了")
+      this.url=getCookie("url")
+      setCookie("url","")
+      if(this.url!=""&&this.url!="/"&&this.url!="/msmlogin"&&this.url!="/login"&&this.url!="/register")
       this.$router.push({
-        name: "Homepage",
-        params: {
-          userId: this.userInfo.userid,
-        },
+        path: this.url
       });
+      else{//如果在登陆之后跳转回index或者没有前驱页面就跳转到首页
+          this.$router.push({
+        name: "Homepage"
+      });
+      }
     }
     if (localStorage.getItem("TJSPACE-email")) {
       this.account.email = localStorage.getItem("TJSPACE-email");
@@ -104,34 +111,25 @@ export default {
   },
 
   methods: {
-    async handleLogin() {
-      await this.$store.dispatch("userInfo/loginUser", {
-        account: this.account,
-        remember: this.remember,
+   handleLogin() {
+       this.$store.dispatch("userInfo/loginUser", {
+        account:this.account,
+        remember:this.remember
+      }).then(()=>
+      {
+        if (!this.token) {
+       //密码错误
+            console.log("密码错误");
+            this.$q.notify({
+              message: "密码错误",
+              position: "center",
+              timeout: "500",
+          });
+        }
       });
-      if (this.token) {
-        // 成功获取token 表示成功登录
-        // console.log("get user token")
-        setTimeout(() => {
-          console.log("in login page", this.userInfo);
-          this.$router.push({
-            name: "Homepage",
-            params: {
-              userId: this.userInfo.userid,
-            },
-          });
-        }, 2000);
-      } else {
-        //密码错误
-        console.log("密码错误");
-        this.$q.notify({
-            message: "密码错误",
-            position: "center",
-            timeout: "2000",
-          });
-      }
+          },
+      
     },
-  },
 };
 </script>
 

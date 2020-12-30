@@ -18,6 +18,14 @@
         <!-- 发布主题贴 -->
         <div v-show="isMakingPost">
           <q-input
+            v-model="postHeader"
+            label="输入标题"
+            maxlength="20"
+            counter
+            filled
+          >
+          </q-input>
+          <q-input
             v-model="postContent"
             label="输入你的想法"
             type="textarea"
@@ -59,7 +67,57 @@
       </div>
     </div>
 
-    <!-- 帖子  放在list中显示-->
+    <!--帖子 我写的-->
+    <div class="row justify-center">
+      <div class="col-8">
+        <!--<div v-for="(o, index) in 3" :key="o" :offset="index> 0 ? 3 : 0" style="padding:5px">-->
+        <div v-for="(post, index) in postInfo" :key=index style="padding:5px">
+          <q-card class="col-8" style="padding:5px">
+            <q-item clickable>
+              <q-item-section avatar>
+                <q-avatar style="height:2em; width:2em">
+                  <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+                </q-avatar>
+                <q-item-label style="margin:auto; padding-top:5px">{{post.nickname}}</q-item-label>
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label style="font-size:1.125rem">{{post.title}}</q-item-label>
+                <q-item-label caption style="font-size:1rem">
+                  {{post.content}}
+                </q-item-label>
+                <br />
+                <q-item-label caption>
+                  最新评论于{{post.latestTime}}
+                  <br />
+                  {{post.replyCount}}评论
+                </q-item-label>
+              </q-item-section>
+
+              <!-- 交互 -->
+              <q-item-section side top>
+                  <q-item-label>
+                    <q-btn
+                      flat
+                      icon="thumb_up"
+                      color="red"
+                    />
+                    {{post.positiveCount}}
+                    <q-btn
+                      flat
+                      icon="thumb_down"
+                      color="black"
+                    />
+                    {{post.negativeCount}}
+                  </q-item-label>
+                </q-item-section>
+            </q-item>
+          </q-card>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 帖子  放在list中显示
     <div class="row justify-center">
       <div class="col-8">
         <q-card class="my-card" style="padding:0">
@@ -68,7 +126,7 @@
               <q-infinite-scroll @load="onLoad" :offset="100">
                 <div v-for="(post, index) in postInfo" :key="post.id">
                   <q-item clickable style="margin:0.5rem">
-                    <!-- 主要内容 -->
+
                     <q-item-section
                       v-ripple
                       clickable
@@ -92,7 +150,7 @@
                         还没有人评论哦
                       </q-item-label>
                     </q-item-section>
-                    <!-- 交互 -->
+
                     <q-item-section side top>
                       <q-item-label>
                         <q-btn
@@ -127,7 +185,7 @@
                   </q-item>
                   <q-separator spaced inset />
                 </div>
-                <!-- 加载动画 -->
+                
                 <template v-slot:loading v-if="!this.isBottom">
                   <div class="row justify-center q-my-md">
                     <q-spinner-dots color="primary" size="40px" />
@@ -138,7 +196,7 @@
           </q-card-section>
         </q-card>
       </div>
-    </div>
+    </div>-->
   </q-page>
 </template>
 
@@ -146,7 +204,11 @@
 import axios from "axios";
 import { mapState } from "vuex";
 
-const URL = "http://175.24.115.240:8080/api/";
+import {
+  getCurPage
+} from "../api/bbsApi";
+
+
 export default {
   components: {},
   data() {
@@ -154,11 +216,18 @@ export default {
       bgPath: require("../assets/bbsBackground.png"),
       tjuLogo: require("../assets/TJU.png"),
       isMakingPost: false,
+      postHeader:"",
       postContent: "",
+      name:"Name",
+      header:"Title",
+      content:"Content",
+      comment_num:"1",
+      comment_time:"2020-12-8 9:32",
       postInfo: [],
-      //默认以发帖时间排序
-      orderType: 3,
-      currPage: 0,
+      //默认以用户Id升序排序
+      order: "",
+      currentPage: 1,
+      sort: "",
       isBottom: false,
       userId: "",
     };
@@ -167,8 +236,22 @@ export default {
     ...mapState("userInfo", ["token", "userInfo"]),
   },
   methods: {
-    initUserInfo: function() {
-      this.userId = this.userInfo.userid;
+    init() {
+      this.currentPage = 1;
+      this.order = "desc";
+      this.sort = "userId"
+      getCurPage(this.currentPage,this.order,this.sort)
+        .then((response) => {
+          this.postInfo = response.data.postList;
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      window.scrollTo({
+        top: 0,
+      });
     },
     jumpWhileNotRegister: function() {
       if (this.userId == "") {
@@ -192,7 +275,7 @@ export default {
             Authorization: this.token,
           },
           params: {
-            title: this.postContent.substr(0, 40),
+            title: this.postHeader.substr(0, 40),
             content: this.postContent,
             userId: this.userId,
           },
@@ -358,7 +441,8 @@ export default {
     },
   },
   mounted() {
-    this.initUserInfo();
+    this.postId = this.$route.params.postId;
+    this.init();
     // this.jumpWhileNotRegister();
   },
 };

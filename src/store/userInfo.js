@@ -1,7 +1,7 @@
-import { loginUser, registerUser, getUserInfo, modifyUserInfo } from "../services/userService"
-import { getHistoryComment } from '../services/commentService'
+import { loginUser,MsmloginUser, registerUser, getUserInfo, modifyUserInfo } from "../services/userService"
 import { collectCourse, getCollectedCourse, cancelCollect } from '../services/courseService'
-import { setCookie, getCookie, removeCookie } from '../utils/utils'
+import { getCookie, removeCookie,setCookie } from '../utils/utils'
+
 /**
  * 用户登录的数据仓库
  */
@@ -9,11 +9,12 @@ export default {
     namespaced: true,
     state: {
         userInfo: null,
-        token: null,
+        token: "",
         isLoading: false,
+//        historyBBS:null,
+//        historyComment: null,
+//        collectedCourse: null,
 
-        historyComment: null,
-        collectedCourse: null,
 
     },
     mutations: {
@@ -35,7 +36,7 @@ export default {
             state.userInfo = {
                 degree: payload.degree,
                 gender: payload.gender,
-                headimageurl: null,
+                headimageurl: payload.headimageurl,
                 majorid: payload.majorId,
                 nickname: payload.nickname,
                 phonenumber: payload.phoneNumber,
@@ -70,6 +71,15 @@ export default {
             state.historyComment = payload;
         },
 
+        
+        /**
+         * 设置历史发帖
+         * @param {*} state 
+         * @param {*} payload 
+         */
+        setHistoryBBS(state, payload) {
+            state.historyBBS = payload;
+        },
         /**
          * 删除评价
          * @param {*} state 
@@ -110,88 +120,101 @@ export default {
 
     actions: {
         /**
-         * 登录用户
+         * 用邮箱登录用户
          * @param {*} context 
-         * @param {Object} payload payload传入email，password
+         * @param {Object} payload payload传入email，password，phoneNumber，remember
          */
-        async loginUser(context, payload) {
+         async loginUser(context, payload) {
             context.commit("setIsLoading", true);
-
-            let token = getCookie('TJSPACE-token')
-            let userId = getCookie('TJSPACE-userId')
-            if (token && userId) {
+            let token = getCookie('TJSPACE_token')
+            let userId = getCookie('TJSPACE_userId')
+            if (token&&userId) {
                 // 如果cookie中有保存用户信息，则使用cookie登录
-                var resp = await getUserInfo({
-                    userId,
-                    token
-                })
-                console.log('after cookie resp', resp)
-                if (resp) {
-                    //成功获取到了用户信息
-                    //继续获取用户的收藏、历史评论
-                    var hisComment = await getHistoryComment({
-                        userId,
-                        token
-                    })
-                    var colCourse = await getCollectedCourse({
-                        userId,
-                        token
-                    })
-                    if (hisComment) {
-                        context.commit('setHistoryComment', hisComment.data)
-                    }
-                    if (colCourse.status == false) {
-                        context.commit('setCollectedCourse', [])
-                    } else {
-                        context.commit('setCollectedCourse', colCourse.collectedcourse)
-                    }
-                    context.commit("setUserInfo", resp)
+                await getUserInfo({attributes:["nickname"]}).then((resp)=>{
+                    console.log('after cookie resp', resp.data)
+                    context.commit("setUserInfo", resp.data)
                     context.commit("setToken", token)
+                    setCookie('TJSPACE_userId', resp.data) 
+                })             
                 }
-            }
             else {
-                var resp1 = await loginUser(payload);
-                console.log(resp1);
-                if (resp1.status) {
-                    // 登录成功，记录其token
-                    context.commit('setToken', "Bearer " + resp1.data1)
-
-                    // 使用token获取用户个人信息
-                    var resp2 = await getUserInfo({
-                        userId: resp1.data2,
-                        token: 'Bearer ' + resp1.data1
-                    })
-
-                    if (resp2) {
-                        //继续获取用户的收藏、历史评论
-                        var hisComment1 = await getHistoryComment({
-                            userId: resp1.data2,
-                            token: 'Bearer ' + resp1.data1
-                        })
-                        var colCourse1 = await getCollectedCourse({
-                            userId: resp1.data2,
-                            token: 'Bearer ' + resp1.data1
-                        })
-                        // 获取历史信息成功
-                        if (hisComment1) {
-                            context.commit('setHistoryComment', hisComment1.data)
-                        }
-                        // console.log('asdasdasdasdasdasdasd',colCourse1)
-                        // 获取的收藏信息为空
-                        if (colCourse1.status == false) {
-                            context.commit('setCollectedCourse', [])
-                        } else {
-                            context.commit('setCollectedCourse', colCourse1.collectedcourse)
-                        }
-                        setCookie('TJSPACE-token', 'Bearer ' + resp1.data1, 1)
-                        setCookie('TJSPACE-userId', resp1.data2, 1)
-                        //成功获取到了用户信息
-                        context.commit("setUserInfo", resp2)
+                console.log("logining",payload.account);
+                await loginUser(payload.account).then(async (resp1)=>{
+                    console.log("no cookie",resp1);
+                if (resp1.success) {
+                // 登录成功，用户选择记住账号
+                console.log(payload.remember)
+                if (payload.remember) {
+                    console.log("remember")
+                    localStorage.setItem('TJSPACE-email', payload.account.email)
+                   }
+                   //如果用户没有选择记住用户账号
+                   if (!payload.remember) {
+                   localStorage.removeItem('TJSPACE-email')
                     }
+                    // 登录成功，记录其token
+                    context.commit("setToken", resp1.data.token)
+                    console.log("setToken",resp1.data.token);
+                    // 使用token获取用户个人信息
+                   
+                    await getUserInfo({attributes:["nickname"]}).then((resp2)=>{
+                     //成功获取到了用户信息
+                    context.commit("setUserInfo", resp2.data)
+                    console.log("setUserInfo",resp2.data);
+                    setCookie('TJSPACE_userId', resp2.data)
+                    })             
+                    }
+                })             
                 }
-            }
-
-            context.commit("setIsLoading", false);
+            context.commit("setIsLoading", false);      
+        },
+        /**
+         * 用手机登录用户
+         * @param {*} context 
+         * @param {Object} payload payload传入phoneNumber
+         */
+        async MSMloginUser(context, payload) {
+            context.commit("setIsLoading", true);
+            let token = getCookie('TJSPACE_token')
+            let userId = getCookie('TJSPACE_userId')
+            if (token&&userId) {
+                // 如果cookie中有保存用户信息，则使用cookie登录
+                await getUserInfo().then((resp)=>{
+                    console.log('after cookie resp', resp.data)
+                    context.commit("setUserInfo", resp.data)
+                    context.commit("setToken", token)
+                    setCookie('TJSPACE_userId', resp.data.nickname) 
+                })             
+                }
+            else {
+                console.log("logining",payload.phone);
+                await MsmloginUser(payload.phone).then(async (resp1)=>{
+                    console.log("no cookie",resp1);
+                if (resp1.success) {
+                // 登录成功，用户选择记住账号
+                console.log(payload.remember)
+                if (payload.remember) {
+                    console.log("remember")
+                    localStorage.setItem('TJSPACE-phone', payload.phone)
+                   }
+                   //如果用户没有选择记住用户账号
+                   if (!payload.remember) {
+                   localStorage.removeItem('TJSPACE-phone')
+                    }
+                    // 登录成功，记录其token
+                    context.commit("setToken", resp1.data.token)
+                    console.log("setToken",resp1.data.token);
+                    // 使用token获取用户个人信息
+                    await getUserInfo().then((resp2)=>{
+                     //成功获取到了用户信息
+                    context.commit("setUserInfo", resp2.data)
+                    console.log("setUserInfo",resp2.data);
+                    setCookie('TJSPACE_userId', resp2.data.nickname)
+                    })             
+                    }
+                })             
+                }
+            context.commit("setIsLoading", false);      
         },
         /**
          * 退出登录，将数据仓库中的用户信息置空
@@ -200,14 +223,11 @@ export default {
         async logoutUser(context) {
             console.log("in store logoutUser")
 
-            context.commit('setToken', null)
+            context.commit('setToken', "")
             context.commit('setUserInfo', null)
 
-            // 清楚相应的cookie
-            removeCookie('TJSPACE-token')
-            removeCookie('TJSPACE-userId')
-
-            return true
+            // 清除相应的cookie
+            removeCookie('TJSPACE_token')
         },
         /**
          * 注册用户
@@ -219,31 +239,26 @@ export default {
             var resp = await registerUser(payload)
             console.log("reg user resp:", resp)
             // 注册成功
-            if (resp.status) {
-                resp = await loginUser({
-                    account: {
+            if (resp.success) {
+                var resp1 = await loginUser({                  
                         email: payload.email,
                         password: payload.password
-                    }
                 });
-                console.log("login user", resp);
-                if (resp.status) {
-                    // 登录成功，记录其token
-                    context.commit('setToken', "Bearer " + resp.data1)
-                    // 使用token获取用户个人信息
-                    if (resp.data1) {
-                        var resp2 = await getUserInfo({
-                            userId: resp.data2,
-                            token: 'Bearer ' + resp.data1
-                        })
-                    }
-                    if (resp2) {
-                        context.commit("setUserInfo", resp2)
-                    }
+                console.log("login user", resp1);
+                if (resp1.success){
+                     // 登录成功，记录其token
+                     context.commit('setToken', resp1.data.token)
+                     // 使用token获取用户个人信息
+                     await getUserInfo().then((resp2)=>{
+                         //成功获取到了用户信息
+                        context.commit("setUserInfo", resp2.data)
+                        console.log("setUserInfo",resp2.data);
+                        setCookie('TJSPACE_userId', resp2.data.nickname)
+                        context.commit("setIsLoading", false);
+                        return resp;               
+                     })
                 }
             }
-            context.commit("setIsLoading", false);
-            return resp
         },
 
         /**
