@@ -41,7 +41,7 @@
             <q-icon color="green" name="today" />
           </q-item-section>
 
-          <q-item-section>
+          <q-item-section >
             <q-item-label>开课时间</q-item-label>
             <q-item-label caption>{{ courseInfo.schoolTime }}</q-item-label>
           </q-item-section>
@@ -163,7 +163,7 @@ export default {
 
 <style scoped>
 .course-detail {
-  max-width: 200px;
+  max-width: 215px;
 }
 .course-detail .course-detail-img {
   max-width: 80px;

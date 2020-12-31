@@ -37,7 +37,7 @@
           />
         </template>
         <template v-else class="row justify-between">
-          <div class="text-h6">暂时还没有人评价该课程哦！</div>
+          <div class="text-h6 text-center">暂时还没有人评价该课程哦！</div>
         </template>
       </div>
     </div>

@@ -35,34 +35,24 @@ export async function getCollectedCourse(payload) {
 }
 
 /**
- * 取消收藏课程
- * @param {*} payload 
- */
-export async function cancelCollect(payload) {
-    let resp = await axios.post(`${URL}Course/CancelCollectCourse`, {},
-        {
-            headers: {
-                Authorization: payload.token,
-            },
-            params: {
-                userId: payload.userId,
-                courseId: payload.courseId,
-                teacherId: payload.teacherId,
-            },
-        }
-    );
-    return resp.data
-}
-
-/**
  * 收藏课程, 重复收藏就是取消！
  * @param {*} payload {token, userId, courseId, teacherId}
  */
 export async function collectCourse(payload) {
     console.log('in collect course', payload);
     return request({
-        url:`infoservice/courses/${payload.courseId}/favorite`,
-        method:'patch'
+        url: `infoservice/courses/${payload.courseId}/favorite`,
+        method: 'patch'
     })
 }
 
+export async function searchCourse(payload) {
+    console.log('in searching course', payload);
+    return request({
+        url: `infoservice/courses/${payload.keywords}/${payload.currentPage}/brief`,
+        method: 'get',
+        params: {
+            limit: payload.limit,
+        }
+    })
+}

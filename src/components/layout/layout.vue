@@ -16,8 +16,13 @@
         <template v-if="userInfo">
           <template class="flex-left">
             <div class="text-caption">欢迎您！{{ userInfo.nickname }}</div>
+
             <q-input
               dark
+              v-if="
+                this.$route.name != 'SearchCourse' &&
+                this.$route.name != 'SearchCourseNoKeyword'
+              "
               dense
               standout
               v-model="text"
