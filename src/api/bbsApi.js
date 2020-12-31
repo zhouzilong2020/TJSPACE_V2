@@ -70,5 +70,14 @@ export function getCurPage(currentPage,order,sort){
   })
 }
 
+export function postPost(title,content){
+  return request({
+    url:'bbsservice/post',
+    method:'post',
+    data:{
+      content:content,
+      title:title
+    }
+  })
+}
 
-  
