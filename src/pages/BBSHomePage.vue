@@ -248,8 +248,9 @@ export default {
             timeout: "1000",
           });
         }
-        this.shiftPage();
-        //this.editorContent = "";
+        this.showPage();
+        this.postContent = "";
+        this.postHeader = "";
       });
     },
 
