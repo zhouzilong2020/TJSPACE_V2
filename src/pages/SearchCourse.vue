@@ -1,172 +1,151 @@
 <template>
-  <!-- 你的内容将会被插入在这里 -->
-  
-
-  <div class="main" style="margin-left: 350px">
-    <div class="body-right row">
-      <div class="left col-8">
-        <div class="q-pa-md">
-          <div class="q-gutter-md">
+  <div class="body-right row flex-center">
+    <div class="left col-8">
+      <div class="q-pa-md">
+        <div class="q-gutter-md">
+          <div style="text-align: center">
+            <img
+              :src="path1"
+              style="
+                height: 150px;
+                width: 510px;
+                margin-left: 20px;
+                margin-right: 70px;
+              "
+            />
+          </div>
+          <div class="search-bar">
             <div style="text-align: center">
-              
-              <img
-                :src="path1"
-                style="
-                  height: 150px;
-                  width: 510px;
-                  margin-left: 20px;
-                  margin-right: 70px;
-                "
-              />
-              
-            </div>
-            <div class="search-bar">
-              <div style="text-align: center">
-                <q-input
-                  class="inputbar"
-                  rounded
-                  outlined
-                  id="textId"
-                  v-model="input"
-                  value
-                  placeholder="请输入需要搜索的课程名"
-                  style="width: 780px"
-                >
-                  <button @click="btnclick()" style="border: none">
-                    <q-icon name="search"></q-icon>
-                  </button>
-                </q-input>
-              </div>
+              <q-input
+                class="inputbar"
+                rounded
+                outlined
+                id="textId"
+                v-model="input"
+                value
+                placeholder="请输入需要搜索的课程名"
+                style="width: 780px"
+              >
+                <button @click="btnclick()" style="border: none">
+                  <q-icon name="search"></q-icon>
+                </button>
+              </q-input>
             </div>
           </div>
         </div>
+      </div>
 
-        <div v-if="isShow">
-          <div
+      <div v-if="isShow">
+        <div
+          class="content"
+          v-for="item in newcourseInfo"
+          :key="item.label"
+          :value="item.value"
+        >
+          <q-card
+            clickable
+            v-ripple
+            class="my-cardinfo"
+            bordered
+            @click="click(item)"
+            @mouseenter="mouseEnter(item.courseId, item.teacherId)"
+            @mouseleave="mouseLeave()"
+            :class="{
+              itemHover:
+                itemIndex == item.courseId && itemName == item.teacherId,
+            }"
+          >
+            <q-item>
+              <q-item-section avatar>
+                <q-avatar>
+                  <img :src="item.courseImageUrl" />
+                </q-avatar>
+              </q-item-section>
+
+              <q-item-section style="margin-top: 5px">
+                <div class="row">
+                  <q-item-label>{{ item.courseName }}</q-item-label>
+                  <q-item-label
+                    style="position: absolute; left: 600px; margin-top: 0px"
+                    >课程号： {{ item.courseId }}</q-item-label
+                  >
+                </div>
+                <div class="row" style="margin-top: 5px">
+                  <q-item-label caption
+                    >授课老师： {{ item.teacherName }}</q-item-label
+                  >
+                  <q-item-label
+                    caption
+                    style="margin-left: 50px; margin-top: 0px"
+                    >课程学分： {{ item.courseCredit }}</q-item-label
+                  >
+                </div>
+              </q-item-section>
+            </q-item>
+
+            <q-separator />
+
+            <q-card-section horizontal>
+              <q-card-section style="width: 500px">
+                {{ item.courseIntro }}
+              </q-card-section>
+
+              <q-separator vertical />
+
+              <q-card-section
+                class="col-4"
+                style="text-align: center; color: #e10602"
+                >分数: {{ item.courseGrade }}</q-card-section
+              >
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
+
+      <div v-else>
+        <div class="wordrec" style="text-align: center">recommendations</div>
+
+        <q-separator style="width: 820px" />
+
+        <div class="row" style="margin-left: 0px">
+          <template
             class="content"
-            v-for="item in newcourseInfo"
-            :key="item.label"
+            style="margin-top: 5px"
+            v-for="(item, index) in courseInfo"
             :value="item.value"
           >
             <q-card
-              clickable
-              v-ripple
-              class="my-cardinfo"
-              bordered
+              class="my-cardrec"
+              :key="index"
               @click="click(item)"
-              @mouseenter="mouseEnter(item.courseId, item.teacherId)"
+              style="margin-left: 45px; margin-top: 15px"
+              @mouseenter="mouseEnter(index)"
               @mouseleave="mouseLeave()"
-              :class="{
-                itemHover:
-                  itemIndex == item.courseId && itemName == item.teacherId,
-              }"
+              :class="{ itemHover: itemIndex == index }"
             >
-              <q-item>
-                <q-item-section avatar>
-                  <q-avatar>
-                    <img :src="item.courseImageUrl" />
-                  </q-avatar>
-                </q-item-section>
-
-                <q-item-section style="margin-top: 5px">
-                  <div class="row">
-                    <q-item-label>{{ item.courseName }}</q-item-label>
-                    <q-item-label
-                      style="position: absolute; left: 600px; margin-top: 0px"
-                      >课程号： {{ item.courseId }}</q-item-label
-                    >
+              <div v-if="index % 3 == 0">
+                <q-img :src="path11" basic style="width: 150px; height: 150px">
+                  <div class="absolute-bottom text-subtitle2 text-center">
+                    {{ item.name }}
                   </div>
-                  <div class="row" style="margin-top: 5px">
-                    <q-item-label caption
-                      >授课老师： {{ item.teacherName }}</q-item-label
-                    >
-                    <q-item-label
-                      caption
-                      style="margin-left: 50px; margin-top: 0px"
-                      >课程学分： {{ item.courseCredit }}</q-item-label
-                    >
+                </q-img>
+              </div>
+              <div v-if="index % 3 == 1">
+                <q-img :src="path12" basic style="width: 150px; height: 150px">
+                  <div class="absolute-bottom text-subtitle2 text-center">
+                    {{ item.name }}
                   </div>
-                </q-item-section>
-              </q-item>
-
-              <q-separator />
-
-              <q-card-section horizontal>
-                <q-card-section style="width: 500px">
-                  {{ item.courseIntro }}
-                </q-card-section>
-
-                <q-separator vertical />
-
-                <q-card-section
-                  class="col-4"
-                  style="text-align: center; color: #e10602"
-                  >分数: {{ item.courseGrade }}</q-card-section
-                >
-              </q-card-section>
+                </q-img>
+              </div>
+              <div v-if="index % 3 == 2">
+                <q-img :src="path13" basic style="width: 150px; height: 150px">
+                  <div class="absolute-bottom text-subtitle2 text-center">
+                    {{ item.name }}
+                  </div>
+                </q-img>
+              </div>
             </q-card>
-          </div>
-        </div>
-
-        <div v-else>
-          <div class="wordrec" style="text-align: center">recommendations</div>
-          
-
-          <q-separator style="width: 820px" />
-
-          <div class="row" style="margin-left: 0px">
-            
-            <template
-              class="content"
-              style="margin-top: 5px"
-              v-for="(item, index) in courseInfo"
-              :value="item.value"
-            >
-              <q-card
-                class="my-cardrec"
-                :key="index"
-                @click="click(item)"
-                style="margin-left: 45px; margin-top: 15px"
-                @mouseenter="mouseEnter(index)"
-                @mouseleave="mouseLeave()"
-                :class="{ itemHover: itemIndex == index }"
-              >
-                <div v-if="index % 3 == 0">
-                  <q-img
-                    :src="path11"
-                    basic
-                    style="width: 150px; height: 150px"
-                  >
-                    <div class="absolute-bottom text-subtitle2 text-center">
-                      {{ item.name }}
-                    </div>
-                  </q-img>
-                </div>
-                <div v-if="index % 3 == 1">
-                  <q-img
-                    :src="path12"
-                    basic
-                    style="width: 150px; height: 150px"
-                  >
-                    <div class="absolute-bottom text-subtitle2 text-center">
-                      {{ item.name }}
-                    </div>
-                  </q-img>
-                </div>
-                <div v-if="index % 3 == 2">
-                  <q-img
-                    :src="path13"
-                    basic
-                    style="width: 150px; height: 150px"
-                  >
-                    <div class="absolute-bottom text-subtitle2 text-center">
-                      {{ item.name }}
-                    </div>
-                  </q-img>
-                </div>
-              </q-card>
-            </template>
-          </div>
+          </template>
         </div>
       </div>
     </div>
@@ -194,8 +173,7 @@ export default {
         {
           name: "软件工程",
           teacher: "杜庆峰",
-          intro:
-            "这是一门很好的课",
+          intro: "这是一门很好的课",
           courseId: "1333571301500243969",
           imagePath: "../assets/sjk.jpg",
         },
@@ -249,7 +227,7 @@ export default {
         name: "courseInfo",
         params: {
           courseId: data.courseId,
-          currentPage:0,
+          currentPage: 0,
         },
       });
     },
@@ -263,7 +241,7 @@ export default {
             searchKey: this.input,
           });
           this.newcourseInfo = resp1;
-          console.log('asdasdasdasdas',resp1)
+          console.log("asdasdasdasdas", resp1);
           if (!this.newcourseInfo) {
             alert("未搜索到相关课程");
           } else {
