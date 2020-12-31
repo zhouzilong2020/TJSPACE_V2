@@ -239,14 +239,15 @@
         >评论于 {{ commentInfo.commentDetail.date }}</span
       >
       <span class="course-review-detail">
-        {{ commentInfo.commentDetail.useful }}/{{
-          commentInfo.commentDetail.useless + commentInfo.commentDetail.useful
+        {{ commentInfo.commentDetail.positiveCount }}/{{
+          commentInfo.commentDetail.positiveCount +
+          commentInfo.commentDetail.negativeCount
         }}
         人觉得有用</span
       >
       <span class="course-review-option">
         <q-btn
-          :color="userfulColor"
+          :color="this.commentInfo.attitude.positive ? 'positive' : 'grey'"
           @click="handleEvaluate(1)"
           size="10px"
           flat
@@ -255,7 +256,7 @@
           icon="thumb_up"
         ></q-btn>
         <q-btn
-          :color="userlessColor"
+          :color="this.commentInfo.attitude.negative ? 'negative' : 'grey'"
           @click="handleEvaluate(0)"
           size="10px"
           flat
@@ -269,10 +270,7 @@
 </template>
 
 <script>
-import {
-  evaluateComment,
-  cancelEvaluation,
-} from "../../services/commentService";
+import { evaluateComment } from "../../services/commentService";
 import { mapState } from "vuex";
 export default {
   name: "CourseComment",
@@ -282,21 +280,15 @@ export default {
       btnLoading: [false, false],
       zan: require("../../assets/zan.png"),
       cai: require("../../assets/cai.png"),
-      isEvaluated: null,
       expanded: false,
       commentInfo: null,
     };
   },
   props: {
     apiData: null,
-    taker: null,
-    needGetEva: {
-      type: Boolean,
-      default: true,
-    },
   },
   computed: {
-    ...mapState("userInfo", ["userInfo", "token"]),
+    ...mapState("userInfo", ["userInfo"]),
     topColor() {
       if (this.commentInfo) {
         let total = 0;
@@ -342,78 +334,58 @@ export default {
         }
       };
     },
-    userfulColor() {
-      if (this.isEvaluated && this.isEvaluated.canEvaluate) {
-        return "grey";
-      }
-      if (this.isEvaluated && this.isEvaluated.type == 1) {
-        return "positive";
-      }
-      return "grey";
-    },
-    userlessColor() {
-      if (this.isEvaluated && this.isEvaluated.canEvaluate) {
-        return "grey";
-      }
-      if (this.isEvaluated && this.isEvaluated.type == 0) {
-        return "negative";
-      }
-      return "grey";
+    isEvaluated() {
+      return this.commentInfo.negative && this.commentInfo.positive;
     },
   },
   methods: {
-    async handleEvaluate(type) {
-      if (this.needGetEva) {
-        console.log(type);
-        var resp;
-        // 如果没有评价则开始评价
-        if (this.isEvaluated.canEvaluate) {
-          // 按钮显示加载中
-          this.btnLoading[type] = true;
+    /**
+     * 更新对评论的态度， 0negative 1positive ，其他（-1）清除
+     */
+    async updateAttitude(payload) {
+      this.commentInfo.attitude.positive = payload.positive;
+      this.commentInfo.attitude.negative = payload.negative;
+    },
 
-          resp = await evaluateComment({
-            userId: this.userInfo.userid,
-            token: this.token,
-            commentId: this.commentInfo.commentId,
-          });
-          console.log("in vue page handel rvaluate", resp);
-          if (resp.status) {
-            this.isEvaluated.canEvaluate = false;
-            this.isEvaluated.type = type;
-            // 评论总数减1
-            if (type == 1) {
-              this.commentInfo.commentDetail.useful += 1;
-            } else {
-              this.commentInfo.commentDetail.useless += 1;
+    async handleEvaluate(type) {
+      console.log(this.commentInfo);
+      this.btnLoading[type] = true;
+
+      if (
+        !(this.commentInfo.attitude.positive == true && type == 1) ||
+        !(this.commentInfo.attitude.negative == true && type == 0)
+      ) {
+        //不能点赞、点踩！
+        evaluateComment({
+          type,
+          commentId: this.commentInfo.commentId,
+        })
+          .then((resp) => {
+            // console.log(resp);
+            if (resp.success) {
+              // 先减去原来的评价人数上统一恢复到没有评价的状态
+              if (this.commentInfo.attitude.positive) {
+                this.commentInfo.commentDetail.positiveCount -= 1;
+              }
+              if (this.commentInfo.attitude.negative) {
+                this.commentInfo.commentDetail.negativeCount -= 1;
+              }
+              // 更新评价后的态度
+              this.commentInfo.attitude.positive = resp.data.positive;
+              this.commentInfo.attitude.negative = resp.data.negative;
+              // 更新评价后人数
+              if (this.commentInfo.attitude.positive) {
+                this.commentInfo.commentDetail.positiveCount += 1;
+              }
+              if (this.commentInfo.attitude.negative) {
+                this.commentInfo.commentDetail.negativeCount += 1;
+              }
             }
-          }
-          // 按钮加载完成
-          this.btnLoading[type] = false;
-        }
-        // 如果已经评价则取消评价
-        else if (this.isEvaluated.type == type) {
-          // 按钮显示加载中
-          this.btnLoading[type] = true;
-          console.log(this.userInfo);
-          resp = await cancelEvaluation({
-            userId: this.userInfo.userid,
-            token: this.token,
-            commentId: this.commentInfo.commentId,
+          })
+          .catch((e) => {
+            console.log(e);
           });
-          console.log("in vue page handel cancel valuate", resp);
-          if (resp.status) {
-            this.isEvaluated.canEvaluate = true;
-            this.isEvaluated.type = null;
-            // 评论总数减1
-            if (type == 1) {
-              this.commentInfo.commentDetail.useful -= 1;
-            } else {
-              this.commentInfo.commentDetail.useless -= 1;
-            }
-          }
-          // 按钮显示加载中
-          this.btnLoading[type] = false;
-        }
+        this.btnLoading[type] = false;
       }
     },
   },
@@ -421,6 +393,10 @@ export default {
   async created() {
     this.commentInfo = {
       commentId: this.apiData.commentId,
+      attitude: {
+        positive: this.apiData.positive,
+        negative: this.apiData.negative,
+      },
       courseStatistic: {
         content: this.apiData.contentScore,
         teaching: this.apiData.teachingScore,
@@ -451,8 +427,8 @@ export default {
         grading: this.apiData.grade,
         workload: this.apiData.workload,
         date: this.apiData.createTime.slice(0, 10),
-        useful: this.apiData.positiveCount,
-        useless: this.apiData.negativeCount,
+        positiveCount: this.apiData.positiveCount,
+        negativeCount: this.apiData.negativeCount,
       },
     };
     // console.log(this.isEvaluated)

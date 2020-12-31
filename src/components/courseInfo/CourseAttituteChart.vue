@@ -16,6 +16,7 @@ export default {
   name: "CourseAttitudeChart",
   data: () => {
     return {
+      chart:null,
       echarts: null,
       option: {
         tooltip: {
@@ -65,14 +66,12 @@ export default {
   computed: {},
   methods: {
     init() {
-      var myChart = this.echarts.init(
+      this.chart  = this.echarts.init(
         document.getElementById("CourseAttitudeChart"),
         "light"
       );
-      // 绘制图表
-      // myChart.showLoading()
-      myChart.setOption(this.option);
-      myChart.setOption({
+      this.chart .setOption(this.option);
+      this.chart .setOption({
         series: [
           {
             name: "学生态度",
@@ -93,7 +92,7 @@ export default {
     this.echarts = require("echarts");
     this.init();
     this.window.onresize = () => {
-      that.myMap.resize();
+      that.chart.resize();
     };
   },
 };

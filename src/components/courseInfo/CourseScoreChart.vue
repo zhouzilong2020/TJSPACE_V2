@@ -5,10 +5,11 @@
 <script>
 // import echarts from "echarts";
 export default {
-  name: "CourseStatisticRight",
+  name: "CourseScoreChart",
   data: () => {
     return {
-      echarts: null,
+      charts: null,
+      echarts:null,
       option: {
         legend: {
           // right: 0,
@@ -102,11 +103,11 @@ export default {
   },
   methods: {
     init() {
-      var myChart = this.echarts.init(document.getElementById("main"), "light");
+      this.charts = this.echarts.init(document.getElementById("main"), "light");
       // 绘制图表
       // myChart.showLoading()
-      myChart.setOption(this.option);
-      myChart.setOption({
+      this.charts.setOption(this.option);
+      this.charts.setOption({
         series: [
           {
             name: "radar",
@@ -130,7 +131,7 @@ export default {
     this.echarts = require("echarts");
     this.init();
     this.window.onresize = () => {
-      that.myMap.resize();
+      that.charts.resize();
     };
   },
 };

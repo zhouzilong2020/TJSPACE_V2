@@ -11,8 +11,8 @@ import { URL } from './config'
 export async function getCourseInfo(payload) {
     console.log("in get courseInfo", payload)
     return request({
-        url:`infoservice/courses/${payload.courseId}`,
-        method:'get'
+        url: `infoservice/courses/${payload.courseId}`,
+        method: 'get'
     })
 }
 
@@ -55,22 +55,14 @@ export async function cancelCollect(payload) {
 }
 
 /**
- * 收藏课程
+ * 收藏课程, 重复收藏就是取消！
  * @param {*} payload {token, userId, courseId, teacherId}
  */
 export async function collectCourse(payload) {
-    let resp = await axios.post(`${URL}Course/CollectCourse`, {},
-        {
-            headers: {
-                Authorization: payload.token,
-            },
-            params: {
-                userId: payload.userId,
-                courseId: payload.courseId,
-                teacherId: payload.teacherId,
-            },
-        }
-    );
-    return resp.data
+    console.log('in collect course', payload);
+    return request({
+        url:`infoservice/courses/${payload.courseId}/favorite`,
+        method:'patch'
+    })
 }
 

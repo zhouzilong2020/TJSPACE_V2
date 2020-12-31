@@ -26,21 +26,11 @@ export async function getComment(payload) {
  */
 export async function evaluateComment(payload) {
     console.log("in evaluate comment", payload)
-    var resp = await axios.post(`${URL}Comment/EvaluateComment`, {},
-        {
-            headers: {
-                Authorization: payload.token,
-                // 'Content-Type':'application/x-www-form-urlencoded'
-            },
-            params: {
-                commentId: payload.commentId,
-                userId: payload.userId,
-                type: payload.type
-            }
-        },
-    );
-    console.log("in evaluate comment response", resp);
-    return resp.data;
+    return request({
+        method: 'patch',
+        url: `evlservice/comments/${payload.commentId}/attitude`,
+        params: payload,
+    })
 }
 
 /**
@@ -64,47 +54,6 @@ export async function getEvaluate(payload) {
 }
 
 
-/**
- * 取消评论
- * @param {Object} payload 传入 userId, commentId
- */
-export async function cancelEvaluation(payload) {
-    console.log("in cancel Evaluation ", payload)
-    var resp = await axios.post(`${URL}Comment/CancelEvaluation`, {},
-        {
-            headers: {
-                Authorization: payload.token,
-                'Content-Type': 'application/json'
-            },
-            params: {
-                commentId: payload.commentId,
-                userId: payload.userId,
-            },
-        }
-    );
-    console.log("in cancel Evaluate response", resp);
-    return resp.data;
-
-}
-
-
-/**
- * 
- * @param {Object} payload payload传入token，userId
- */
-export async function getCommentInfo(payload) {
-    var resp = await axios.get(`${URL}Comment/CancelEvaluation`,
-        {
-            headers: {
-                Authorization: payload.token,
-            },
-            params: {
-                userId: payload.userId,
-            }
-        })
-    console.log('data in commentinfo:', this.commentInfo)
-    return resp.data
-}
 
 /**
  * 
@@ -122,26 +71,6 @@ export async function makeComment(payload) {
 }
 
 
-/**
- * 是否能够评价某一个课程信息
- * @param {*} payload {userId, courseId, teacherId}
- */
-export async function canMakeComment(payload) {
-    console.log('in canMakeComment ', payload)
-    var resp = await axios.get(`${URL}Comment/CanPostComment`,
-        {
-            headers: {
-                Authorization: payload.token,
-            },
-            params: {
-                userId: payload.userId,
-                courseId: payload.courseId,
-                teacherId: payload.teacherId
-            }
-        })
-    console.log('after canMakeComment', resp)
-    return resp.data
-}
 
 /**
  * 返回历史评论信息
