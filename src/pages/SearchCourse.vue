@@ -1,152 +1,130 @@
 <template>
   <div class="body-right row flex-center">
-    <div class="left col-8">
-      <div class="q-pa-md">
-        <div class="q-gutter-md">
-          <div style="text-align: center">
-            <img
-              :src="path1"
-              style="
-                height: 150px;
-                width: 510px;
-                margin-left: 20px;
-                margin-right: 70px;
-              "
-            />
-          </div>
-          <div class="search-bar">
-            <div style="text-align: center">
-              <q-input
-                class="inputbar"
-                rounded
-                outlined
-                id="textId"
-                v-model="input"
-                value
-                placeholder="请输入需要搜索的课程名"
-                style="width: 780px"
-              >
-                <button @click="btnclick()" style="border: none">
-                  <q-icon name="search"></q-icon>
-                </button>
-              </q-input>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="q-gutter-md">
+      <img :src="topImg" style="height: 140px; width: 500px" />
+      <q-input
+        rounded
+        bordered
+        standout="bg-grey-3"
+        v-model="searchKeyword"
+        @keydown.13="handleSearch()"
+        input-class="q-pl-lg text-black icon-black"
+        placeholder="请输入需要搜索的关键字"
+      >
+        <template v-slot:append>
+          <q-btn flat class="black" icon="search" />
+        </template>
+      </q-input>
+    </div>
 
-      <div v-if="isShow">
-        <div
+    <div v-if="isShow">
+      <div
+        class="content"
+        v-for="item in newcourseInfo"
+        :key="item.label"
+        :value="item.value"
+      >
+        <q-card
+          clickable
+          v-ripple
+          class="my-cardinfo"
+          bordered
+          @click="click(item)"
+          @mouseenter="mouseEnter(item.courseId, item.teacherId)"
+          @mouseleave="mouseLeave()"
+          :class="{
+            itemHover: itemIndex == item.courseId && itemName == item.teacherId,
+          }"
+        >
+          <q-item>
+            <q-item-section avatar>
+              <q-avatar>
+                <img :src="item.courseImageUrl" />
+              </q-avatar>
+            </q-item-section>
+
+            <q-item-section style="margin-top: 5px">
+              <div class="row">
+                <q-item-label>{{ item.courseName }}</q-item-label>
+                <q-item-label
+                  style="position: absolute; left: 600px; margin-top: 0px"
+                  >课程号： {{ item.courseId }}</q-item-label
+                >
+              </div>
+              <div class="row" style="margin-top: 5px">
+                <q-item-label caption
+                  >授课老师： {{ item.teacherName }}</q-item-label
+                >
+                <q-item-label caption style="margin-left: 50px; margin-top: 0px"
+                  >课程学分： {{ item.courseCredit }}</q-item-label
+                >
+              </div>
+            </q-item-section>
+          </q-item>
+
+          <q-separator />
+
+          <q-card-section horizontal>
+            <q-card-section style="width: 500px">
+              {{ item.courseIntro }}
+            </q-card-section>
+
+            <q-separator vertical />
+
+            <q-card-section
+              class="col-4"
+              style="text-align: center; color: #e10602"
+              >分数: {{ item.courseGrade }}</q-card-section
+            >
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+
+    <div v-else>
+      <div class="wordrec" style="text-align: center">recommendations</div>
+
+      <q-separator style="width: 820px" />
+
+      <div class="row" >
+        <template
           class="content"
-          v-for="item in newcourseInfo"
-          :key="item.label"
+          style="margin-top: 5px"
+          v-for="(item, index) in courseInfo"
           :value="item.value"
         >
           <q-card
-            clickable
-            v-ripple
-            class="my-cardinfo"
-            bordered
+            class="my-cardrec"
+            :key="index"
             @click="click(item)"
-            @mouseenter="mouseEnter(item.courseId, item.teacherId)"
+            style="margin-left: 45px; margin-top: 15px"
+            @mouseenter="mouseEnter(index)"
             @mouseleave="mouseLeave()"
-            :class="{
-              itemHover:
-                itemIndex == item.courseId && itemName == item.teacherId,
-            }"
+            :class="{ itemHover: itemIndex == index }"
           >
-            <q-item>
-              <q-item-section avatar>
-                <q-avatar>
-                  <img :src="item.courseImageUrl" />
-                </q-avatar>
-              </q-item-section>
-
-              <q-item-section style="margin-top: 5px">
-                <div class="row">
-                  <q-item-label>{{ item.courseName }}</q-item-label>
-                  <q-item-label
-                    style="position: absolute; left: 600px; margin-top: 0px"
-                    >课程号： {{ item.courseId }}</q-item-label
-                  >
+            <div v-if="index % 3 == 0">
+              <q-img :src="path11" basic style="width: 150px; height: 150px">
+                <div class="absolute-bottom text-subtitle2 text-center">
+                  {{ item.name }}
                 </div>
-                <div class="row" style="margin-top: 5px">
-                  <q-item-label caption
-                    >授课老师： {{ item.teacherName }}</q-item-label
-                  >
-                  <q-item-label
-                    caption
-                    style="margin-left: 50px; margin-top: 0px"
-                    >课程学分： {{ item.courseCredit }}</q-item-label
-                  >
+              </q-img>
+            </div>
+            <div v-if="index % 3 == 1">
+              <q-img :src="path12" basic style="width: 150px; height: 150px">
+                <div class="absolute-bottom text-subtitle2 text-center">
+                  {{ item.name }}
                 </div>
-              </q-item-section>
-            </q-item>
-
-            <q-separator />
-
-            <q-card-section horizontal>
-              <q-card-section style="width: 500px">
-                {{ item.courseIntro }}
-              </q-card-section>
-
-              <q-separator vertical />
-
-              <q-card-section
-                class="col-4"
-                style="text-align: center; color: #e10602"
-                >分数: {{ item.courseGrade }}</q-card-section
-              >
-            </q-card-section>
+              </q-img>
+            </div>
+            <div v-if="index % 3 == 2">
+              <q-img :src="path13" basic style="width: 150px; height: 150px">
+                <div class="absolute-bottom text-subtitle2 text-center">
+                  {{ item.name }}
+                </div>
+              </q-img>
+            </div>
           </q-card>
-        </div>
-      </div>
-
-      <div v-else>
-        <div class="wordrec" style="text-align: center">recommendations</div>
-
-        <q-separator style="width: 820px" />
-
-        <div class="row" style="margin-left: 0px">
-          <template
-            class="content"
-            style="margin-top: 5px"
-            v-for="(item, index) in courseInfo"
-            :value="item.value"
-          >
-            <q-card
-              class="my-cardrec"
-              :key="index"
-              @click="click(item)"
-              style="margin-left: 45px; margin-top: 15px"
-              @mouseenter="mouseEnter(index)"
-              @mouseleave="mouseLeave()"
-              :class="{ itemHover: itemIndex == index }"
-            >
-              <div v-if="index % 3 == 0">
-                <q-img :src="path11" basic style="width: 150px; height: 150px">
-                  <div class="absolute-bottom text-subtitle2 text-center">
-                    {{ item.name }}
-                  </div>
-                </q-img>
-              </div>
-              <div v-if="index % 3 == 1">
-                <q-img :src="path12" basic style="width: 150px; height: 150px">
-                  <div class="absolute-bottom text-subtitle2 text-center">
-                    {{ item.name }}
-                  </div>
-                </q-img>
-              </div>
-              <div v-if="index % 3 == 2">
-                <q-img :src="path13" basic style="width: 150px; height: 150px">
-                  <div class="absolute-bottom text-subtitle2 text-center">
-                    {{ item.name }}
-                  </div>
-                </q-img>
-              </div>
-            </q-card>
-          </template>
-        </div>
+        </template>
       </div>
     </div>
   </div>
@@ -159,6 +137,7 @@ export default {
   components: {},
   data() {
     return {
+      searchKeyword: "",
       itemIndex: null,
       itemName: null,
       input: "",
@@ -166,7 +145,7 @@ export default {
       path11: require("../assets/sjk.jpg"),
       path12: require("../assets/xtjg.jpg"),
       path13: require("../assets/java.jpg"),
-      path1: require("../assets/tjLogo.jpeg"),
+      topImg: require("../assets/tjLogo.jpeg"),
       path: require("../assets/zhuzi.jpeg"),
       inputSearch: "",
       courseInfo: [
@@ -198,16 +177,7 @@ export default {
       ],
       newcourseInfo: [],
       text: "",
-      active: -1,
-      drawer: false,
-      logoPath: require("../assets/TJU.png"),
-      avatarPath: require("../assets/boy-avatar.png"),
-      avatarBGPath: require("../assets/material.png"),
       str: "",
-      userInfo: {
-        email: "1",
-        nickname: "1",
-      },
     };
   },
 
@@ -332,10 +302,6 @@ export default {
 .header {
   background-color: #0025abcc;
 }
-.body {
-  width: 100%;
-  margin: 0 auto;
-}
 
 .drawer-btn-penal {
   position: absolute;
@@ -344,18 +310,9 @@ export default {
 .header .header-search {
   color: aliceblue;
 }
-.page-footer .footer-name {
-  margin-left: 10px;
-  font-size: 16px;
-}
-.page-footer .footer-id {
-  position: absolute;
-  right: 10px;
-  font-size: 16px;
-}
 
 .content {
-  width: 800px;
+  max-width: 800px;
 }
 
 .my-cardinfo {
@@ -368,21 +325,9 @@ export default {
   /* margin-left: 70px; */
 }
 
-.search-bar {
-  display: flex;
-  width: 1000px;
-}
-
 .search-bar button {
-  outline: none;
   height: 60px;
   width: 80px;
-  border: 3px solid #2932e1;
-  background: #f5f6f7;
-  color: black;
-  border-left: 0;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
 }
 
 @font-face {
