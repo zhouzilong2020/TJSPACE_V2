@@ -109,7 +109,7 @@ export function validateMsmAuthCode(payload) {
  * @param {Object} payload
  */
 export function getUserInfo(payload) {
-  console.log("getUserInfo")
+  console.log("in getUserInfo", payload)
   return request({
     url: 'infoservice/info',
     method: "get",

@@ -1,5 +1,5 @@
 <template>
-  <q-card flat bordered class="BBSHistory">
+  <q-card flat bordered class="BBSHistory" style="min-width:200px">
     <q-item>
       <q-item-section avatar>
         <q-icon color="black" name="library_books"></q-icon>

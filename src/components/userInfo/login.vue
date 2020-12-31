@@ -65,12 +65,10 @@
 <script>
 // import popDialog from "../popDialog";
 import { mapState } from "vuex";
-import { getCookie, setCookie } from "../../utils/utils";
+// import { getCookie, setCookie } from "../../utils/utils";
 
 export default {
-  components: {
-    // popDialog,
-  },
+  components: {},
 
   data() {
     return {
@@ -87,35 +85,24 @@ export default {
   },
 
   computed: {
-    ...mapState("userInfo", ["isLoading", "token", "userInfo"]),
+    ...mapState("userInfo", ["userInfo", "isLoading"]),
     isDisabled() {
       if (this.account.email && this.account.password) return false;
       return true;
     },
   },
-
-  created() {
-    if (this.userInfo) {
-      console.log("跳转了");
-      this.url = getCookie("url");
-      setCookie("url", "");
-      if (
-        this.url != "" &&
-        this.url != "/" &&
-        this.url != "/msmlogin" &&
-        this.url != "/login" &&
-        this.url != "/register"
-      )
-        this.$router.push({
-          path: this.url,
-        });
-      else {
-        //如果在登陆之后跳转回index或者没有前驱页面就跳转到首页
+  watch: {
+    userInfo() {
+      if (this.userInfo != null) {
         this.$router.push({
           name: "Homepage",
         });
       }
-    }
+    },
+  },
+
+  created() {
+   
     if (localStorage.getItem("TJSPACE-email")) {
       this.account.email = localStorage.getItem("TJSPACE-email");
       this.remember = true;
@@ -124,21 +111,10 @@ export default {
 
   methods: {
     handleLogin() {
-      this.$store
-        .dispatch("userInfo/loginUser", {
-          account: this.account,
-          remember: this.remember,
-        }).then(() => {
-          if (!this.token) {
-            //密码错误
-            console.log("密码错误");
-            this.$q.notify({
-              message: "密码错误",
-              position: "center",
-              timeout: "500",
-            });
-          }
-        });
+      this.$store.dispatch("userInfo/loginUser", {
+        account: this.account,
+        remember: this.remember,
+      });
     },
   },
 };

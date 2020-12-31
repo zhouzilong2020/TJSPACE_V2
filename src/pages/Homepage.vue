@@ -1,103 +1,21 @@
 <template>
   <div class="row q-gutter-md q-pa-md flex-center no-wrap items-stretch">
-    <div class="detial col-2 q-gutter-md ">
-      <q-card elevated>
-        <q-item>
-          <q-item-section>
-            <q-item-label>个人信息</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-card-section class="text-center">
-          <q-avatar size="80px">
-            <img :src="avatarPath" />
-          </q-avatar>
-        </q-card-section>
-        <q-card-section horizontal>
-          <q-list padding>
-            <q-item>
-              <q-item-section avatar>
-                <q-icon color="primary" name="face" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label overline>昵称</q-item-label>
-                <q-item-label> {{ NickName }}</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section avatar>
-                <img :src="genderPath" width="25px" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label overline>性别</q-item-label>
-                <q-item-label>{{ Gender }}</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section avatar>
-                <q-icon color="red" name="call" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label overline>手机号</q-item-label>
-                <q-item-label>{{ phonenumber }}</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section avatar>
-                <q-icon color="amber" name="local_offer" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label overline>年级</q-item-label>
-                <q-item-label> {{ Grade }}</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section avatar>
-                <q-icon color="green" name="book" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label overline>专业</q-item-label>
-                <q-item-label> {{ Major }}</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section avatar>
-                <q-icon color="grey" name="school" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label overline>学历</q-item-label>
-                <q-item-label> {{ Degree }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-card-section>
-        <q-separator />
-        <q-btn
-          class="full-width btn gt-sm"
-          color="primary"
-          icon-right="build"
-          type="修改个人信息"
-          label="修改信息"
-          :to="{ name: 'SelfInfoModify', params: { userId: NickName } }"
-          unelevated
-        />
-      </q-card>
+    <div class="detial col-2 q-gutter-md">
+      <UserInfo />
       <CourseInfo />
     </div>
-    <div
-      class="column col-8 q-gutter-md" 
-            style="max-width: 550pt" 
-
-    >
-    <Header/>
+    <div class="column q-gutter-md" style="max-width: 550pt">
+      <Header />
       <CommentHistory v-if="ok" />
     </div>
     <div class="column col-2 q-gutter-md">
       <BBSHistory />
-    </div>  
+    </div>
   </div>
 </template>
 
 <script>
+import UserInfo from "../components/homepage/UserInfo";
 import CourseInfo from "../components/homepage/CourseInfo";
 import BBSHistory from "../components/homepage/BBSHistory";
 import CommentHistory from "../components/homepage/CommentHistory";
@@ -106,6 +24,7 @@ import Header from "../components/homepage/Header";
 
 export default {
   components: {
+    UserInfo,
     CourseInfo,
     BBSHistory,
     CommentHistory,
@@ -118,7 +37,7 @@ export default {
       logoPath: require("../assets/TJU.png"),
       avatarPath: require("../assets/boy-avatar.png"),
       avatarBGPath: require("../assets/material.png"),
-      genderPath: require("../assets/user-info-icon/gender-male-female.svg"),
+
       drawer: false,
       active: -1,
       Grade: "大二",
@@ -127,7 +46,7 @@ export default {
       Degree: "本科",
       NickName: "lili",
       phonenumber: "13127527753",
-      ok:false,
+      ok: false,
     };
   },
 

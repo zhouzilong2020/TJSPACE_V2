@@ -33,11 +33,11 @@ export default {
             name: "SearchCourseNoKeyword",
             component: () => import("@/pages/SearchCourse"),
         }, {
-            path: "/Homepage/:userId",
+            path: "/Homepage",
             name: "Homepage",
             component: () => import("@/pages/Homepage"),
         }, {
-            path: "/SelfInfoModify/:userId",
+            path: "/SelfInfoModify",
             name: 'SelfInfoModify',
             component: () => import("@/pages/SelfInfoModify"),
         }, {

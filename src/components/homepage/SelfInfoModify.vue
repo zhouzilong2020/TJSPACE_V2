@@ -174,7 +174,6 @@ export default {
   data() {
     return {
       LogoImg: require("../assets/TJU.png"),
-
       OptionGender: ["男", "女"],
       OptionGrade: ["大一", "大二", "大三", "大四", "研一", "研二", "博士"],
       OptionMajor: ["软件工程", "土木工程", "经济与管理"],

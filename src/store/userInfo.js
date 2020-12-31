@@ -8,13 +8,7 @@ export default {
     namespaced: true,
     state: {
         userInfo: null,
-        token: "",
         isLoading: false,
-        //        historyBBS:null,
-        //        historyComment: null,
-        //        collectedCourse: null,
-
-
     },
     mutations: {
         /**
@@ -118,37 +112,29 @@ export default {
             let token = getCookie('TJSPACE_token')
             if (token) {
                 // 如果cookie中有保存用户信息，则使用cookie登录
-                await getUserInfo({ attributes: ["nickname"] }).then((resp) => {
-                    console.log('after cookie resp', resp)
+                getUserInfo().then((resp) => {
+                    console.log("using cookie", resp)
                     context.commit("setUserInfo", resp.data)
-                    context.commit("setToken", token)
                 })
             }
             else {
-                console.log("logining", payload.account);
-                await loginUser(payload.account).then(async (resp1) => {
-                    console.log("no cookie", resp1);
-                    if (resp1.success) {
+                loginUser(payload.account).then((resp) => {
+                    console.log("no cookie", resp);
+                    if (resp.success) {
                         // 登录成功，用户选择记住账号
-                        console.log(payload.remember)
                         if (payload.remember) {
-                            console.log("remember")
                             localStorage.setItem('TJSPACE-email', payload.account.email)
                         }
-                        //如果用户没有选择记住用户账号
+                        //如果用户没有选择记住用户账号, 删除历史记录
                         if (!payload.remember) {
                             localStorage.removeItem('TJSPACE-email')
                         }
-                        // 登录成功，记录其token
-                        context.commit("setToken", resp1.data.token)
-                        console.log("setToken", resp1.data.token);
-                        // 使用token获取用户个人信息
-
-                        await getUserInfo({ attributes: ["nickname"] }).then((resp2) => {
-                            //成功获取到了用户信息
-                            context.commit("setUserInfo", resp2.data)
-                            console.log("setUserInfo", resp2.data);
-                            setCookie('TJSPACE_userId', resp2.data)
+                        getUserInfo().then((resp) => {
+                            if (resp.success) {
+                                //成功获取到了用户信息
+                                console.log("userinfo", resp.data)
+                                context.commit("setUserInfo", resp.data);
+                            }
                         })
                     }
                 })
@@ -209,10 +195,7 @@ export default {
          */
         async logoutUser(context) {
             console.log("in store logoutUser")
-
-            context.commit('setToken', "")
             context.commit('setUserInfo', null)
-
             // 清除相应的cookie
             removeCookie('TJSPACE_token')
         },

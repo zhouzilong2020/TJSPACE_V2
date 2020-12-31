@@ -135,7 +135,7 @@ export default {
 
 .body-right .option-group {
   margin-top: 15px;
-  max-width: 80px;
+  max-width: 1000px;
 }
 
 .body-right .option-group .btn {

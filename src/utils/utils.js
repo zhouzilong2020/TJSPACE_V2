@@ -1,5 +1,5 @@
 export function removeCookie(cname) {
-  setCookie(cname,"",-1)
+  setCookie(cname, "", -1)
 }
 
 export function setCookie(cname, cvalue, exhours) {
@@ -11,7 +11,7 @@ export function setCookie(cname, cvalue, exhours) {
 
   // console.log("now:", d)
 
-  
+
   var expires = "expires=" + d.toGMTString();
   document.cookie = cname + "=" + cvalue + "; " + expires + ";" + " path=*"
 }
@@ -27,10 +27,8 @@ export function getCookie(cname) {
 }
 
 export function checkCookie() {
-  var token = getCookie('TJSPACE-token')
-  var userId = getCookie('TJSPACE-userId')
-  // console.log('in check cookie:', token, userId)
-  if (token && userId) {
+  var token = getCookie('TJSPACE_token')
+  if (token) {
     return true
   }
   else {

@@ -355,7 +355,6 @@ export default {
         !(this.commentInfo.attitude.positive == true && type == 1) ||
         !(this.commentInfo.attitude.negative == true && type == 0)
       ) {
-        //不能点赞、点踩！
         evaluateComment({
           type,
           commentId: this.commentInfo.commentId,

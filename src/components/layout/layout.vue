@@ -57,7 +57,6 @@
               flat
               :to="{
                 name: 'SearchCourseNoKeyword',
-                
               }"
               label="搜索课程"
             />
@@ -163,7 +162,7 @@
               />
               <drawer-btn
                 :label="'搜索课程'"
-                :to="{ name: 'SearchCourseNoKeyword'}"
+                :to="{ name: 'SearchCourseNoKeyword' }"
                 :icon="'search'"
               />
             </template>
@@ -214,7 +213,7 @@ export default {
   },
   props: {},
   computed: {
-    ...mapState("userInfo", ["isLoading", "token", "userInfo"]),
+    ...mapState("userInfo", ["isLoading", "userInfo"]),
   },
   methods: {
     debug() {
@@ -242,23 +241,15 @@ export default {
       console.log("clicking logout btn");
       await this.$store.dispatch("userInfo/logoutUser");
       // 成功退出
-      if (this.token == null) {
-        console.log("logout user successfully");
-        this.$router.push({
-          name: "index",
-        });
-      }
+      this.$router.push({
+        name: "index",
+      });
     },
   },
 };
 </script>
 
 <style scoped>
-.body {
-  width: 100%;
-  margin: 0 auto;
-}
-
 .logout-btn {
   margin-left: 10px;
 }

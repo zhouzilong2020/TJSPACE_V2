@@ -1,5 +1,5 @@
 <template>
-  <q-card elevated class="course-info">
+  <q-card elevated style="min-width: 160px" class="course-info">
     <q-item>
       <q-item-section avatar>
         <q-icon color="black" name="attachment"></q-icon>
@@ -11,37 +11,40 @@
     <q-chip square size="md" color="amber" text-color="white" icon="bookmark">
       Curriculum
     </q-chip>
-    <q-list padding v-for="(i, index) in collectedcourse" :key="index">
-      <q-item>
-        <q-item-section avatar>
-          <q-avatar
-            color="secondary"
-            icon="assignment"
-            text-color="white"
-          ></q-avatar>
-        </q-item-section>
-        <q-item-section>
+    <q-list padding v-for="(course, index) in collectedCourse" :key="index">
+      <q-item class="col no-padding" style="min-height: 100px">
+        <q-item-section class="q-pa-sm row col-8">
           <q-btn
             align="left"
-            padding="none"
             flat
             :to="{
               name: 'courseInfo',
-              params: { courseId: i.courseId, teacherId: i.teacherId },
+              params: { courseId: course.courseId },
             }"
           >
-            {{ i.courseName }}
+            <div class="rows" style="margin: 0 auto">
+              <q-avatar
+                color="secondary"
+                icon="assignment"
+                text-color="white"
+                size="1.8em"
+                style="margin-bottom: 6px"
+              ></q-avatar>
+              <q-item-label class="h6 text-center">{{
+                course.courseName
+              }}</q-item-label>
+              <q-item-label caption class="text-center">{{
+                course.teacherName
+              }}</q-item-label>
+            </div>
           </q-btn>
-          <q-item-label caption>老师：{{ i.teacherName }}</q-item-label>
         </q-item-section>
-        <q-item-section side>
-          <q-btn
-            flat
-            size="12px"
-            icon="delete"
-            @click="cancelCollect(i.courseId, i.teacherId)"
-          />
-        </q-item-section>
+        <q-btn
+          flat
+          size="12px"
+          icon="delete"
+          @click="cancelCollect(course.courseId)"
+        />
       </q-item>
     </q-list>
   </q-card>
@@ -59,16 +62,16 @@ export default {
       //Credit: "4.0",
       //Teacher: "袁时金",
       coursePath: require("../../assets/user-info-icon/chakanyuanwenlianjie.svg"),
-      collectedcourse: [
-        {courseName:"数据库原理与应用",teacherName:"袁时金"},
-        {courseName:"操作系统",teacherName:"张惠娟"}
+      collectedCourse: [
+        { courseName: "数据库原理与应用", teacherName: "袁时金" },
+        { courseName: "操作系统", teacherName: "张惠娟" },
       ],
     };
   },
   computed: {
     //...mapState("userInfo", ["userInfo", "collectedCourse", "token"]),
     //collectedcourse() {
-      //return this.collectedCourse;
+    //return this.collectedCourse;
     //},
   },
   methods: {
