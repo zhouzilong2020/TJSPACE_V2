@@ -34,7 +34,7 @@
           <q-btn
             flat
             round
-            :style="{ color: postPositive ? 'red' : 'gray' }"
+            :style="{ color: isThumbUp ? 'red' : 'gray' }"
             icon="thumb_up"            
             @click="updateAttitude(1)"
           />
@@ -42,7 +42,7 @@
           <q-btn
             flat
             round
-            :style="{ color: postNegative ? 'red' : 'gray' }"
+            :style="{ color: isThumbDown ? 'red' : 'gray' }"
             icon="thumb_down"           
             @click="updateAttitude(0)"
           />
@@ -110,6 +110,8 @@ export default {
     return {
       thumbUpNum: 0, //更新用户的点赞-1/0/1
       thumbDownNum : 0, //更新用户的点踩-1/0/1
+      isThumbUp: false,
+      isThumbDown: false,
     };
   },
   methods: {
@@ -127,6 +129,8 @@ export default {
         if(response.success){
           that.thumbUpNum += response.data.positive;
           that.thumbDownNum += response.data.negative;
+          that.isThumbUp = response.data.positive;
+          that.isThumbDown = response.data.negative;
         }
       });
       event.stopPropagation(); 
@@ -139,8 +143,15 @@ export default {
         postId : this.postId
         }
       })
+    },    
+    init() {
+      this.isThumbUp = this.postPositive;
+      this.isThumbDown = this.postNegative;
     }
   },
+  mounted() {
+    this.init();
+  }
 };
 </script>
 <style type="text/css">

@@ -23,6 +23,7 @@
             maxlength="20"
             counter
             filled
+            :rules="[val => !!val || '输入不能为空']"
           >
           </q-input>
           <q-input
@@ -32,6 +33,7 @@
             maxlength="100"
             counter
             filled
+            :rules="[val => !!val || '输入不能为空']"
           >
           </q-input>
         </div>
@@ -183,18 +185,30 @@ export default {
       this.postHeader = "";
     },
     submitPost: async function() {
-      postPost(this.postHeader, this.postContent).then((response) => {
-        this.currentPage = 1;
-        if(response.success){
-          this.$q.notify({
-            message: "发帖成功",
+      if(this.postHeader == "" || this.postContent == "") {
+        this.$q.notify({
+            message: "发帖失败",
             position: "center",
             timeout: "1000",
           });
-        }
-        this.showPage();
-        //this.editorContent = "";
-      });
+      }
+      else {
+        postPost(this.postHeader, this.postContent).then((response) => {
+          this.currentPage = 1;
+          if(response.success){
+            this.$q.notify({
+              message: "发帖成功",
+              position: "center",
+              timeout: "1000",
+            });
+          }
+          this.showPage();
+          //this.editorContent = "";
+        });
+      }
+      this.isMakingPost = false;
+      this.postContent = "";
+      this.postHeader = ""; 
     },
 
   },
