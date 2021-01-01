@@ -10,18 +10,30 @@
         </q-item-section> -->
         <q-item-section class="user-infro-detail">
           <q-item-label class="nickname text-center text-h6">
-            {{ commentInfo.userInfo.nickname }}
+            {{
+              isAuthor
+                ? commentInfo.userInfo.nickname
+                : collapse(commentInfo.courseInfo.courseTitle, 14)
+            }}
           </q-item-label>
 
           <q-item-label class="grade text-center" caption>
             {{
-              commentInfo.userInfo.grade
-                ? commentInfo.userInfo.grade + "年级"
-                : "某一个年级"
+              isAuthor
+                ? commentInfo.userInfo.grade
+                  ? commentInfo.userInfo.grade + "年级"
+                  : "某一个年级"
+                : commentInfo.courseInfo.teacherName
             }}
           </q-item-label>
           <q-item-label class="major text-center" caption>
-            {{ commentInfo.userInfo.major }}
+            {{
+              isAuthor
+                ? commentInfo.userInfo.major
+                  ? commentInfo.userInfo.major
+                  : "某专业"
+                : commentInfo.courseInfo.officialId
+            }}
           </q-item-label>
         </q-item-section>
       </div>
@@ -85,7 +97,10 @@
 
     <q-separator />
     <!-- 课程的一些作业情况 -->
-    <q-item class="course-requirement q-gutter-sm q-px-sm q-my-sm">
+    <q-item
+      v-if="isDetail"
+      class="course-requirement q-gutter-sm q-px-sm q-my-sm"
+    >
       <ul class="">
         <li :class="[commentInfo.courseDetail.midterm == true ? 'active' : '']">
           <span
@@ -204,7 +219,7 @@
     <q-separator />
 
     <!-- 具体内容 -->
-    <q-item class="course-review-body" horizontal>
+    <q-item v-if="isDetail" class="course-review-body" horizontal>
       <div class="col-6 q-gutter-sm">
         <q-card-section>
           <div class="text-h6 text-center">课程内容</div>
@@ -250,40 +265,71 @@
         人觉得有用</span
       >
       <span class="course-review-option">
-        <q-btn
-          :color="this.commentInfo.attitude.positive ? 'positive' : 'grey'"
-          @click="handleEvaluate(1)"
-          size="10px"
-          flat
-          round
-          :loading="btnLoading[1]"
-          icon="thumb_up"
-          :disable="disableBtn"
-        ></q-btn>
-        <q-btn
-          :color="this.commentInfo.attitude.negative ? 'negative' : 'grey'"
-          @click="handleEvaluate(0)"
-          size="10px"
-          flat
-          round
-          :loading="btnLoading[0]"
-          icon="thumb_down"
-          :disable="disableBtn"
-        ></q-btn>
+        <template v-if="!deleteBtn">
+          <q-btn
+            :color="this.commentInfo.attitude.positive ? 'positive' : 'grey'"
+            @click="handleEvaluate(1)"
+            size="10px"
+            flat
+            round
+            :loading="btnLoading[1]"
+            icon="thumb_up"
+            :disable="disableBtn"
+          ></q-btn>
+          <q-btn
+            :color="this.commentInfo.attitude.negative ? 'negative' : 'grey'"
+            @click="handleEvaluate(0)"
+            size="10px"
+            flat
+            round
+            :loading="btnLoading[0]"
+            icon="thumb_down"
+            :disable="disableBtn"
+          ></q-btn>
+        </template>
+        <template v-else>
+          <q-btn
+            @click="confirm()"
+            size="10px"
+            color="grey-9"
+            style="position: absolute; right:-25px"
+            flat
+            round
+            :loading="btnLoading[3]"
+            icon="delete"
+          />
+        </template>
       </span>
     </q-card-section>
+    <!-- 仅在个人主页显示 -->
+    <q-btn
+      v-if="deleteBtn"
+      size="12px"
+      style="position: absolute; top: 0px; right: 0px"
+      color="grey-10"
+      flat
+      round
+      :to="{
+        name: 'courseInfo',
+        params: {
+          courseId: commentInfo.courseInfo.courseId,
+          currentPage: 1,
+        },
+      }"
+      icon="more_horiz"
+    />
   </q-card>
 </template>
 
 <script>
-import { evaluateComment } from "../../services/commentService";
+import { evaluateComment, deleteComment } from "../../services/commentService";
 import { mapState } from "vuex";
 export default {
   name: "CourseComment",
   components: {},
   data: () => {
     return {
-      btnLoading: [false, false],
+      btnLoading: [false, false, false],
       zan: require("../../assets/zan.png"),
       cai: require("../../assets/cai.png"),
       expanded: false,
@@ -292,7 +338,26 @@ export default {
   },
   props: {
     apiData: null,
+    // 个人信息页面不展示评分详情和作业情况, 头部不展示评价人， 只展示头部评分细则和课程名称
+    isAuthor: {
+      type: Boolean,
+      default() {
+        return true;
+      },
+    },
+    isDetail: {
+      type: Boolean,
+      default() {
+        return true;
+      },
+    },
     disableBtn: {
+      type: Boolean,
+      default() {
+        return false;
+      },
+    },
+    deleteBtn: {
       type: Boolean,
       default() {
         return false;
@@ -300,6 +365,9 @@ export default {
     },
   },
   computed: {
+    isCourseInfo() {
+      return !this.isAuthor;
+    },
     ...mapState("userInfo", ["userInfo"]),
     topColor() {
       if (this.commentInfo) {
@@ -351,6 +419,44 @@ export default {
     },
   },
   methods: {
+    collapse(string, length) {
+      for (var i = 0; i < string.length; i++) {
+        if (string.charCodeAt(i) > 127 || string.charCodeAt(i) < 0) {
+          length -= 2;
+        } else {
+          length -= 1;
+        }
+        if (length < 0) {
+          return string.slice(0, i - 1) + "...";
+        }
+      }
+      return string;
+    },
+    /**
+     * 确认是否删除对话框
+     */
+    confirm() {
+      this.$q
+        .dialog({
+          title: "确认删吗？",
+          message: "评论删除后就无法找回了哦！",
+          cancel: true,
+        })
+        .onOk(() => {
+          console.log(">>>> second OK catcher");
+          this.btnLoading[2] = true;
+
+          deleteComment({ commentId: this.commentInfo.commentId }).then(
+            (resp) => {
+              console.log(resp);
+              if (resp.success) {
+                this.$emit("delete");
+              }
+            }
+          );
+          this.btnLoading[2] = false;
+        });
+    },
     /**
      * 更新对评论的态度， 0negative 1positive ，其他（-1）清除
      */
@@ -401,7 +507,7 @@ export default {
     },
   },
 
-  async created() {
+  mounted() {
     this.commentInfo = {
       commentId: this.apiData.commentId,
       attitude: {
@@ -415,9 +521,9 @@ export default {
         workload: this.apiData.workloadScore,
       },
       userInfo: {
-        nickname: this.apiData.userInfo.nickname,
-        grade: this.apiData.userInfo.grade,
-        major: this.apiData.userInfo.major,
+        nickname: this.apiData.userInfo ? this.apiData.userInfo.nickname : "",
+        grade: this.apiData.userInfo ? this.apiData.userInfo.grade : "",
+        major: this.apiData.userInfo ? this.apiData.userInfo.major : "",
       },
       courseDetail: {
         // year:"2020-2021",
@@ -435,11 +541,17 @@ export default {
       commentDetail: {
         content: this.apiData.content,
         teaching: this.apiData.teaching,
-        grading: this.apiData.grade,
+        grading: this.apiData.grading,
         workload: this.apiData.workload,
         date: this.apiData.createTime.slice(0, 10),
         positiveCount: this.apiData.positiveCount,
         negativeCount: this.apiData.negativeCount,
+      },
+      courseInfo: {
+        teacherName: this.apiData.teacherName,
+        courseTitle: this.apiData.courseTitle,
+        officialId: this.apiData.officialId,
+        courseId: this.apiData.courseId,
       },
     };
     // console.log(this.isEvaluated)
@@ -456,6 +568,7 @@ export default {
   margin-top: 10px;
 }
 .user-infro-detail {
+  width: 140px;
   margin-right: 10px;
   display: inline;
 }

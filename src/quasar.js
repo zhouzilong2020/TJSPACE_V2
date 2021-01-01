@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 import './styles/quasar.sass'
 import '@quasar/extras/material-icons/material-icons.css'
-import { Quasar,Loading,Notify } from 'quasar'
+import { Quasar, Loading, Notify, Dialog } from 'quasar'
 
 Vue.use(Quasar, {
   config: {},
@@ -10,6 +10,7 @@ Vue.use(Quasar, {
   directives: { /* not needed if importStrategy is not 'manual' */ },
   plugins: {
     Loading,
-    Notify
+    Notify,
+    Dialog
   }
- })
+})

@@ -82,7 +82,7 @@
         class="full-width"
         color="primary"
         icon-right="comment"
-        :disable="!canMakeComment"
+        :disable="courseInfo.commented"
         :to="{
           name: 'MakeComment',
           params: {
@@ -93,7 +93,7 @@
         unelevated
       >
         <q-tooltip content-class="bg-accent">{{
-          canMakeComment ? "现在就撰写你的评论吧！" : "你已经评价过该课程！"
+          !courseInfo.commented ? "现在就撰写你的评论吧！" : "你已经评价过该课程！"
         }}</q-tooltip>
       </q-btn>
     </q-card-section>
@@ -128,6 +128,7 @@ export default {
       type: Object,
       default: () => {
         return {
+          commented:false,
           avgContentScore: 4,
           avgGradingScore: 3,
           avgTeachingScore: 5,
@@ -152,7 +153,6 @@ export default {
   data() {
     return {
       path: require("../../assets/TJU.png"),
-      canMakeComment: true,
     };
   },
   mounted() {},

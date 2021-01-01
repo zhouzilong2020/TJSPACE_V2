@@ -1,7 +1,4 @@
 // 获取评论 ！哈哈
-import axios from "axios";
-// import Qs from  'qs'
-import { URL } from './config'
 import request from '../utils/request'
 
 
@@ -70,15 +67,8 @@ export async function getHistoryComment(payload) {
  */
 export async function deleteComment(payload) {
     console.log('in get delete comment', payload)
-    let resp = await axios.post(`${URL}Show/personalcomment`, {},
-        {
-            headers: {
-                Authorization: payload.token,
-            },
-            params: {
-                userId: payload.commentId
-            }
-        })
-    console.log('after delete history comment ', resp)
-    return resp.data
+    return request({
+        url: `evlservice/comments/${payload.commentId}`,
+        method: 'delete',
+    })
 }

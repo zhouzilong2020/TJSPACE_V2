@@ -366,7 +366,7 @@ export default {
       return {
         content: this.comment[0],
         teaching: this.comment[1],
-        grade: this.comment[2],
+        grading: this.comment[2],
         workload: this.comment[3],
 
         isMidterm: this.selection.includes("midterm") ? 1 : 0,

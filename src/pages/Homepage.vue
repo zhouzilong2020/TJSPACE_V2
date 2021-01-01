@@ -13,16 +13,23 @@
         :offset="250"
       >
         <CourseComment
-          v-for="comment in commentList"
-          :key="comment.commentId"
+          @delete="onDeleteComment(i)"
+          v-for="(comment, i) in commentList"
+          :isAuthor="false"
+          :isDetail="false"
+          :key="i"
           :apiData="comment"
           :disableBtn="true"
+          :deleteBtn="true"
         />
         <template v-slot:loading>
           <div class="row justify-center q-my-md">
             <q-spinner-dots color="primary" size="40px" />
           </div>
         </template>
+        <div v-if="isDisableScroll" class="text-grey-7 caption text-center">
+          已经到底啦！
+        </div>
       </q-infinite-scroll>
     </div>
     <div class="column col-2 q-gutter-md">
@@ -70,6 +77,10 @@ export default {
     };
   },
   methods: {
+    onDeleteComment(i) {
+      // console.log("delete No:", i);
+      this.commentList.splice(i, 1);
+    },
     getUserComment() {},
     onLoad(index, done) {
       this.currentPage = index;
@@ -86,6 +97,13 @@ export default {
           }
           if (this.currentPage == this.totalPage) {
             this.isDisableScroll = true;
+            this.$q.notify({
+              message: "已经全部加载了哦",
+              caption: "快去评论更多课程吧",
+              color: "info",
+              icon: "tag_faces",
+              timeout: 2000,
+            });
           }
           done();
         })

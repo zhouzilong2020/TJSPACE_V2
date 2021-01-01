@@ -6,8 +6,8 @@
       </q-item-section>
     </q-item>
     <q-card-section class="text-center">
-      <q-avatar size="80px">
-        <img :src="userInfo.avatar" />
+      <q-avatar size="65px">
+        <img :src="userInfo.avatar ? userInfo.avatar : ''" />
       </q-avatar>
     </q-card-section>
     <q-card-section horizontal>
@@ -18,7 +18,9 @@
           </q-item-section>
           <q-item-section>
             <q-item-label overline>昵称</q-item-label>
-            <q-item-label> {{ userInfo.nickname }}</q-item-label>
+            <q-item-label>
+              {{ userInfo.nickname ? userInfo.nickname : "暂无" }}</q-item-label
+            >
           </q-item-section>
         </q-item>
         <q-item>
@@ -27,7 +29,9 @@
           </q-item-section>
           <q-item-section>
             <q-item-label overline>性别</q-item-label>
-            <q-item-label>{{ userInfo.gender }}</q-item-label>
+            <q-item-label>{{
+              userInfo.gender ? userInfo.gender : "暂无"
+            }}</q-item-label>
           </q-item-section>
         </q-item>
         <q-item>
@@ -36,7 +40,9 @@
           </q-item-section>
           <q-item-section>
             <q-item-label overline>年级</q-item-label>
-            <q-item-label> {{ userInfo.grade }}</q-item-label>
+            <q-item-label>
+              {{ userInfo.grade ? userInfo.grade : "暂无" }}</q-item-label
+            >
           </q-item-section>
         </q-item>
         <q-item>
@@ -58,7 +64,9 @@
           </q-item-section>
           <q-item-section>
             <q-item-label overline>学历</q-item-label>
-            <q-item-label> {{ userInfo.degree }}</q-item-label>
+            <q-item-label>
+              {{ userInfo.degree ? userInfo.degree : "暂无" }}</q-item-label
+            >
           </q-item-section>
         </q-item>
       </q-list>
@@ -83,9 +91,7 @@ export default {
   data() {
     return {};
   },
-  created() {
-    
-  },
+  created() {},
   computed: { ...mapState("userInfo", ["userInfo"]) },
 };
 </script>
