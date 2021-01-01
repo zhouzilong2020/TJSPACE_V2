@@ -4,17 +4,21 @@
     <q-item :class="topColor">
       <div class="user-infro col-auto row inline justify-evenly">
         <!-- <q-item-section class="avatar" avatar>
-                    <q-avatar>
-                        <img :src="commentInfo.userInfro.photoPath">
-                    </q-avatar>
-                </q-item-section> -->
+          <q-avatar>
+            <img :src="commentInfo.userInfro.photoPath" />
+          </q-avatar>
+        </q-item-section> -->
         <q-item-section class="user-infro-detail">
           <q-item-label class="nickname text-center text-h6">
             {{ commentInfo.userInfo.nickname }}
           </q-item-label>
 
           <q-item-label class="grade text-center" caption>
-            {{ commentInfo.userInfo.grade + "年级" }}
+            {{
+              commentInfo.userInfo.grade
+                ? commentInfo.userInfo.grade + "年级"
+                : "某一个年级"
+            }}
           </q-item-label>
           <q-item-label class="major text-center" caption>
             {{ commentInfo.userInfo.major }}
@@ -220,13 +224,13 @@
         <q-card-section>
           <div class="text-h6 text-center">评分情况</div>
           <p class="tetx-body2 text-justify">
-            {{ commentInfo.commentDetail.grading ? 1 : 2 }}
+            {{ commentInfo.commentDetail.grading }}
           </p>
         </q-card-section>
         <q-card-section>
           <div class="text-h6 text-center">课程作业</div>
           <p class="tetx-body2 text-justify">
-            {{ commentInfo.commentDetail.workload ? 1 : 2 }}
+            {{ commentInfo.commentDetail.workload }}
           </p>
         </q-card-section>
       </div>
@@ -411,9 +415,9 @@ export default {
         workload: this.apiData.workloadScore,
       },
       userInfo: {
-        nickname: "this.taker.nickname",
-        grade: "this.taker.grade",
-        major: "this.taker.major",
+        nickname: this.apiData.userInfo.nickname,
+        grade: this.apiData.userInfo.grade,
+        major: this.apiData.userInfo.major,
       },
       courseDetail: {
         // year:"2020-2021",
