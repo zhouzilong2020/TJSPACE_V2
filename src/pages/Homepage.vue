@@ -1,11 +1,20 @@
 <template>
-  <div class="row q-gutter-md q-pa-md flex-center no-wrap items-stretch">
+  <div class="row q-gutter-md q-py-sm flex-center no-wrap items-stretch">
     <div class="detial col-2 q-gutter-md">
       <UserInfo />
       <CourseInfo />
     </div>
     <div class="column q-gutter-md" style="max-width: 550pt">
-      <Header />
+      <Header
+        :content="{
+          title: '请开始您的旅程并留下您的足迹',
+          content: commentList.length
+            ? '今天还想评论点什么吗？'
+            : '您还没有对任何课程发表您的评价。',
+          subcontent:
+            '请点击下方的搜索课程按钮进入搜索页面选择您想评价的课程，并撰写下您的评价。',
+        }"
+      />
       <!-- 个人历史评价做无限滚动 -->
       <q-infinite-scroll
         :disable="isDisableScroll"

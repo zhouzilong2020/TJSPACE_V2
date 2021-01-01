@@ -292,7 +292,7 @@
             @click="confirm()"
             size="10px"
             color="grey-9"
-            style="position: absolute; right:-25px"
+            style="position: absolute; right: -25px"
             flat
             round
             :loading="btnLoading[3]"

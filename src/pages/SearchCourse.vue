@@ -29,8 +29,12 @@
           />
         </template>
         <template v-else>
-          <div class="q-mt-lg text-h5">
-            暂未搜索到相关信息，请尝试其他关键词！
+          <div class="q-mt-lg text-h5 text-grey-8">
+            {{
+              this.$route.name === "SearchCourseNoKeyword"
+                ? "快来快来搜一搜！"
+                : "暂未搜索到相关信息，请尝试其他关键词！"
+            }}
           </div>
         </template>
       </div>
@@ -68,7 +72,6 @@ export default {
       this.keywords = this.$route.params.keyword;
       this.currentPage = 1;
       this.search();
-      console.log(this.totalPage);
     },
     currentPage() {
       searchCourse({
@@ -92,17 +95,36 @@ export default {
   methods: {
     handleSearch() {
       // 避免冗余跳转
-      if (this.searchKeyword != this.$route.params.keyword) {
-        console.log(this.keywords, this.$route.params.keyword);
+      if (
+        this.searchKeyword != "" &&
+        this.searchKeyword != this.$route.params.keyword
+      ) {
+        // console.log(this.keywords, this.$route.params.keyword);
         this.$router.push({
           name: "SearchCourse",
           params: {
             keyword: this.searchKeyword,
           },
         });
+      } else {
+        if (this.searchKeyword == "") {
+          this.$q.notify({
+            position: "top",
+            icon: "warning",
+            message: "请输入关键字!",
+            clearTimeout: 2000,
+          });
+        } else {
+          this.$q.notify({
+            position: "top",
+            icon: "warning",
+            message: "你已经查询过这个关键词啦!",
+            clearTimeout: 2000,
+          });
+        }
       }
     },
-    async search() {
+    search() {
       searchCourse({
         currentPage: this.currentPage,
         keywords: this.searchKeyword,
