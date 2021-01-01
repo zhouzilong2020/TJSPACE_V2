@@ -399,12 +399,13 @@ export default {
             type: "positive",
             message: `评论提交成功！`,
             position: "center",
+            timeout: 2500,
           });
           this.$router.push({
             name: "courseInfo",
             params: {
               courseId: this.$route.params.courseId,
-              currentPage: 0,
+              currentPage: 1,
             },
           });
         })

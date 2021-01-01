@@ -25,7 +25,7 @@ export default {
         name: "courseInfo",
         params: {
           courseId: this.$route.params.courseId,
-          currentPage: 0,
+          currentPage: 1,
         },
       });
     }
