@@ -31,7 +31,7 @@
                 style="margin-bottom: 6px"
               ></q-avatar>
               <q-item-label class="h6 text-center">{{
-                course.courseName
+                course.title
               }}</q-item-label>
               <q-item-label caption class="text-center">{{
                 course.teacherName
@@ -50,8 +50,13 @@
   </q-card>
 </template>
 
+
+
 <script>
 //import { mapState } from "vuex";
+//import axios from "axios";
+import { getCourse } from "../../services/infoModifyService";
+import { collectCourse } from "../../services/courseService";
 export default {
   data() {
     return {
@@ -61,11 +66,15 @@ export default {
       //Semester: "大二下",
       //Credit: "4.0",
       //Teacher: "袁时金",
+      currentPage: 1,
+      limit: 12,
       coursePath: require("../../assets/user-info-icon/chakanyuanwenlianjie.svg"),
-      collectedCourse: [
-        { courseName: "数据库原理与应用", teacherName: "袁时金" },
-        { courseName: "操作系统", teacherName: "张惠娟" },
-      ],
+      // collectedCourse: [
+      //   { courseName: "数据库原理与应用", teacherName: "袁时金" },
+      //   { courseName: "操作系统", teacherName: "张惠娟" },
+      // ],
+      collectedCourse: [],
+      isRouterAlive: true
     };
   },
   computed: {
@@ -78,17 +87,58 @@ export default {
     click() {
       alert("ok!");
     },
-    cancelCollect(courseId, teacherId) {
-      this.$store.dispatch("userInfo/cancelCollect", {
-        token: this.token,
-        courseId,
-        teacherId,
-        userId: this.userInfo.userid,
-      });
+    cancelCollect(courseId) {
+      collectCourse({
+        courseId: courseId
+      })
+        .then((resp) => {
+          if (resp.success) {
+            console.log(resp);
+            console.log("success!!!!!!!!!!!!!!!!!!");
+            for (var i = 1; i < this.collectedCourse.length; i++) {
+              console.log("in for")
+              console.log(this.collectedCourse[i].courseId)
+              if (this.collectedCourse[i].courseId == courseId){
+                this.collectedCourse.splice(i, 1);
+              }
+            }
+            console.log(this.collectedCourse);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
   },
 
-  created() {},
+  reload(){
+    this.isRouterAlive=false
+    this.$nextTick(function(){
+      this.isRouterAlive=true
+    })
+  },
+
+  // initCourseFav(){
+    
+  // },
+
+  created() {
+    getCourse({
+        currentPage: this.currentPage,
+        limit: this.limit,
+      }).then((resp) => {
+        console.log(resp);
+        console.log("aaaaaaaaaaaaaaaaaaaaaaa");
+        if (resp.success) {
+          this.collectedCourse=resp.data.courseList;
+          console.log(this.collectedCourse)
+          // this.courseList = resp.data.courseList;
+          // this.totalPage = resp.data.totalPage;
+          // this.currentPage = resp.data.currentPage;
+        }
+      });
+
+  },
 };
 </script>
 
