@@ -71,56 +71,21 @@
     <div class="row justify-center">
       <div class="col-8">
         <div v-for="(post, index) in postInfo" :key=index style="padding:5px">
-          <q-card class="col-8" style="padding:5px">
-            <q-item clickable>
-              <q-item-section avatar>
-                <q-avatar style="height:2em; width:2em">
-                  <img :src="post.avatar">
-                </q-avatar>
-                <q-item-label style="margin:auto; padding-top:5px">{{post.nickname}}</q-item-label>
-              </q-item-section>
-
-              <q-item-section>
-                <q-item-label style="font-size:1.125rem">{{post.title}}</q-item-label>
-                <q-item-label caption style="font-size:1rem">
-                  {{post.content}}
-                </q-item-label>
-                <br />
-                <q-item-label caption v-if="post.replyCount">
-                  最新评论于{{post.latestTime}}
-                  <br />
-                  发布于{{post.createTime}}
-                  <br />
-                  {{post.replyCount}}评论
-                </q-item-label>
-                <q-item-label caption v-else>
-                  发布于{{post.createTime}}
-                  <br />
-                  还没有人评论哦
-                </q-item-label>
-              </q-item-section>
-
-              <!-- 交互 -->
-              <q-item-section side top>
-                  <q-item-label>
-                    <q-btn
-                      flat
-                      icon="thumb_up"
-                      color="red"
-                      @click="updateAttitude(1,post.postId,post.positive,post.negative)"
-                    />
-                    {{Number(post.positiveCount) + Number(thumbUpNum)}}
-                    <q-btn
-                      flat
-                      icon="thumb_down"
-                      color="black"
-                      @click="updateAttitude(0,post.postId,post.positive,post.negative)"
-                    />
-                    {{Number(post.negativeCount) + Number(thumbDownNum)}}
-                  </q-item-label>
-                </q-item-section>
-            </q-item>
-          </q-card>
+          <Post
+            :postSrc="post.avatar"
+            :postNickname="post.nickname"
+            :postTitle="post.title"
+            :postContent="post.content"
+            :postLatestTime="post.latestTime"
+            :postCreateTime="post.createTime"
+            :postReplyCount="post.replyCount"
+            :postPositiveCount="post.positiveCount"
+            :postNegativeCount="post.negativeCount"
+            :postPositive="post.positive"
+            :postNegative="post.negative"
+            :postId="post.postId"
+          >
+          </Post>
         </div>
         <div class="q-pa-lg flex flex-center">
           <q-pagination
@@ -141,16 +106,17 @@
 <script>
 //import axios from "axios";
 import { mapState } from "vuex";
-
+import Post from "../components/BBSHome/Post.vue";
 import {
   getCurPage,
-  patchAttitude,
   postPost
 } from "../api/bbsApi";
 
 
 export default {
-  components: {},
+  components: {
+    Post
+  },
   data() {
     return {
       bgPath: require("../assets/bbsBackground.png"),
@@ -166,10 +132,6 @@ export default {
       sort: "",
       isBottom: false,
       userId: "",
-      //isThumbUp: false,
-      //isThumbDown: false,
-      thumbUpNum: 0, //更新用户的点赞-1/0/1
-      thumbDownNum : 0, //更新用户的点踩-1/0/1
     };
   },
   computed: {
@@ -212,24 +174,6 @@ export default {
       }
     },
 
-    updateAttitude(type,postId,posAttitude,negAttitude) {
-      this.thumbUpNum = 0;
-      this.thumbDownNum = 0;
-      if(posAttitude){ //当前态度为positive
-        this.thumbUpNum -= 1;
-      }
-      if(negAttitude){ //当前态度negative
-        this.thumbDownNum -= 1;
-      }
-      var that=this;
-      patchAttitude(postId, type).then((response) => {
-        if(response.success){
-          that.thumbUpNum += response.data.positive;
-          that.thumbDownNum += response.data.negative;
-        }
-      });
-    },
-
     makeNewPost: function() {
       this.isMakingPost = true;
     },
@@ -249,156 +193,10 @@ export default {
           });
         }
         this.showPage();
-        this.postContent = "";
-        this.postHeader = "";
+        //this.editorContent = "";
       });
     },
 
-    /*
-    jumpWhileNotRegister: function() {
-      if (this.userId == "") {
-        console.log("adaaasda");
-        //this.$router.push('index');
-      }
-    },
-    
-    jumpToPost: function(index) {
-      this.$router.push({
-        name: "Forum",
-        params: { postId: this.postInfo[index].postId },
-      });
-    },
-    thumbUp: async function(index) {
-      var evaluatable = true;
-      await axios
-        .get(URL + `Post/CanEvaluate`, {
-          headers: {
-            Authorization: this.token,
-          },
-          params: {
-            postId: this.postInfo[index].postId,
-            userId: this.userId,
-          },
-        })
-        .then((resp) => {
-          console.log("return:" + resp.data.canEvaluate);
-          if (!resp.data.canEvaluate) {
-            evaluatable = false;
-            return;
-          }
-        });
-      if (!evaluatable) {
-        return;
-      }
-      axios.post(
-        URL + `Post/evaluate`,
-        {},
-        {
-          headers: {
-            Authorization: this.token,
-          },
-          params: {
-            postId: this.postInfo[index].postId,
-            userId: this.userId,
-            type: 1,
-          },
-        }
-      );
-      this.postInfo[index].agreeAccount++;
-      this.postInfo[index].canThumb = 0;
-    },
-    thumbDown: async function(index) {
-      var evaluatable = true;
-      await axios
-        .get(URL + `Post/CanEvaluate`, {
-          headers: {
-            Authorization: this.token,
-          },
-          params: {
-            postId: this.postInfo[index].postId,
-            userId: this.userId,
-          },
-        })
-        .then((resp) => {
-          if (!resp.data.canEvaluate) {
-            evaluatable = false;
-            return;
-          }
-        });
-      if (!evaluatable) {
-        return;
-      }
-      var resp = axios.post(
-        URL + `Post/evaluate`,
-        {},
-        {
-          headers: {
-            Authorization: this.token,
-          },
-          params: {
-            postId: this.postInfo[index].postId,
-            userId: this.userId,
-            type: 0,
-          },
-        }
-      );
-      console.log(resp);
-      this.postInfo[index].agreeAccount--;
-      this.postInfo[index].canStep = 0;
-    },
-    cleanPage: function() {
-      this.postInfo.length = 0;
-      this.currPage = 0;
-      this.isBottom = false;
-    },
-    getPosts: async function(type, page) {
-      console.log(page);
-      await axios
-        .get(URL + `Show/getPosts`, {
-          headers: {
-            Authorization: this.token,
-          },
-          params: {
-            orderType: type,
-            startPosition: page * 12,
-            userId: this.userId,
-          },
-        })
-        .then((resp) => {
-          console.log(resp.data.posts);
-          var posts = resp.data.posts;
-          if (posts.length == 0) {
-            this.isBottom = true;
-          }
-          for (var i = 0; i < posts.length; i++) {
-            var tempPost = {
-              posterName: posts[i].nickname,
-              postContent: posts[i].title,
-              agreeAccount: posts[i].usefulNum - posts[i].uselessNum,
-              latestCommentTime: posts[i].latestReply.replace("T", "/"),
-              commentAccount: posts[i].numOfReply,
-              postId: posts[i].postId,
-              canStep: posts[i].canStep,
-              canThumb: posts[i].canThumb,
-            };
-            this.postInfo.push(tempPost);
-            //如果到底了
-            if (posts.length < 12) {
-              this.isBottom = true;
-            }
-          }
-        });
-    }, //end get post
-    onLoad(index, done) {
-      if (this.isBottom) {
-        return;
-      }
-      setTimeout(() => {
-        this.getPosts(this.orderType, this.currPage);
-        this.currPage++;
-        done();
-      }, 1000);
-    },*/
   },
 
   mounted() {
