@@ -95,7 +95,7 @@ export default {
           if (resp.success) {
             console.log(resp);
             console.log("success!!!!!!!!!!!!!!!!!!");
-            for (var i = 1; i < this.collectedCourse.length; i++) {
+            for (var i = 0; i < this.collectedCourse.length; i++) {
               console.log("in for")
               console.log(this.collectedCourse[i].courseId)
               if (this.collectedCourse[i].courseId == courseId){

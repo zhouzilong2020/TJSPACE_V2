@@ -7,7 +7,7 @@ import {
     Loading,
     Notify
 } from 'quasar'
-
+import request from "@/utils/request";
 
 var isLoading = 0
 var timer
@@ -97,6 +97,30 @@ function post(api, params) {
         })
     })
 }
+
+export async function myBBS(payload) {
+    console.log('in get delete BBS', payload)
+    return request({
+        url: `bbsservice/posts/${payload.postId}`,
+        method: 'delete',
+        params: {
+            
+        }
+    })
+}
+
+export async function showBBS(payload) {
+    console.log('in searching BBS', payload);
+    return request({
+        url: `bbsservice/personal/posts/${payload.currentPage}`,
+        method: 'get',
+        params: {
+            attributes:payload.attributes,
+            limit: payload.limit,
+        }
+    })
+  }
+
 /**
  * 取消所有请求
  */
