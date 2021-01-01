@@ -367,7 +367,7 @@ export default {
         content: this.comment[0],
         teaching: this.comment[1],
         grade: this.comment[2],
-        homework: this.comment[3],
+        workload: this.comment[3],
 
         isMidterm: this.selection.includes("midterm") ? 1 : 0,
         isFinal: this.selection.includes("final") ? 1 : 0,
@@ -387,6 +387,11 @@ export default {
         createTime: this.date,
         positiveCount: 0,
         negativeCount: 0,
+        userInfo: {
+          nickname: this.userInfo.nickname,
+          grade: this.userInfo.grade,
+          major: this.userInfo.major,
+        },
       };
     },
   },

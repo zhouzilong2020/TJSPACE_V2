@@ -130,13 +130,11 @@ export default {
     },
   },
   created() {
-    console.log("ASdasdasdas", this.$route.name);
     // 从其他地方进入，有关键词
     if (this.$route.params.keyword != null) {
       this.$nextTick(() => {
         this.searchKeyword = this.$route.params.keyword;
         this.currentPage = 1;
-        this.search();
       });
     }
   },
