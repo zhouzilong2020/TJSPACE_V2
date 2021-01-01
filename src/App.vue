@@ -9,12 +9,14 @@
 </template>
 
 <script>
+
 import layout from "./components/layout/layout";
 import { checkCookie } from "./utils/utils";
 import { mapState } from "vuex";
 export default {
   name: "APP",
   components: {
+
     layout,
   },
   data() {
