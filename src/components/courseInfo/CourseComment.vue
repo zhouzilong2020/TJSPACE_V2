@@ -254,6 +254,7 @@
           round
           :loading="btnLoading[1]"
           icon="thumb_up"
+          :disable="disableBtn"
         ></q-btn>
         <q-btn
           :color="this.commentInfo.attitude.negative ? 'negative' : 'grey'"
@@ -263,6 +264,7 @@
           round
           :loading="btnLoading[0]"
           icon="thumb_down"
+          :disable="disableBtn"
         ></q-btn>
       </span>
     </q-card-section>
@@ -286,6 +288,12 @@ export default {
   },
   props: {
     apiData: null,
+    disableBtn: {
+      type: Boolean,
+      default() {
+        return false;
+      },
+    },
   },
   computed: {
     ...mapState("userInfo", ["userInfo"]),
@@ -348,7 +356,7 @@ export default {
     },
 
     async handleEvaluate(type) {
-      console.log(this.commentInfo);
+      // console.log(this.commentInfo);
       this.btnLoading[type] = true;
 
       if (

@@ -55,7 +55,7 @@
                 v-model="score[0]"
                 size="2.5em"
                 :max="10"
-                color="green-10"
+                color="green-4"
                 icon="star_border"
                 icon-selected="star"
               />
@@ -84,7 +84,7 @@
                   label: $q.lang.editor.formatting,
                   icon: $q.iconSet.editor.formatting,
                   list: 'no-icons',
-                  options: ['p', 'h3', 'h4', 'h5', 'h6', 'code'],
+                  options: ['p', 'h3', 'h4', 'h5', 'h6'],
                 },
               ],
             ]"
@@ -120,7 +120,7 @@
                 v-model="score[1]"
                 size="2.5em"
                 :max="10"
-                color="green-10"
+                color="green-4"
                 icon="star_border"
                 icon-selected="star"
               />
@@ -185,7 +185,7 @@
                 v-model="score[2]"
                 size="2.5em"
                 :max="10"
-                color="green-10"
+                color="green-4"
                 icon="star_border"
                 icon-selected="star"
               />
@@ -250,7 +250,7 @@
                 v-model="score[3]"
                 size="2.5em"
                 :max="10"
-                color="green-10"
+                color="green-4"
                 icon="star_border"
                 icon-selected="star"
               />
@@ -309,16 +309,17 @@
           content[5][1]
         }}</q-item-label>
 
-        <!-- <course-comment
+        <course-comment
           v-if="isFinish"
           :apiData="apiInterface"
+          :disableBtn="true"
           :taker="{
             nickname: userInfo.nickname,
             grade: userInfo.degree,
             major: userInfo.majorid,
           }"
           :needGetEva="false"
-        /> -->
+        />
 
         <q-stepper-navigation class="q-gutter-sm">
           <div class="row flex-center">
@@ -343,6 +344,7 @@
 </template>
 
 <script>
+import CourseComment from "../courseInfo/CourseComment";
 import { makeComment } from "../../services/commentService";
 import { mapState } from "vuex";
 export default {
@@ -381,8 +383,10 @@ export default {
         teachingScore: this.score[1],
         gradingScore: this.score[2],
         workloadScore: this.score[3],
-
         courseId: this.$route.params.courseId,
+        createTime: this.date,
+        positiveCount: 0,
+        negativeCount: 0,
       };
     },
   },
@@ -391,6 +395,11 @@ export default {
       makeComment(this.apiInterface)
         .then((resp) => {
           console.log(resp);
+          this.$q.notify({
+            type: "positive",
+            message: `评论提交成功！`,
+            position: "center",
+          });
           this.$router.push({
             name: "courseInfo",
             params: {
@@ -406,10 +415,12 @@ export default {
   },
   data() {
     return {
+      date: new Date().toLocaleDateString(),
+      limit: 255,
       isLoading: false,
       step: 0,
       score: [5, 5, 5, 5],
-      comment: ["1", "1", "1", "1"],
+      comment: ["", "", "", ""],
       selection: [],
       title: [
         "请选择本门课程的相应情况",
@@ -491,6 +502,10 @@ export default {
       ],
     };
   },
+  components: {
+    CourseComment,
+  },
+  name: "makeComment",
 };
 </script>
 

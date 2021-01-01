@@ -31,7 +31,7 @@
       <div class="course-comment">
         <template v-if="comments.length > 0">
           <course-comment
-            v-for="(comment) in comments"
+            v-for="comment in comments"
             :key="comment.commentId"
             :apiData="comment"
           />
@@ -92,6 +92,10 @@ export default {
     };
   },
   async created() {
+    window.scrollTo({
+      top: 0,
+      type: "auto",
+    });
     getCourseInfo({
       courseId: this.$route.params.courseId,
     })

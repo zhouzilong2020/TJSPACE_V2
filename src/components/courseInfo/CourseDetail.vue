@@ -41,7 +41,7 @@
             <q-icon color="green" name="today" />
           </q-item-section>
 
-          <q-item-section >
+          <q-item-section>
             <q-item-label>开课时间</q-item-label>
             <q-item-label caption>{{ courseInfo.schoolTime }}</q-item-label>
           </q-item-section>
@@ -103,8 +103,6 @@
 <script>
 import CourseStatistic from "./CourseStatistic";
 import CourseAttitudeChart from "./CourseAttituteChart";
-//    这里需要有id才能展示 记得去掉zhushi
-// import { canMakeComment } from "../../services/commentService";
 import { mapState } from "vuex";
 export default {
   name: "CourseDetail",

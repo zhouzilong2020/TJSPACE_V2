@@ -3,7 +3,7 @@
     <div class="justify-between row q-pt-sm">
       <q-item>
         <q-item-section avatar>
-          <q-icon color="black" name="info" />
+          <q-icon color="black"> ID</q-icon>
         </q-item-section>
         <q-item-section>
           <q-item-label>课程编号</q-item-label>
