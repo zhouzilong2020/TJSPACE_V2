@@ -84,7 +84,7 @@ export default {
     return {};
   },
   created() {
-    // console.log("haha", this.userInfo);
+    
   },
   computed: { ...mapState("userInfo", ["userInfo"]) },
 };

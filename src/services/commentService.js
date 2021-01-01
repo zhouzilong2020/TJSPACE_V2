@@ -10,7 +10,6 @@ import request from '../utils/request'
  */
 export async function getComment(payload) {
     console.log("in get comment", payload)
-
     return request({
         url: `evlservice/courses/${payload.courseId}/comments/${payload.currentPage}`,
         method: 'get',
@@ -34,28 +33,6 @@ export async function evaluateComment(payload) {
 }
 
 /**
- * 获取用户对当前课程评价的历史评价
- * @param {Object} payload 传入 userId， commentId 
- */
-export async function getEvaluate(payload) {
-    console.log("in getEvaluate ", payload)
-    var resp = await axios.get(`${URL}Comment/CanEvaluate`, {
-        headers: {
-            Authorization: payload.token,
-        },
-        params: {
-            userId: payload.userId,
-            commentId: payload.commentId,
-        },
-    });
-    console.log("in getEvaluate response", resp);
-    return resp.data;
-
-}
-
-
-
-/**
  * 
  * 发表对课程的评价
  * @param {*} payload  
@@ -71,23 +48,19 @@ export async function makeComment(payload) {
 }
 
 
-
 /**
- * 返回历史评论信息
- * @param {Object}} payload {token, userId}
+ * 查询个人历史评价信息
+ * @param {Object}} payload currentPage
  */
 export async function getHistoryComment(payload) {
     console.log('in get history comment', payload)
-    let resp = await axios.get(`${URL}Show/personalcomment`, {
-        headers: {
-            Authorization: payload.token,
-        },
+    return request({
+        url: `evlservice/personal/comments/${payload.currentPage}`,
+        method: 'get',
         params: {
-            userId: payload.userId
+            limit: payload.limit
         }
     })
-    console.log('after getting history comment ', resp)
-    return resp.data
 }
 
 

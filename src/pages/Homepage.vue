@@ -6,7 +6,24 @@
     </div>
     <div class="column q-gutter-md" style="max-width: 550pt">
       <Header />
-      <CommentHistory v-if="ok" />
+      <!-- 个人历史评价做无限滚动 -->
+      <q-infinite-scroll
+        :disable="isDisableScroll"
+        @load="onLoad"
+        :offset="250"
+      >
+        <CourseComment
+          v-for="comment in commentList"
+          :key="comment.commentId"
+          :apiData="comment"
+          :disableBtn="true"
+        />
+        <template v-slot:loading>
+          <div class="row justify-center q-my-md">
+            <q-spinner-dots color="primary" size="40px" />
+          </div>
+        </template>
+      </q-infinite-scroll>
     </div>
     <div class="column col-2 q-gutter-md">
       <BBSHistory />
@@ -15,10 +32,11 @@
 </template>
 
 <script>
+import { getHistoryComment } from "../services/commentService";
 import UserInfo from "../components/homepage/UserInfo";
 import CourseInfo from "../components/homepage/CourseInfo";
 import BBSHistory from "../components/homepage/BBSHistory";
-import CommentHistory from "../components/homepage/CommentHistory";
+import CourseComment from "../components/courseInfo/CourseComment";
 import Header from "../components/homepage/Header";
 //import { mapState } from "vuex";
 
@@ -27,18 +45,15 @@ export default {
     UserInfo,
     CourseInfo,
     BBSHistory,
-    CommentHistory,
+    CourseComment,
     Header,
   },
 
   data() {
     return {
-      inputSearch: "",
       logoPath: require("../assets/TJU.png"),
       avatarPath: require("../assets/boy-avatar.png"),
       avatarBGPath: require("../assets/material.png"),
-
-      drawer: false,
       active: -1,
       Grade: "大二",
       Major: "软件工程",
@@ -46,69 +61,41 @@ export default {
       Degree: "本科",
       NickName: "lili",
       phonenumber: "13127527753",
-      ok: false,
+
+      commentList: [],
+      currentPage: 1,
+      totalPage: 0,
+      limit: 3,
+      isDisableScroll: false,
     };
   },
-
-  //computed: mapState("userInfo", ["userInfo"]),
-  //created() {
-  //  console.log("in homepage created", this.userInfo);
-  //  switch (this.userInfo.gender) {
-  //  case 0:
-  //  this.Gender = "男";
-  //  break;
-  //  case 1:
-  //  this.Gender = "女";
-  //  break;
-  //}
-  //switch (this.userInfo.majorid) {
-  // case "1":
-  //  this.Major = "软件工程";
-  // break;
-  // case "2":
-  // this.Major = "土木工程";
-  // break;
-  //case "3":
-  // this.Major = "经济与管理";
-  // break;
-  // }
-  // switch (this.userInfo.year) {
-  //  case 1:
-  //   this.Grade = "大一";
-  //   break;
-  // case 2:
-  //   this.Grade = "大二";
-  //   break;
-  // case 3:
-  //   this.Grade = "大三";
-  //   break;
-  // case 4:
-  //   this.Grade = "大四";
-  //   break;
-  // }
-  //switch (this.userInfo.degree) {
-  // case 1:
-  //  this.Degree = "本科生";
-  //  break;
-  // case 2:
-  //   this.Degree = "研究生";
-  //   break;
-  // case 3:
-  //   this.Degreer = "博士生";
-  //   break;
-  //}
-
-  //这一块加不加好像都没用
-  // this.$store.commit('userInfo/setUserInfo', {
-  //     userid: this.userInfo.userid,
-  //     nickname: this.userInfo.nickname,
-  //     phonenumber:this.userInfo.phonenumber,
-  //     gender:this.userInfo.gender,
-  //     year:this.userInfo.year,
-  //     degree:this.userInfo.degree
-  // })
-
-  //},
+  methods: {
+    getUserComment() {},
+    onLoad(index, done) {
+      this.currentPage = index;
+      getHistoryComment({
+        limit: this.limit,
+        currentPage: this.currentPage,
+      })
+        .then((resp) => {
+          console.log(resp);
+          if (resp.success) {
+            Array.prototype.push.apply(this.commentList, resp.data.commentList);
+            this.currentPage = resp.data.currentPage;
+            this.totalPage = resp.data.totalPage;
+          }
+          if (this.currentPage == this.totalPage) {
+            this.isDisableScroll = true;
+          }
+          done();
+        })
+        .catch((e) => {
+          console.log(e);
+          done();
+        });
+    },
+  },
+  mounted() {},
 };
 </script>
 

@@ -18,7 +18,7 @@
           :to="{
             name: 'SearchCourse',
             params: {
-              keyword: this.text,
+              keyword: '软件工程',
             },
           }"
         ></q-btn>
@@ -30,9 +30,7 @@
 <script>
 export default {
   data() {
-    return {
-      text:"",
-    };
+    return {};
   },
 };
 </script>
