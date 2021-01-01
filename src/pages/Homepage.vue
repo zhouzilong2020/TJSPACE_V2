@@ -15,6 +15,7 @@
             '请点击下方的搜索课程按钮进入搜索页面选择您想评价的课程，并撰写下您的评价。',
         }"
       />
+      <CommentHeatChart />
       <!-- 个人历史评价做无限滚动 -->
       <q-infinite-scroll
         :disable="isDisableScroll"
@@ -48,6 +49,7 @@
 </template>
 
 <script>
+import CommentHeatChart from "../components/homepage/CommentHeatChart";
 import { getHistoryComment } from "../services/commentService";
 import UserInfo from "../components/homepage/UserInfo";
 import CourseInfo from "../components/homepage/CourseInfo";
@@ -58,6 +60,7 @@ import Header from "../components/homepage/Header";
 
 export default {
   components: {
+    CommentHeatChart,
     UserInfo,
     CourseInfo,
     BBSHistory,
