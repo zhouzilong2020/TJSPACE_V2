@@ -42,6 +42,7 @@
       v-model="currentPage"
       :max="totalPage"
       :direction-links="true"
+      :max-pages="8"
     >
     </q-pagination>
   </div>
