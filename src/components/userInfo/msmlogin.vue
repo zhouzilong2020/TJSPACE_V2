@@ -162,7 +162,7 @@ export default {
         await this.popWarning(resp.message);
       } else {
         this.validatetoken=resp.data.token
-        console.log("in sent login form", this.model);
+        //console.log("in sent login form", this.model);
         this.$store.dispatch("userInfo/MSMloginUser", {
           phone: this.model.phoneNumber,
           remember:this.remember,
