@@ -94,6 +94,14 @@
           color="primary"
           @click="handleRegister()"
         />
+        <q-btn
+          class="queren-btn"
+          label="已有账号？马上登录"
+          flat
+          :to="{
+            name: 'login',
+          }"
+        />
       </div>
     </q-card-section>
     <pop-dialog
@@ -155,13 +163,13 @@ export default {
         return false;
       }
     },
+
     sentIsDisabled() {
       if (this.model.email && !this.timer) {
         return false;
       }
       return true;
     },
-    
     accountEmail() {
       return this.model.email + "@tongji.edu.cn";
     },
@@ -237,11 +245,11 @@ export default {
           });
           //console.log("resp2",resp2)
           if (this.token) {
-              this.$router.push({
+            this.$router.push({
               name: "SelfInfoModify",
             });
           } else {
-            await this.popWarning(resp2.message)
+            await this.popWarning(resp2.message);
           }
         }
         //昵称重复
@@ -260,6 +268,9 @@ export default {
 
 <style scoped>
 .title {
+  font-weight: bold;
+  font-size: 27px;
+  line-height: -2;
   text-align: center;
 }
 

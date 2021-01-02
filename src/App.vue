@@ -9,24 +9,25 @@
 </template>
 
 <script>
-
 import layout from "./components/layout/layout";
 import { checkCookie } from "./utils/utils";
 import { mapState } from "vuex";
 export default {
   name: "APP",
   components: {
-
     layout,
   },
   data() {
     return {};
   },
   computed: mapState("userInfo", ["userInfo"]),
-  methods: {},
+  methods: {
+  
+  },
   mounted() {},
+
   async beforeCreate() {
-    console.log(checkCookie());
+    console.log(!this.userInfo, checkCookie());
     if (!this.userInfo) {
       //如果当前用户信息没有，先检查cookie中是否含有信息
       if (checkCookie()) {
@@ -35,13 +36,15 @@ export default {
           .then(() => {})
           .catch(async () => {
             this.$store.dispatch("userInfo/logoutUser").then(() => {
-              // console.log("ajsdbfkjhsadfjkshadf");
               this.$router.push({
                 name: "index",
               });
             });
           });
-      } else {
+      } else if (
+        !(this.$route.name == "register" || this.$route.name == "login")
+      ) {
+        // 如果cookie没有信息，应当为未登录
         this.$router.push({
           name: "index",
         });
