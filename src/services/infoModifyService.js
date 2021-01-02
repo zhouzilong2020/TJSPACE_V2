@@ -20,4 +20,41 @@ export async function getCourse(payload) {
         }
     })
   }
+/**
+ * 获取所有专业的名称
+ */
+
+export  function getMajors(data){
+  //console.log("getMajors",data)
+  return request({
+    url: 'infoservice/depts/{deptId}/majors?deptId='+data,
+    method: "get",
+  })
+}
+
+/**
+ * 保存个人信息
+ */
+
+export async  function Update(data){
+  //console.log("update",data)
+  return request({
+    url: 'infoservice/personal/info',
+    method: "put",
+    data:data,
+  })
+}
+
+/**
+ * 保存头像
+ */
+
+export async  function UpdateOSS(data){
+  //console.log("update",data.avatar)
+  return request({
+    url: 'infooss/fileoss/avatar',
+    method: "post",
+    data:data.avatar,
+  })
+}
 
