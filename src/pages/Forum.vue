@@ -4,12 +4,7 @@
       <q-card class="q-ml-xs" style="width: 230px" />
     </div>
     <div class="col-auto">
-      <q-card
-        class="row q-mb-xs z-top"
-        style="width: 750px"
-        id="title"
-        v-scroll="follow"
-      >
+      <q-card class="row q-mb-xs z-top" style="width: 750px" id="title" v-scroll="follow">
         <!--帖子标题-->
         <q-banner class="col white">
           <div class="text-h6">{{ title | ellipsis(60) }}</div>
@@ -41,12 +36,13 @@
             :subreplyList="reply.subreplyList"
             :usersInfo="usersInfo"
             @toBottom="toBottom"
+            @publish="publishSubreply"
           >
             <!--1楼点赞/踩按钮-->
             <template v-if="currentPage == 1 && i == 0">
               <q-btn
                 class="q-mx-sm"
-                :style="{ color: isThumbUp ? 'red' : 'gray' }"
+                :color="isThumbUp ? 'red' : 'gray'"
                 :icon="thumbUp"
                 flat
                 round
@@ -56,7 +52,7 @@
               </q-btn>
               <q-btn
                 class="q-mx-sm"
-                :style="{ color: isThumbDown ? 'red' : 'gray' }"
+                :color="isThumbDown ? 'red' : 'gray'"
                 :icon="thumbDown"
                 flat
                 round
@@ -69,19 +65,18 @@
         <q-card class="q-my-lg">
           <q-editor v-model="editorContent" min-height="5rem" />
           <div class="row justify-end">
-            <q-btn
-              class="q-ma-sm"
-              text-color="black"
-              label="发表"
-              @click="publish()"
-            />
+            <q-btn class="q-ma-sm" text-color="black" label="发表" @click="publish()" />
           </div>
         </q-card>
         <!--分页-->
         <div class="row justify-start q-pb-lg">
           <q-pagination
             v-model="currentPage"
-            @click="shiftPage()"
+            @click="
+              shiftPage(() => {
+                toTop('auto');
+              })
+            "
             :max="totalPage"
             :direction-links="true"
           ></q-pagination>
@@ -134,8 +129,8 @@
 
 <script>
 import Reply from "../components/forum/Reply";
-//import { mapState } from "vuex";
 import { RequestCancel } from "../services/forum";
+import { mapState } from "vuex";
 
 import {
   outlinedThumbUp,
@@ -179,12 +174,15 @@ export default {
     thumbDown() {
       return this.isThumbDown ? "thumb_down" : outlinedThumbDown;
     },
+    ...mapState("userInfo", ["userInfo"]),
   },
   watch: {
     $route() {
       this.postId = this.$route.params.postId;
       this.init();
-      this.shiftPage();
+      this.shiftPage(() => {
+        this.toTop("auto");
+      });
     },
   },
   methods: {
@@ -203,19 +201,9 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-
-      this.jump = true;
-      window.scrollTo({
-        top: 0,
-      });
     },
     //切换分页
-    shiftPage() {
-      this.jump = true;
-      window.scrollTo({
-        top: 0,
-      });
-
+    shiftPage(callback) {
       getReplies(this.postId, this.currentPage, {
         limit: 10,
         isOnlyPoster: this.isOnlyPoster,
@@ -227,6 +215,8 @@ export default {
 
         this.currentPage = response.data.currentPage;
         this.totalPage = response.data.totalPage;
+
+        callback();
       });
     },
     //发表回复
@@ -239,16 +229,34 @@ export default {
         });
         this.currentPage =
           this.displays.length == 10 ? this.totalPage + 1 : this.totalPage;
-        this.shiftPage();
+        this.shiftPage(() => {
+          this.toTop("auto", () => {
+            this.toBottom("smooth");
+          });
+        });
         this.editorContent = "";
       });
     },
+    publishSubreply(floor, subreply) {
+      this.displays[floor - 1 - (this.currentPage - 1) * 10].subreplyList.push({
+        userId: this.userInfo.userId,
+        content: subreply.content,
+        createTime: subreply.createTime,
+        subreplyId: subreply.subreplyId,
+      });
+      if (!this.usersInfo[this.userInfo.userid]) {
+        this.usersInfo[this.userInfo.userid] = {
+          nickname: this.userInfo.nickname,
+          avatar: this.userInfo.avatar,
+        };
+      }
+    },
     updateAttitude(type) {
-      this.thumbUpNum -= this.isThumbUp;
+      let pre = this.isThumbUp;
       patchAttitude(this.postId, type).then((response) => {
         this.isThumbUp = response.data.positive;
         this.isThumbDown = response.data.negative;
-        this.thumbUpNum += this.isThumbUp;
+        this.thumbUpNum += this.isThumbUp - pre;
       });
     },
     //切换只看楼主或取消只看楼主
@@ -260,21 +268,41 @@ export default {
         this.onlyPosterText = "只看楼主";
       }
       this.currentPage = 1;
-      this.shiftPage();
+      this.shiftPage(() => {
+        this.toTop("auto");
+      });
     },
     //页面滚动至底部
-    toBottom() {
+    toBottom(behavior) {
+      this.jump = true;
       window.scrollTo({
         top: document.documentElement.offsetHeight,
-        behavior: "smooth",
+        behavior: behavior,
       });
     },
     //页面滚动至顶部
-    toTop() {
+    toTop(behavior, callback) {
+      this.jump = true;
       window.scrollTo({
         top: 0,
-        behavior: "smooth",
+        behavior: behavior,
       });
+
+      if (!callback) return;
+
+      if (window.scrollY === 0) {
+        return callback();
+      }
+
+      let running = () => {
+        let top = this.scrollY;
+        if (top === 0) {
+          this.removeEventListener("scroll", running);
+          return callback();
+        }
+      };
+
+      window.addEventListener("scroll", running, false);
     },
     //帖子标题和推荐栏随页面滚动
     follow(position) {
@@ -314,12 +342,18 @@ export default {
       this.jump = false;
     },
   },
-  mounted() {
+  created() {
     this.postId = this.$route.params.postId;
+    if (!this.postId) {
+      this.$router.push({
+        name: "BBSHomepage",
+      });
+    }
     this.init();
-    this.shiftPage();
+    this.shiftPage(() => {
+      this.toTop("auto");
+    });
 
-    console.log(this.usersInfo["4"]);
     //加载推荐栏数据
     getPosts(1, {
       limit: 10,
@@ -355,10 +389,6 @@ export default {
   destroyed() {
     //切换页面时取消请求
     RequestCancel();
-    if (this.timer !== void 0) {
-      clearTimeout(this.timer);
-      this.$q.loading.hide();
-    }
   },
 };
 </script>
