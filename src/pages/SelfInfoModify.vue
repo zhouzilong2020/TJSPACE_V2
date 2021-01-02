@@ -332,13 +332,13 @@ export default {
             this.grade = 1;
             break;
           case "三年级":
-            this.degree = 3;
+            this.grade = 2;
             break;
           case "四年级":
-            this.degree = 4;
+           this.grade = 3;
             break;
           case "五年级":
-            this.degree = 5;
+            this.grade = 4;
             break;
         }
         var resp = await Update({
