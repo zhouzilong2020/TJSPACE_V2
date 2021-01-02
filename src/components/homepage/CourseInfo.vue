@@ -11,10 +11,12 @@
     <q-chip square size="md" color="amber" text-color="white" icon="bookmark">
       Curriculum
     </q-chip>
+    <!-- 遍历渲染 -->
     <q-list padding v-for="(course, index) in collectedCourse" :key="index">
       <q-item class="col no-padding" style="min-height: 100px">
-        <q-item-section class="q-pa-sm row col-8">
+        <q-item-section class="q-px-sm row col-8">
           <q-btn
+            class="full-width"
             align="left"
             flat
             :to="{
@@ -42,11 +44,27 @@
         <q-btn
           flat
           size="12px"
+          class="full-width"
           icon="delete"
-          @click="cancelCollect(course.courseId)"
+          @click="confirmDelete(course.courseId, index)"
         />
       </q-item>
+      <q-separator />
     </q-list>
+    <div
+      v-if="currentPage >= totalPage"
+      class="text-center text-caption text-grey-8"
+    >
+      没有更多了哦
+    </div>
+    <q-btn
+      color="grey-10"
+      flat
+      class="absolute full-width"
+      :disable="currentPage >= totalPage"
+      icon="more_horiz"
+      @click="getMoreCourse"
+    />
   </q-card>
 </template>
 
@@ -60,53 +78,57 @@ import { collectCourse } from "../../services/courseService";
 export default {
   data() {
     return {
-      //Name: "数据库原理与应用",
-      //CourseID: 42024403,
-      //College: "软件学院",
-      //Semester: "大二下",
-      //Credit: "4.0",
-      //Teacher: "袁时金",
       currentPage: 1,
-      limit: 12,
+      totalPage: null,
+      limit: 6,
       coursePath: require("../../assets/user-info-icon/chakanyuanwenlianjie.svg"),
-      // collectedCourse: [
-      //   { courseName: "数据库原理与应用", teacherName: "袁时金" },
-      //   { courseName: "操作系统", teacherName: "张惠娟" },
-      // ],
+
       collectedCourse: [],
       isRouterAlive: true,
     };
   },
-  computed: {
-    //...mapState("userInfo", ["userInfo", "collectedCourse", "token"]),
-    //collectedcourse() {
-    //return this.collectedCourse;
-    //},
-  },
+  computed: {},
   methods: {
-    click() {
-      alert("ok!");
+    getMoreCourse() {
+      this.currentPage += 1;
+      getCourse({
+        currentPage: this.currentPage,
+        limit: this.limit,
+      }).then((resp) => {
+        // console.log(resp);
+        if (resp.success) {
+          this.collectedCourse = this.collectedCourse.concat(
+            resp.data.courseList
+          );
+          this.totalPage = resp.data.totalPage;
+          this.currentPage = resp.data.currentPage;
+        }
+      });
     },
-    cancelCollect(courseId) {
-      collectCourse({
-        courseId: courseId,
-      })
-        .then((resp) => {
-          if (resp.success) {
-            console.log(resp);
-
-            for (var i = 0; i < this.collectedCourse.length; i++) {
-              console.log("in for");
-              console.log(this.collectedCourse[i].courseId);
-              if (this.collectedCourse[i].courseId == courseId) {
-                this.collectedCourse.splice(i, 1);
-              }
-            }
-            console.log(this.collectedCourse);
-          }
+    confirmDelete(courseId, index) {
+      this.$q
+        .dialog({
+          title: "确认取消收藏吗？",
+          message: "取消收藏就不能直接抵达啦",
+          cancel: true,
         })
-        .catch((e) => {
-          console.log(e);
+        .onOk(() => {
+          collectCourse({
+            courseId,
+          })
+            .then((resp) => {
+              if (resp.success) {
+                this.collectedCourse.splice(index, 1);
+                this.$q.notify({
+                  position: "top",
+                  type: "positive",
+                  message: `收藏课程删除成功`,
+                });
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
         });
     },
   },
@@ -118,23 +140,16 @@ export default {
     });
   },
 
-  // initCourseFav(){
-
-  // },
-
   created() {
     getCourse({
       currentPage: this.currentPage,
       limit: this.limit,
     }).then((resp) => {
-      console.log(resp);
-      console.log("aaaaaaaaaaaaaaaaaaaaaaa");
+      // console.log(resp);
       if (resp.success) {
         this.collectedCourse = resp.data.courseList;
-        console.log(this.collectedCourse);
-        // this.courseList = resp.data.courseList;
-        // this.totalPage = resp.data.totalPage;
-        // this.currentPage = resp.data.currentPage;
+        this.totalPage = resp.data.totalPage;
+        this.currentPage = resp.data.currentPage;
       }
     });
   },

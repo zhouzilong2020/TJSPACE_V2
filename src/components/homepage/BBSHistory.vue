@@ -16,7 +16,7 @@
     <q-chip size="md" color="green" text-color="white" icon="assignment">
       BBS
     </q-chip>
-
+    <!-- 循环渲染 -->
     <q-card-section
       style="width: 100%"
       flat
@@ -74,8 +74,24 @@
       </q-btn>
       <q-separator />
     </q-card-section>
+
+    <div
+      v-if="currentPage >= totalPage"
+      class="text-center text-caption text-grey-8"
+    >
+      没有更多了哦
+    </div>
+    <q-btn
+      color="grey-10"
+      flat
+      class="absolute full-width"
+      :disable="currentPage >= totalPage"
+      icon="more_horiz"
+      @click="getMorePost"
+    />
   </q-card>
 </template>
+
 
 <script>
 import { collapse } from "../../utils/utils";
@@ -85,6 +101,7 @@ export default {
     return {
       currentPage: 1,
       totalPage: null,
+
       limit: 6,
       postList: [],
     };
@@ -106,12 +123,32 @@ export default {
             if (resp.success) {
               this.postList.splice(index, 1);
               this.$q.notify({
-                position:"top",
+                position: "top",
                 type: "positive",
                 message: `帖子删除成功`,
               });
             }
           });
+        });
+    },
+
+    getMorePost() {
+      this.currentPage += 1;
+
+      getMyPost({
+        currentPage: this.currentPage,
+        limit: this.limit,
+      })
+        .then((resp) => {
+          if (resp.success) {
+            this.postList = this.postList.concat(resp.data.postList);
+            console.log(this.postList);
+            this.totalPage = resp.data.totalPage;
+            this.currentPage = resp.data.currentPage;
+          }
+        })
+        .catch((e) => {
+          console.log(e);
         });
     },
   },

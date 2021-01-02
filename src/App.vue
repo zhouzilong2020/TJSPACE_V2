@@ -21,9 +21,7 @@ export default {
     return {};
   },
   computed: mapState("userInfo", ["userInfo"]),
-  methods: {
-  
-  },
+  methods: {},
   mounted() {},
 
   async beforeCreate() {

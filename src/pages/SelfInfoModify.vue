@@ -9,7 +9,7 @@
         <q-card-section horizontal class="items-center">
           <q-card-section class="q-gutter-xl">
             <q-avatar size="200px" class="q-gutter-x-xl q-gutter-y-md">
-              <img :src="oriavatar"/>
+              <img :src="oriavatar" />
             </q-avatar>
             <div style="width: 300px">
               <q-file
@@ -177,7 +177,12 @@
 <script>
 import popDialog from "../components/popDialog";
 import { getUserInfo } from "../services/userService";
-import { getDepts, getMajors, Update,UpdateOSS } from "../services/infoModifyService";
+import {
+  getDepts,
+  getMajors,
+  Update,
+  UpdateOSS,
+} from "../services/infoModifyService";
 import { sentMsmAuthCode, validateMsmAuthCode } from "../services/userService";
 export default {
   components: {
@@ -201,7 +206,7 @@ export default {
       year: "",
       degree: "",
       grade: "",
-      oriavatar:null,
+      oriavatar: null,
       deptId: "",
       deptName: "",
       majorName: "",
@@ -297,7 +302,7 @@ export default {
           });
         }
       } else {
-        this.popWarning("还未填写验证码")
+        this.popWarning("还未填写验证码");
       }
     },
     handlePhone() {
@@ -344,30 +349,30 @@ export default {
           nickname: this.nickname,
           phoneNumber: this.phoneNumber,
         });
-        if(this.avatar!=null){
-         var formData=new FormData();
-         formData.append('file',this.avatar)
-        var resp1=await UpdateOSS({
-          avatar:formData
-        })
-         //console.log("更改个人头像", resp1);
-         if(!resp1.success){
-              this.$q.notify({
-            message: resp1.message,
-            position: "center",
-            timeout: "500",
+        if (this.avatar != null) {
+          var formData = new FormData();
+          formData.append("file", this.avatar);
+          var resp1 = await UpdateOSS({
+            avatar: formData,
           });
-           }
-        }
-       // console.log("更改个人信息", resp);
-       
-        if (!resp.success) {
+          //console.log("更改个人头像", resp1);
+          if (!resp1.success) {
             this.$q.notify({
+              message: resp1.message,
+              position: "center",
+              timeout: "500",
+            });
+          }
+        }
+        // console.log("更改个人信息", resp);
+
+        if (!resp.success) {
+          this.$q.notify({
             message: resp.message,
             position: "center",
             timeout: "500",
           });
-        } 
+        }
       } else {
         this.popWarning(
           "正在绑定手机,无法提交，请先等待绑定完成或者取消绑定！"
