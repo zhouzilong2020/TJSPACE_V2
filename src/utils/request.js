@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
-import { Loading,Notify } from 'quasar'
+import { Loading, Notify } from 'quasar'
 import cookie from 'js-cookie'
 
 // 创建axios实例
@@ -17,15 +17,15 @@ var cancelToken = new CancelToken(function executor(c) {
 })
 
 function setLoading() {
-  if(isLoading==0){
+  if (isLoading == 0) {
     Loading.show()
   }
   isLoading++;
 }
 
-function unsetLoading(){
+function unsetLoading() {
   isLoading--;
-  if(isLoading==0){
+  if (isLoading == 0) {
     Loading.hide();
   }
 }
@@ -65,12 +65,12 @@ service.interceptors.response.use(
     if (response.data.code == 20004) {
       cookie.remove('TJSPACE_token')
       // 返回 错误代码-1 清除token信息并跳转到登录页面
-      Notify.create({ color: 'negative', message: response.data.message, icon: 'report_problem' })
+      Notify.create({ position: "center", color: 'negative', message: response.data.message, icon: 'report_problem' })
       return Promise.reject(response.data)   // 返回接口返回的错误信息
     } else if (response.data.code == 20003) {
       cookie.remove('TJSPACE_token')
       // 返回 错误代码-1 清除token信息并跳转到登录页面
-      Notify.create({ color: 'negative', message: "您已长时间未登录，请重新登录", icon: 'report_problem' })
+      Notify.create({ position: "center", color: 'negative', message: "您已长时间未登录，请重新登录", icon: 'report_problem' })
       return Promise.reject(response.data)   // 返回接口返回的错误信息
     }
     // TODO 配置全局统一通知！

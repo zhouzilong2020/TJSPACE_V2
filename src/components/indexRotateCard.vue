@@ -96,7 +96,7 @@ export default {
 </script>
 
 <style scoped>
-.indexRotateCard{
-  min-width:400px;
+.indexRotateCard {
+  min-width: 500px;
 }
 </style>

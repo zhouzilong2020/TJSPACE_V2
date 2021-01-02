@@ -2,7 +2,7 @@
   <div>
     <img :src="bgPath" alt="" />
     <div class="q-mt-lg q-pt-lg justify-center row">
-      <index-rotate-card class="index-card col-7" />
+      <index-rotate-card  class="index-card col-8" />
       <login class="login-card" />
     </div>
   </div>
@@ -50,7 +50,7 @@ img {
 }
 .index-card {
   opacity: 0.9;
-  /* height: 520px; */
+  /* height:; */
   /* margin-left: px; */
 }
 .login-card {

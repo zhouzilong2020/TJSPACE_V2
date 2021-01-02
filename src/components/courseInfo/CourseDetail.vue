@@ -1,6 +1,6 @@
 <template>
   <q-card elevated class="course-detail row">
-    <img :src="path" class="course-detail-img" />
+    <img style="width=10px;" :src="path" class="course-detail-img" />
 
     <q-card-section horizontal>
       <q-list>
