@@ -48,10 +48,6 @@ img {
   padding: 0;
   z-index: -1;
 }
-
-.container {
-
-}
 .index-card {
   opacity: 0.9;
   /* height: 520px; */

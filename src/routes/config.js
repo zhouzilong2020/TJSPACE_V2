@@ -4,7 +4,8 @@ export default {
             path: "/courseInfo/:courseId/:currentPage",
             name: 'courseInfo',
             component: () => import("@/pages/CourseInfo"),
-        }, {
+        },
+        {
             path: "/login",
             name: "login",
             component: () => import("@/pages/Login"),

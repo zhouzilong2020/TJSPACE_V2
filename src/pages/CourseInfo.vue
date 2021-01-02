@@ -91,7 +91,7 @@ export default {
       comments: [],
     };
   },
-  async created() {
+  async mounted() {
     window.scrollTo({
       top: 0,
       type: "auto",

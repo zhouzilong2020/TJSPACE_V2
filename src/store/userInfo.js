@@ -1,4 +1,4 @@
-import { loginUser,  registerUser, getUserInfo } from "../services/userService"
+import { loginUser, registerUser, getUserInfo } from "../services/userService"
 import { getCookie, removeCookie, setCookie } from '../utils/utils'
 
 /**
@@ -107,93 +107,47 @@ export default {
          * @param {*} context 
          * @param {Object} payload payload传入email，password，phoneNumber，remember
          */
-         async loginUser(context, payload) {
+        async loginUser(context, payload) {
             context.commit("setIsLoading", true);
             let token = getCookie('TJSPACE_token')
-            let userId = getCookie('TJSPACE_userId')
-            if (token&&userId) {
+            if (token) {
                 // 如果cookie中有保存用户信息，则使用cookie登录
-                await getUserInfo({attributes:["nickname","avatar"]}).then((resp)=>{
+                getUserInfo().then((resp) => {
                     //console.log('after cookie resp', resp)
                     context.commit("setUserInfo", resp.data)
                     context.commit("setToken", token)
-                    setCookie('TJSPACE_userId', resp.data.nickname) 
-                })             
-                }
+                    setCookie('TJSPACE_userId', resp.data.nickname)
+                })
+            }
             else {
-                //console.log("logining",payload.account);
-                await loginUser(payload.account).then(async (resp1)=>{
+                loginUser(payload.account).then(async (resp1) => {
                     //console.log("no cookie",resp1);
-                if (resp1.success) {
-                // 登录成功，用户选择记住账号
-                console.log(payload.remember)
-                if (payload.remember) {
-                    //console.log("remember")
-                    localStorage.setItem('TJSPACE-email', payload.account.email)
-                   }
-                   //如果用户没有选择记住用户账号
-                   if (!payload.remember) {
-                   localStorage.removeItem('TJSPACE-email')
+                    if (resp1.success) {
+                        // 登录成功，用户选择记住账号
+                        console.log(payload.remember)
+                        if (payload.remember) {
+                            //console.log("remember")
+                            localStorage.setItem('TJSPACE-email', payload.account.email)
+                        }
+                        //如果用户没有选择记住用户账号
+                        if (!payload.remember) {
+                            localStorage.removeItem('TJSPACE-email')
+                        }
+                        // 登录成功，记录其token
+                        context.commit("setToken", resp1.data.token)
+                        //console.log("setToken",resp1.data.token);
+                        // 使用token获取用户个人信息
+
+                        await getUserInfo().then((resp2) => {
+                            //成功获取到了用户信息
+                            context.commit("setUserInfo", resp2.data)
+                        })
                     }
-                    // 登录成功，记录其token
-                    context.commit("setToken", resp1.data.token)
-                    //console.log("setToken",resp1.data.token);
-                    // 使用token获取用户个人信息
-                   
-                    await getUserInfo({attributes:["nickname"]}).then((resp2)=>{
-                     //成功获取到了用户信息
-                    context.commit("setUserInfo", resp2.data)
-                    //console.log("setUserInfo",resp2.data);
-                    setCookie('TJSPACE_userId', resp2.data.nickname)
-                    })             
-                    }
-                })             
-                }
-            context.commit("setIsLoading", false);      
+                })
+            }
+            context.commit("setIsLoading", false);
         },
-        /**
-         * 用手机登录用户
-         * @param {*} context 
-         * @param {Object} payload payload传入phoneNumber
-         */
-        async MSMloginUser(context, payload) {
-            context.commit("setIsLoading", true);
-            let token = getCookie('TJSPACE_token')
-            let userId = getCookie('TJSPACE_userId')
-            if (token&&userId) {
-                // 如果cookie中有保存用户信息，则使用cookie登录
-                await getUserInfo().then((resp)=>{
-                    //console.log('after cookie resp', resp.data)
-                    context.commit("setUserInfo", resp.data)
-                    context.commit("setToken", token)
-                    setCookie('TJSPACE_userId', resp.data.nickname) 
-                })             
-                }
-            else {
-                //console.log("logining",payload.phone);
-                // 登录成功，用户选择记住账号
-                //console.log(payload.remember)
-                if (payload.remember) {
-                    //console.log("remember")
-                    localStorage.setItem('TJSPACE-phone', payload.phone)
-                   }
-                   //如果用户没有选择记住用户账号
-                   if (!payload.remember) {
-                   localStorage.removeItem('TJSPACE-phone')
-                    }
-                    // 登录成功，记录其token
-                    context.commit("setToken", payload.token)
-                    //console.log("setToken",payload.token);
-                    // 使用token获取用户个人信息
-                    await getUserInfo().then((resp2)=>{
-                     //成功获取到了用户信息
-                    context.commit("setUserInfo", resp2.data)
-                    //console.log("setUserInfo",resp2.data);
-                    setCookie('TJSPACE_userId', resp2.data.nickname)
-                    })                          
-                }
-            context.commit("setIsLoading", false);      
-        },
+
         /**
          * 退出登录，将数据仓库中的用户信息置空
          * @param {*} context 
@@ -218,46 +172,26 @@ export default {
             //console.log("reg user resp:", resp)
             // 注册成功
             if (resp.success) {
-                var resp1 = await loginUser({                  
-                        email: payload.email,
-                        password: payload.password
+                var resp1 = await loginUser({
+                    email: payload.email,
+                    password: payload.password
                 });
                 //console.log("login user", resp1);
-                if (resp1.success){
-                     // 登录成功，记录其token
-                     context.commit('setToken', resp1.data.token)
-                     // 使用token获取用户个人信息
-                     await getUserInfo().then((resp2)=>{
-                         //成功获取到了用户信息
+                if (resp1.success) {
+                    // 登录成功，记录其token
+                    context.commit('setToken', resp1.data.token)
+                    // 使用token获取用户个人信息
+                    await getUserInfo().then((resp2) => {
+                        //成功获取到了用户信息
                         context.commit("setUserInfo", resp2.data)
-                        //console.log("setUserInfo",resp2.data);
-                        setCookie('TJSPACE_userId', resp2.data.nickname)
                         context.commit("setIsLoading", false);
-                        //console.log("resp",resp)
-                        return resp;               
-                     })
+                        return resp;
+                    })
                 }
             }
-            else{
+            else {
                 return resp;
             }
         },
-
-        // 不需要记录？ 重复请求就好
-        // async collectCourse(context, payload) {
-        //     console.log('in store collect course', payload)
-        //     collectCourse(payload).then(resp => {
-
-        //         if (resp.success) {
-        //             context.commit('collectCourse', payload.courseInfo)
-        //             return resp.data;
-        //         }
-        //     }).catch(e => {
-        //         console.log(e)
-        //     })
-
-        // },
-
-
     },
 }

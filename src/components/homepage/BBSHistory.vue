@@ -1,5 +1,10 @@
 <template>
-  <q-card flat bordered class="BBSHistory" style="min-width:200px">
+  <q-card
+    flat
+    bordered
+    class="BBSHistory"
+    style="min-width: 240px; max-width: 300px"
+  >
     <q-item>
       <q-item-section avatar>
         <q-icon color="black" name="library_books"></q-icon>
@@ -11,132 +16,128 @@
     <q-chip size="md" color="green" text-color="white" icon="assignment">
       BBS
     </q-chip>
+
     <q-card-section
-      bordered
+      style="width: 100%"
       flat
-      class="bbs"
-      v-for="(i, postId) in bbsHistory"
-      :key="postId"
+      class="no-padding"
+      v-for="(post, i) in postList"
+      :key="i"
     >
-      <q-card-section>
-        <div class="row items-center">
-          <div class="col">
-            <div class="text-h6 title" style="color:primary">
-              <q-btn
-                align="left"
-                padding="none"
-                flat
-                :to="{
-                  name: 'bbsInfo',
-                  params: { title: i.title,},
-                }"
-              >
-                {{ i.courseName }} </q-btn
-              >{{ i.title }}
-            </div>
-            <q-item-label caption>{{ i.createTime }}</q-item-label>
-          </div>
-
-          <div class="col-auto">
-            <q-btn 
-            color="grey-7" 
-            round 
-            flat icon="delete"
-            @click="cancelBBS(i.postId)"
-            > 
-            </q-btn>
-          </div>
+      <div class="col items-center q-px-md q-py-sm q-gutter-sm">
+        <q-btn
+          align="left"
+          padding="none"
+          flat
+          :to="{
+            name: 'Forum',
+            params: { postId: post.postId },
+          }"
+        >
+          {{ collapse(post.title ? post.title : "Post Title", 22) }}
+        </q-btn>
+        <q-item-label class="text-overline text-grey-8">{{
+          post.createTime
+        }}</q-item-label>
+        <!-- 帖子的内容 -->
+        <div style="word-wrap: break-word" class="text-body">
+          {{ collapse(post.content, 120) }}
         </div>
-      </q-card-section>
+        <template class="row inline">
+          <q-item-label caption class="inline">
+            <template>
+              {{ "活跃于  " + post.latestTime }}
+            </template>
+            <!-- position: absolute; right: 5px; bottom: 10px -->
+            <div class="q-pt-sm">
+              {{ post.replyCount.toString().padStart(3, "0")
+              }}<q-icon class="grey-8" name="reply" />
+              {{ post.positiveCount.toString().padStart(3, "0") + " "
+              }}<q-icon class="grey-8" name="thumb_up" />
+              {{ post.negativeCount.toString().padStart(3, "0") + " "
+              }}<q-icon class="grey-8" name="thumb_down" />
+            </div>
+          </q-item-label>
+        </template>
+      </div>
 
-      <q-card-section>
-        {{ i.content }}
-      </q-card-section>
-      <br/>
-      <q-item-section>
-      <q-separator/>
-      </q-item-section>
+      <!-- 按钮 -->
+      <q-btn
+        color="grey-7"
+        round
+        flat
+        class="absolute"
+        style="top: 5px; right: 0"
+        icon="delete"
+        @click="confirmDelete(post.postId, i)"
+      >
+      </q-btn>
+      <q-separator />
     </q-card-section>
   </q-card>
 </template>
 
 <script>
-import { myBBS } from "../../services/forum";
-import { showBBS } from "../../services/forum";
+import { collapse } from "../../utils/utils";
+import { getMyPost, deleteMyPost } from "../../services/forum";
 export default {
   data() {
     return {
       currentPage: 1,
-      limit: 12,
-      attributes:[],
-      bbsHistory: [
-        // {
-        //   title: "数据库课真好",
-        //   time: "2020.12,11",
-        //   content:
-        //     "袁时金老师十分认真负责，上课会监督我们背诵知识点，用学习文科的方式学习理科，非常好。",
-        // },
-        // {
-        //   title: "浑元形意太极掌门人马保国",
-        //   time: "2020.12,11",
-        //   content:
-        //     "希望这两位年轻人耗子尾汁，年轻人要讲武德，武林要以和为贵，不要搞窝里斗。",
-        // },
-      ],
+      totalPage: null,
+      limit: 6,
+      postList: [],
     };
   },
   methods: {
-    click() {
-      alert("ok!");
+    collapse(content, length) {
+      return collapse(content, length);
     },
-    cancelBBS(postId) {
-      myBBS({
-        postId: postId
-      })
-        .then((resp) => {
-          if (resp.success) {
-            console.log(resp);
-            console.log("success!!!!!!!!!!!!!!!!!!");
-            for (var i = 0; i < this.bbsHistory.length; i++) {
-              console.log("in for")
-              console.log(this.bbsHistory[i].postId)
-              if (this.bbsHistory[i].postId == postId){
-                this.bbsHistory.splice(i, 1);
-              }
-            }
-            console.log(this.collectedCourse);
-          }
+    confirmDelete(postId, index) {
+      this.$q
+        .dialog({
+          title: "确认删除吗？",
+          message: "帖子删除后就无法找回了哦！",
+          cancel: true,
         })
-        .catch((e) => {
-          console.log(e);
+        .onOk(() => {
+          deleteMyPost({ postId }).then((resp) => {
+            console.log(resp);
+            if (resp.success) {
+              this.postList.splice(index, 1);
+              this.$q.notify({
+                position:"top",
+                type: "positive",
+                message: `帖子删除成功`,
+              });
+            }
+          });
         });
     },
   },
 
-
-  created() {
-    showBBS({
-        currentPage: this.currentPage,
-        limit: this.limit,
-      }).then((resp) => {
-        console.log(resp);
-        console.log("bbbbbbbbbbbbbb");
+  mounted() {
+    getMyPost({
+      currentPage: this.currentPage,
+      limit: this.limit,
+    })
+      .then((resp) => {
         if (resp.success) {
-          this.bbsHistory=resp.data.postList;
-          console.log(resp.data)
-          // this.courseList = resp.data.courseList;
-          // this.totalPage = resp.data.totalPage;
-          // this.currentPage = resp.data.currentPage;
+          console.log(resp);
+          this.postList = resp.data.postList;
+          this.totalPage = resp.data.totalPage;
+          this.currentPage = resp.data.currentPage;
         }
+      })
+      .catch((e) => {
+        console.log(e);
       });
-
   },
-
 };
 </script>
 
 <style>
-.title{
-    font-size:20px;
+.title {
+  font-size: 20px;
 }
 </style>

@@ -74,7 +74,7 @@ export default {
       //   { courseName: "操作系统", teacherName: "张惠娟" },
       // ],
       collectedCourse: [],
-      isRouterAlive: true
+      isRouterAlive: true,
     };
   },
   computed: {
@@ -89,16 +89,16 @@ export default {
     },
     cancelCollect(courseId) {
       collectCourse({
-        courseId: courseId
+        courseId: courseId,
       })
         .then((resp) => {
           if (resp.success) {
             console.log(resp);
-            console.log("success!!!!!!!!!!!!!!!!!!");
+
             for (var i = 0; i < this.collectedCourse.length; i++) {
-              console.log("in for")
-              console.log(this.collectedCourse[i].courseId)
-              if (this.collectedCourse[i].courseId == courseId){
+              console.log("in for");
+              console.log(this.collectedCourse[i].courseId);
+              if (this.collectedCourse[i].courseId == courseId) {
                 this.collectedCourse.splice(i, 1);
               }
             }
@@ -111,33 +111,32 @@ export default {
     },
   },
 
-  reload(){
-    this.isRouterAlive=false
-    this.$nextTick(function(){
-      this.isRouterAlive=true
-    })
+  reload() {
+    this.isRouterAlive = false;
+    this.$nextTick(function () {
+      this.isRouterAlive = true;
+    });
   },
 
   // initCourseFav(){
-    
+
   // },
 
   created() {
     getCourse({
-        currentPage: this.currentPage,
-        limit: this.limit,
-      }).then((resp) => {
-        console.log(resp);
-        console.log("aaaaaaaaaaaaaaaaaaaaaaa");
-        if (resp.success) {
-          this.collectedCourse=resp.data.courseList;
-          console.log(this.collectedCourse)
-          // this.courseList = resp.data.courseList;
-          // this.totalPage = resp.data.totalPage;
-          // this.currentPage = resp.data.currentPage;
-        }
-      });
-
+      currentPage: this.currentPage,
+      limit: this.limit,
+    }).then((resp) => {
+      console.log(resp);
+      console.log("aaaaaaaaaaaaaaaaaaaaaaa");
+      if (resp.success) {
+        this.collectedCourse = resp.data.courseList;
+        console.log(this.collectedCourse);
+        // this.courseList = resp.data.courseList;
+        // this.totalPage = resp.data.totalPage;
+        // this.currentPage = resp.data.currentPage;
+      }
+    });
   },
 };
 </script>
