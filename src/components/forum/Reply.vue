@@ -186,15 +186,23 @@ export default {
     },
     //发布子回复
     publish() {
-      postSubreply(this.replyId, this.subreplyPrefix + this.subreplyContent).then(() => {
-        this.subreplyPrefix = "";
-        this.subreplyContent = "";
-        this.$q.notify({
-          message: "回复成功",
-          position: "center",
-          timeout: "1000",
-        });
-      });
+      postSubreply(this.replyId, this.subreplyPrefix + this.subreplyContent).then(
+        (response) => {
+          this.$emit("publish", this.floor, {
+            content: this.subreplyPrefix + this.subreplyContent,
+            subreplyId: response.data.subreplyId,
+            createTime: response.data.createTime,
+          });
+
+          this.subreplyPrefix = "";
+          this.subreplyContent = "";
+          this.$q.notify({
+            message: "回复成功",
+            position: "center",
+            timeout: "1000",
+          });
+        }
+      );
     },
   },
 };

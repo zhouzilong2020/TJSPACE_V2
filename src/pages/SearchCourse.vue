@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="body-right row flex-center">
-      <div class="q-gutter-md q-pb-sm">
-        <img :src="topImg" style="height: 140px; width: 500px" />
+      <div class="column items-center q-gutter-md q-pb-sm">
+        <img class="col" :src="topImg" style="height: 140px; width: 500px" />
         <q-input
+          class="col"
           rounded
           bordered
           standout="bg-grey-3"
@@ -16,27 +17,28 @@
             <q-btn flat class="black" icon="search" @click="handleSearch()" />
           </template>
         </q-input>
-      </div>
-      <div>
-        <q-separator style="width: 820px" />
-      </div>
-      <div class="q-pt-sm q-gutter-sm">
-        <template v-if="this.courseList.length > 0">
-          <CourseCard
-            v-for="course in courseList"
-            :apiInterface="course"
-            :key="course.courseId"
-          />
-        </template>
-        <template v-else>
-          <div class="q-mt-lg text-h5 text-grey-8">
-            {{
-              this.$route.name === "SearchCourseNoKeyword"
-                ? "快来快来搜一搜！"
-                : "暂未搜索到相关信息，请尝试其他关键词！"
-            }}
-          </div>
-        </template>
+
+        <div>
+          <q-separator style="width: 820px" />
+        </div>
+        <div class="col q-pt-sm q-gutter-sm">
+          <template v-if="this.courseList.length > 0">
+            <CourseCard
+              v-for="course in courseList"
+              :apiInterface="course"
+              :key="course.courseId"
+            />
+          </template>
+          <template v-else-if="!$q.loading.isActive">
+            <div class="q-mt-lg text-h5 text-grey-8">
+              {{
+                this.$route.name === "SearchCourseNoKeyword"
+                  ? "快来快来搜一搜！"
+                  : "暂未搜索到相关信息，请尝试其他关键词！"
+              }}
+            </div>
+          </template>
+        </div>
       </div>
     </div>
 
@@ -95,10 +97,7 @@ export default {
   methods: {
     handleSearch() {
       // 避免冗余跳转
-      if (
-        this.searchKeyword != "" &&
-        this.searchKeyword != this.$route.params.keyword
-      ) {
+      if (this.searchKeyword != "" && this.searchKeyword != this.$route.params.keyword) {
         // console.log(this.keywords, this.$route.params.keyword);
         this.$router.push({
           name: "SearchCourse",
