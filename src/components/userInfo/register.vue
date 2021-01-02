@@ -105,6 +105,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import popDialog from "../popDialog";
 import {
   sentAuthCode,
@@ -139,6 +140,7 @@ export default {
   },
 
   computed: {
+    ...mapState("userInfo", ["isLoading", "token", "userInfo"]),
     sentAuthCodeText() {
       if (!this.timer) {
         return "发送验证码";
@@ -154,14 +156,15 @@ export default {
       }
     },
 
-    accountEmail() {
-      return this.model.email + "@tongji.edu.cn";
-    },
+    
     sentIsDisabled() {
       if (this.model.email && !this.timer) {
         return false;
       }
       return true;
+    },
+    accountEmail() {
+      return this.model.email + "@tongji.edu.cn";
     },
     regIsDisabled() {
       if (
@@ -225,6 +228,7 @@ export default {
         var resp1 = await validateNickname({
           nickname: this.model.nickname,
         });
+        console.log(resp1)
         if (resp1.success) {
           console.log("in sent reg form", this.model);
           var resp2 = await this.$store.dispatch("userInfo/registerUser", {
@@ -232,19 +236,18 @@ export default {
             password: this.model.password,
             nickname: this.model.nickname,
           });
-          if (resp2.success) {
-            // 成功获取token 表示成功登录
-            // console.log("get user token")
-            this.$router.push({
+          console.log("resp2",resp2)
+          if (this.token) {
+              this.$router.push({
               name: "SelfInfoModify",
             });
           } else {
-            this.popWarning(resp2.message);
+            await this.popWarning(resp2.message)
           }
         }
         //昵称重复
         else {
-          this.popWarning(resp1.message);
+          await this.popWarning(resp1.message);
           if (resp1.message == "昵称重复") {
             this.model.nickname = "";
             document.getElementById("nickname").focus();

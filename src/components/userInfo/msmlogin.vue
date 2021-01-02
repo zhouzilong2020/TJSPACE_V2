@@ -56,7 +56,6 @@
 
 <script>
 import { mapState } from "vuex";
-import {getCookie,setCookie} from "../../utils/utils"
 import popDialog from "../popDialog";
 import {
   sentMsmAuthCode,
@@ -81,9 +80,15 @@ export default {
       warningText: null,
       warning: false,
       remember:false,
+      validatetoken:""
     };
   },
-
+   created() {
+    if (localStorage.getItem("TJSPACE-phone")) {
+      this.model.phoneNumber = localStorage.getItem("TJSPACE-phone");
+      this.remember = true;
+    }
+  },
   computed: {
        ...mapState("userInfo", ["isLoading", "token", "userInfo"]),
     sentAuthCodeText() {
@@ -156,32 +161,25 @@ export default {
       if (!resp.success) {
         await this.popWarning(resp.message);
       } else {
+        this.validatetoken=resp.data.token
         console.log("in sent login form", this.model);
-        var resp1 = await this.$store.dispatch("userInfo/MSMloginUser", {
+        this.$store.dispatch("userInfo/MSMloginUser", {
           phone: this.model.phoneNumber,
           remember:this.remember,
-        });
-        if (resp1.success) {
+          token:this.validatetoken,
+        }).then(()=>{
+          if (this.token) {
           // 成功获取token 表示成功登录
           // console.log("get user token")
           if (this.userInfo) {
-            console.log("跳转了");
-            this.url = getCookie("url");
-            setCookie("url", "");
-            if(this.url!=""&&this.url!="/"&&this.url!="/msmlogin"&&this.url!="/login"&&this.url!="/register")
-              this.$router.push({
-                path: this.url,
-              });
-            else {
               //如果在登陆之后跳转回index或者没有前驱页面就跳转到首页
               this.$router.push({
                 name: "Homepage",
               });
             }
-          }
-        } else {
-          this.popWarning(resp.message);
-        }
+        } 
+
+        })
       }
     },
   },
