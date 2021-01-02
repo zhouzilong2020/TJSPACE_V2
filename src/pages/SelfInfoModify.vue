@@ -150,7 +150,6 @@
             color="primary"
             class="col-6"
             @click="submit()"
-            :to="{ name: 'Homepage' }"
           />
           <q-btn
             label="Reset"
@@ -201,11 +200,13 @@ export default {
       avatar: null,
       nickname: "",
       gender: "",
+      origender: "",
       phoneNumber: "",
       majorId: "",
-      year: "",
       degree: "",
+      oridegree: "",
       grade: "",
+      origrade: "",
       oriavatar: null,
       deptId: "",
       deptName: "",
@@ -311,42 +312,41 @@ export default {
     },
     async submit() {
       if (this.canReg == true) {
-        if (this.gender == "男") this.gender = true;
-        else this.gender = false;
+        if (this.gender == "男") this.origender = true;
+        else this.origender = false;
         switch (this.degree) {
           case "本科生":
-            this.degree = 0;
+            this.oridegree = 0;
             break;
           case "研究生":
-            this.degree = 1;
+            this.oridegree = 1;
             break;
           case "博士生":
-            this.degree = 2;
+            this.oridegree = 2;
             break;
         }
         switch (this.grade) {
           case "一年级":
-            this.grade = 0;
+            this.origrade = 0;
             break;
           case "二年级":
-            this.grade = 1;
+            this.origrade = 1;
             break;
           case "三年级":
-            this.grade = 2;
+            this.origrade = 2;
             break;
           case "四年级":
-           this.grade = 3;
+            this.origrade = 3;
             break;
           case "五年级":
-            this.grade = 4;
+            this.origrade = 4;
             break;
         }
         var resp = await Update({
-          degree: this.degree,
-          gender: this.gender,
-          grade: this.grade,
+          degree: this.oridegree,
+          gender: this.origender,
+          grade: this.origrade,
           majorId: this.majorId,
-          nickname: this.nickname,
           phoneNumber: this.phoneNumber,
         });
         if (this.avatar != null) {
@@ -355,7 +355,7 @@ export default {
           var resp1 = await UpdateOSS({
             avatar: formData,
           });
-          //console.log("更改个人头像", resp1);
+          console.log("更改个人头像", resp1);
           if (!resp1.success) {
             this.$q.notify({
               message: resp1.message,
@@ -364,7 +364,7 @@ export default {
             });
           }
         }
-        // console.log("更改个人信息", resp);
+        console.log("更改个人信息", resp);
 
         if (!resp.success) {
           this.$q.notify({
@@ -372,6 +372,13 @@ export default {
             position: "center",
             timeout: "500",
           });
+        }
+        if ((resp.success &&this.avatar==null)||(resp.success&&resp1.success)) {
+          this.$store.dispatch("userInfo/loginUser").then(()=>{
+            this.$router.push({
+                name: "Homepage",
+              });
+          })
         }
       } else {
         this.popWarning(
