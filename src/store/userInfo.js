@@ -1,4 +1,4 @@
-import { loginUser, MsmloginUser, registerUser, getUserInfo, modifyUserInfo } from "../services/userService"
+import { loginUser,  registerUser, getUserInfo } from "../services/userService"
 import { getCookie, removeCookie, setCookie } from '../utils/utils'
 
 /**
@@ -113,7 +113,7 @@ export default {
             let userId = getCookie('TJSPACE_userId')
             if (token&&userId) {
                 // 如果cookie中有保存用户信息，则使用cookie登录
-                await getUserInfo({attributes:["nickname"]}).then((resp)=>{
+                await getUserInfo({attributes:["nickname","avatar"]}).then((resp)=>{
                     //console.log('after cookie resp', resp)
                     context.commit("setUserInfo", resp.data)
                     context.commit("setToken", token)
