@@ -4,9 +4,7 @@
       <!-- 功能按钮 -->
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="drawer = !drawer" />
-        <q-toolbar-title class="title">
-          TJSPACE · 同济大学社群
-        </q-toolbar-title>
+        <q-toolbar-title class="title"> TJSPACE · 同济大学社群 </q-toolbar-title>
 
         <!-- 登录|注册 -->
         <!-- 三种情况！ -->
@@ -33,12 +31,7 @@
             >
               <template v-slot:append>
                 <q-icon v-if="text === ''" name="search" />
-                <q-icon
-                  v-else
-                  name="clear"
-                  class="cursor-pointer"
-                  @click="text = ''"
-                />
+                <q-icon v-else name="clear" class="cursor-pointer" @click="text = ''" />
               </template>
             </q-input>
 
@@ -65,18 +58,8 @@
               }"
               label="搜索课程"
             />
-            <q-btn
-              class="BBS-btn"
-              flat
-              :to="{ name: 'BBSHomepage' }"
-              label="同济BBS"
-            />
-            <q-btn
-              class="logout-btn"
-              flat
-              @click="handleLogout()"
-              label="退出登录"
-            />
+            <q-btn class="BBS-btn" flat :to="{ name: 'BBSHomepage' }" label="同济BBS" />
+            <q-btn class="logout-btn" flat @click="handleLogout()" label="退出登录" />
           </q-btn-group>
         </template>
 
@@ -118,7 +101,7 @@
         <q-img class="absolute-top" :src="avatarBGPath" style="height: 130px">
           <div class="absolute-bottom bg-transparent drawer-top">
             <q-avatar size="36pt" class="q-mb-sm avatar">
-              <img :src="avatarPath" />
+              <img :src="userInfo.avatar" />
             </q-avatar>
 
             <template v-if="userInfo">
@@ -212,7 +195,6 @@ export default {
       //TODE DEBUG
       drawer: false,
       logoPath: require("../../assets/TJU.png"),
-      avatarPath: require("../../assets/boy-avatar.png"),
       avatarBGPath: require("../../assets/material.png"),
     };
   },
@@ -279,4 +261,3 @@ export default {
   font-size: 16px;
 }
 </style>
-
