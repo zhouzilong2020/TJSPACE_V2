@@ -6,32 +6,21 @@ import axios from "axios";
  */
 
 
-export async function loginUser(userInfo) {
-  console.log("in login api", userInfo)
+export async function loginUser(userInfo){
+  //console.log("in login api",userInfo)
   return request({
     url: 'ucenterservice/login',
     method: "post",
     data: userInfo
   })
 }
-/**
- * 手机登录用户的API接口，如果成功返回token
- */
 
-
-export async function MsmloginUser(userInfo) {
-  console.log("in login api", userInfo)
-  return request({
-    url: 'ucenterservice/login/' + userInfo,
-    method: "post",
-  })
-}
 /**
  * 注册用户API，如果成功返回token以及userId，并将token，userId保存在浏览器的localstorage中；
  * @param {Object} payload payload需要传入 email，password，nickname，以及邮箱的相关验证码
  */
 export async function registerUser(payload) {
-  console.log("in userSevice::reg", payload);
+  //console.log("in userSevice::reg", payload);
   return request({
     url: 'ucenterservice/register',
     method: "post",
@@ -42,10 +31,10 @@ export async function registerUser(payload) {
 /**
  * 验证用户昵称是否重复
  */
-export async function validateNickname(userInfo) {
-  console.log("in reg api", userInfo)
+export async function validateNickname(userInfo){
+ //console.log("in reg api",userInfo)
   return request({
-    url: 'ucenterservice/register/validate' + userInfo,
+    url: 'ucenterservice/register/validate/'+userInfo.nickname,
     method: "get",
   })
 }
@@ -57,7 +46,7 @@ export async function validateNickname(userInfo) {
  * @param {Object} payload
  */
 export async function sentAuthCode(payload) {
-  console.log("in sending AuthCode", payload);
+  //console.log("in sending AuthCode", payload);
   return request({
     url: 'emailservice/send',
     method: "post",
@@ -70,9 +59,9 @@ export async function sentAuthCode(payload) {
  * @param {Object} payload
  */
 export async function validateAuthCode(payload) {
-  console.log("validate AuthCode", payload.addr + '/' + payload.code);
+  //console.log("validate AuthCode", payload.addr+'/'+payload.code);
   return request({
-    url: 'emailservice/validate/' + payload.addr + '/' + payload.code,
+    url: 'emailservice/validate/'+payload.addr+'/'+payload.code,
     method: "get",
   })
 }
@@ -81,9 +70,9 @@ export async function validateAuthCode(payload) {
  * @param {Object} payload
  */
 export async function sentMsmAuthCode(payload) {
-  console.log("in sending AuthCode", payload.phone);
+  //console.log("in sending AuthCode", payload.phone);
   return request({
-    url: 'msmservice/send/' + payload.phone,
+    url: 'msmservice/send/'+payload.phone,
     method: "post",
   })
 }
@@ -92,31 +81,26 @@ export async function sentMsmAuthCode(payload) {
  * 确认手机验证码
  * @param {Object} payload
  */
-export function validateMsmAuthCode(payload) {
-  console.log("validate AuthCode", payload);
+export function validateMsmAuthCode(payload){
+  //console.log("validate AuthCode", payload);
   return request({
-    url: 'msmservice/validate/' + payload.code + '/' + payload.phone,
+    url: 'msmservice/validate/'+payload.code+'/'+payload.phone,
     method: "get",
   })
 }
-/**
- * 用手机号登陆用户
- * @param {Object} payload
- * 
- */
+
 /**
  * 获取登陆用户的信息
  * @param {Object} payload
  */
 export function getUserInfo(payload) {
-  console.log("in getUserInfo", payload)
+  //console.log("getUserInfo")
   return request({
     url: 'infoservice/info',
     method: "get",
     params: payload,
   })
 }
-
 /**
  * 获取用户收藏的课程信息
  * @param {Object} payload
