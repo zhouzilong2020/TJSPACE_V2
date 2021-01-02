@@ -131,18 +131,17 @@
           label="Submit"
           type="submit"
           color="primary"
-          class="col-6"
           @click="submit()"
           :to="{ name: 'Homepage' }"
         />
-        <q-btn
+        <!-- <q-btn
           label="Reset"
           type="reset"
           color="primary"
           flat
           class="q-ml-sm col-5"
           @click="reset()"
-        />
+        /> -->
       </div>
     </q-card>
     <br />

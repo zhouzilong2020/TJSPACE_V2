@@ -143,24 +143,25 @@
         <q-separator />
 
         <!-- 这里跳转回主页之后主页的信息不会刷新 -->
-        <div class="row">
-          <q-btn
-            label="Submit"
-            type="submit"
-            color="primary"
-            class="col-6"
-            @click="submit()"
-            :to="{ name: 'Homepage' }"
-          />
-          <q-btn
+
+        <q-btn
+          label="提交"
+          type="submit"
+          color="primary"
+          class="full-width"
+          stretch
+          @click="submit()"
+          :to="{ name: 'Homepage' }"
+        />
+        <!-- <q-btn
             label="Reset"
             type="reset"
             color="primary"
             flat
             class="q-ml-sm col-5"
             @click="reset()"
-          />
-        </div>
+          /> -->
+
         <pop-dialog
           :content="warningText"
           :bgColor="'bg-warning'"
@@ -335,7 +336,7 @@ export default {
             this.grade = 2;
             break;
           case "四年级":
-           this.grade = 3;
+            this.grade = 3;
             break;
           case "五年级":
             this.grade = 4;

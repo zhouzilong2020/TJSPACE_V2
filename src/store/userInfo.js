@@ -29,11 +29,11 @@ export default {
             state.userInfo = {
                 degree: payload.degree,
                 gender: payload.gender,
-                headimageurl: payload.headimageurl,
-                majorid: payload.majorId,
+                avatar: payload.avatar,
+                majorId: payload.majorId,
+                majorName:payload.majorName,
                 nickname: payload.nickname,
-                phonenumber: payload.phoneNumber,
-                userid: payload.userId,
+                phoneNumber: payload.phoneNumber,
                 year: payload.year,
             }
         },

@@ -1,5 +1,5 @@
 <template>
-  <q-card class="q-my-md bg-grey-2 my-card col-md-4 col-xs-12">
+  <q-card class="q-my-sm bg-grey-2 my-card col-md-4 col-xs-12">
     <q-card-section>
       <div class="title">
         <h5>欢迎使用</h5>
