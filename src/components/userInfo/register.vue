@@ -140,7 +140,7 @@ export default {
   },
 
   computed: {
-    ...mapState("userInfo", ["isLoading", "token", "userInfo"]),
+    ...mapState("userInfo", ["userInfo"]),
     sentAuthCodeText() {
       if (!this.timer) {
         return "发送验证码";
@@ -155,14 +155,13 @@ export default {
         return false;
       }
     },
-
-    
     sentIsDisabled() {
       if (this.model.email && !this.timer) {
         return false;
       }
       return true;
     },
+    
     accountEmail() {
       return this.model.email + "@tongji.edu.cn";
     },
