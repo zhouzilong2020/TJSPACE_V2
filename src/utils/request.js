@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
-import { Notify } from 'quasar'
+import { Loading,Notify } from 'quasar'
 import cookie from 'js-cookie'
 
 // 创建axios实例
@@ -15,6 +15,20 @@ var cancel
 var cancelToken = new CancelToken(function executor(c) {
   cancel = c;
 })
+
+function setLoading() {
+  if(isLoading==0){
+    Loading.show()
+  }
+  isLoading++;
+}
+
+function unsetLoading(){
+  isLoading--;
+  if(isLoading==0){
+    Loading.hide();
+  }
+}
 
 //创建拦截器  http request 拦截器
 service.interceptors.request.use(
@@ -31,7 +45,7 @@ service.interceptors.request.use(
       return qs.stringify(params, { indices: false })
     }
     config.cancelToken = cancelToken;
-    isLoading++;
+    setLoading();
     return config
   },
   err => {
@@ -46,7 +60,7 @@ service.interceptors.response.use(
       cookie.set('TJSPACE_token', response.data.data.token)
       console.log("token", cookie.get('TJSPACE_token'))
     }
-    isLoading--;
+    unsetLoading();
     // 其他地方登录
     if (response.data.code == 20004) {
       cookie.remove('TJSPACE_token')
@@ -62,7 +76,7 @@ service.interceptors.response.use(
     return response.data;
   },
   error => {
-    isLoading--;
+    unsetLoading();
 
     return Promise.reject(error.response)   // 返回接口返回的错误信息
   });
