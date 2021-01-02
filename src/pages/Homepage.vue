@@ -92,6 +92,10 @@ export default {
     onDeleteComment(i) {
       // console.log("delete No:", i);
       this.commentList.splice(i, 1);
+      this.$q.notify({
+        type: "positive",
+        message: `评论删除成功`,
+      });
     },
     getUserComment() {},
     onLoad(index, done) {

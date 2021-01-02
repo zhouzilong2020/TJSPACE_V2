@@ -36,3 +36,22 @@ export function checkCookie() {
   }
 }
 
+
+/**
+ * 为中、英文字符串折叠
+ * @param {string}} string 需要折叠的字符串
+ * @param {int} length 保留长度
+ */
+export function collapse(string, length) {
+  for (var i = 0; i < string.length; i++) {
+    if (string.charCodeAt(i) > 127 || string.charCodeAt(i) < 0) {
+      length -= 2;
+    } else {
+      length -= 1;
+    }
+    if (length < 0) {
+      return string.slice(0, i - 1) + "...";
+    }
+  }
+  return string;
+}

@@ -82,13 +82,11 @@ export default {
     //},
   //},
   methods: {
-    click() {
-      alert("ok!");
-    },
+   
   },
 
   created() {
-    console.log('sadgbasdkjhfghiuwdhjlsaoghfuhsdijhfpuijksadbfiubjlnio')
+   
   },
 };
 </script>

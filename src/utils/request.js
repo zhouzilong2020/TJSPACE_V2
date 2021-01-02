@@ -53,12 +53,14 @@ service.interceptors.response.use(
       // 返回 错误代码-1 清除token信息并跳转到登录页面
       Notify.create({ color: 'negative', message: response.data.message, icon: 'report_problem' })
       return Promise.reject(response.data)   // 返回接口返回的错误信息
-    } else if(response.data.code == 20003){
+    } else if (response.data.code == 20003) {
       cookie.remove('TJSPACE_token')
       // 返回 错误代码-1 清除token信息并跳转到登录页面
       Notify.create({ color: 'negative', message: "您已长时间未登录，请重新登录", icon: 'report_problem' })
       return Promise.reject(response.data)   // 返回接口返回的错误信息
     }
+    // TODO 配置全局统一通知！
+    // Notify.create({ color: response.'negative', message: "您已长时间未登录，请重新登录", icon: 'report_problem' })
     return response.data;
   },
   error => {
