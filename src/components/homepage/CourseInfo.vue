@@ -100,7 +100,7 @@ export default {
         currentPage: this.currentPage,
         limit: this.limit,
       }).then((resp) => {
-        // console.log(resp);
+        // //console.log(resp);
         if (resp.success) {
           this.collectedCourse = this.collectedCourse.concat(
             resp.data.courseList
@@ -150,7 +150,7 @@ export default {
       currentPage: this.currentPage,
       limit: this.limit,
     }).then((resp) => {
-      // console.log(resp);
+      // //console.log(resp);
       if (resp.success) {
         this.collectedCourse = resp.data.courseList;
         this.totalPage = resp.data.totalPage;

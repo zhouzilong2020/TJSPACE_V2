@@ -119,7 +119,7 @@ export default {
         })
         .onOk(() => {
           deleteMyPost({ postId }).then((resp) => {
-            console.log(resp);
+            // //console.log(resp);
             if (resp.success) {
               this.postList.splice(index, 1);
               this.$q.notify({
@@ -142,14 +142,14 @@ export default {
         .then((resp) => {
           if (resp.success) {
             this.postList = this.postList.concat(resp.data.postList);
-            console.log(this.postList);
+            // //console.log(this.postList);
             this.totalPage = resp.data.totalPage;
             this.currentPage = resp.data.currentPage;
           }
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        // .catch((e) => {
+        //   //console.log(e);
+        // });
     },
   },
 
@@ -160,15 +160,15 @@ export default {
     })
       .then((resp) => {
         if (resp.success) {
-          console.log(resp);
+          // //console.log(resp);
           this.postList = resp.data.postList;
           this.totalPage = resp.data.totalPage;
           this.currentPage = resp.data.currentPage;
         }
       })
-      .catch((e) => {
-        console.log(e);
-      });
+      // .catch((e) => {
+      //   //console.log(e);
+      // });
   },
 };
 </script>

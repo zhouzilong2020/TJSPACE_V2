@@ -240,12 +240,12 @@ export default {
           this.oriavatar = window.webkitURL.createObjectURL(newval);
         }
       }
-      console.log(this.oriavatar);
+      //console.log(this.oriavatar);
     },
     deptId(newVal) {
       if (newVal != "") {
         getMajors(newVal).then((resp) => {
-          //console.log("resp", resp);
+          ////console.log("resp", resp);
           if (resp.success) {
             this.OptionMajor = resp.data.majorList;
           }
@@ -268,7 +268,7 @@ export default {
         var resp = await sentMsmAuthCode({
           phone: this.phoneNumber,
         });
-        //console.log("in receiving authCode", resp);
+        ////console.log("in receiving authCode", resp);
         if (resp.success) {
           this.canReg = false;
           //设置倒计时
@@ -291,7 +291,7 @@ export default {
           phone: this.phoneNumber,
           code: this.authCode,
         });
-        console.log("resp", resp);
+        //console.log("resp", resp);
         if (!resp.success) {
           await this.popWarning(resp.message);
         } else {
@@ -357,7 +357,7 @@ export default {
           var resp1 = await UpdateOSS({
             avatar: formData,
           });
-          console.log("更改个人头像", resp1);
+          //console.log("更改个人头像", resp1);
           if (!resp1.success) {
             this.$q.notify({
               message: resp1.message,
@@ -366,7 +366,7 @@ export default {
             });
           }
         }
-        console.log("更改个人信息", resp);
+        //console.log("更改个人信息", resp);
 
         if (!resp.success) {
           this.$q.notify({
@@ -393,7 +393,7 @@ export default {
     },
     InitInfo() {
       getUserInfo().then((resp) => {
-        //console.log("getUserInfo", resp);
+        ////console.log("getUserInfo", resp);
         if (resp.success) {
           this.nickname = resp.data.nickname;
           this.gender = resp.data.gender;
@@ -431,7 +431,7 @@ export default {
           }
           this.degree = resp.data.degree;
           this.oriavatar = resp.data.avatar;
-          //console.log("avatar",this.oriavatar)
+          ////console.log("avatar",this.oriavatar)
           this.avatar = null;
         }
       });

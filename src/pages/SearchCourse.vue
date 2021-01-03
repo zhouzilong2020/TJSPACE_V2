@@ -7,6 +7,7 @@
           class="col"
           rounded
           bordered
+          size="35"
           standout="bg-grey-3"
           v-model="searchKeyword"
           @keydown.13="handleSearch()"
@@ -81,7 +82,7 @@ export default {
         keywords: this.$route.params.keyword,
         limit: this.limit,
       }).then((resp) => {
-        console.log(resp);
+        //console.log(resp);
         if (resp.success) {
           this.courseList = resp.data.courseList;
           this.totalPage = resp.data.totalPage;
@@ -98,7 +99,7 @@ export default {
     handleSearch() {
       // 避免冗余跳转
       if (this.searchKeyword != "" && this.searchKeyword != this.$route.params.keyword) {
-        // console.log(this.keywords, this.$route.params.keyword);
+        // //console.log(this.keywords, this.$route.params.keyword);
         this.$router.push({
           name: "SearchCourse",
           params: {
@@ -129,7 +130,7 @@ export default {
         keywords: this.searchKeyword,
         limit: this.limit,
       }).then((resp) => {
-        console.log(resp);
+        //console.log(resp);
         if (resp.success) {
           this.courseList = resp.data.courseList;
           this.totalPage = resp.data.totalPage;

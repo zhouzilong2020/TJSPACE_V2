@@ -99,14 +99,14 @@ export default {
         courseId: this.$route.params.courseId,
       })
         .then((resp) => {
-          // console.log(resp)
+          // //console.log(resp)
           if (resp.success) {
             this.courseInfo.favorite = resp.data.favorite;
           }
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        // .catch((e) => {
+        //   //console.log(e);
+        // });
     },
   },
   props: {

@@ -145,7 +145,7 @@ export default {
         .then((response) => {
           this.postInfo = response.data.postList;
           this.totalPage = response.data.totalPage;
-          console.log(response);
+          //console.log(response);
         })
         .catch((error) => {
           console.log(error);
@@ -172,7 +172,7 @@ export default {
         this.showPage();
       }
       else {
-        console.log("Error! Wrong order type!")
+        //console.log("Error! Wrong order type!")
       }
     },
 

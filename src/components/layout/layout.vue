@@ -221,9 +221,9 @@ export default {
     ...mapState("userInfo", ["isLoading", "userInfo"]),
   },
   methods: {
-    debug() {
-      console.log("this", this.userInfo.userId);
-    },
+    // debug() {
+    //console.log("this", this.userInfo.userId);
+    // },
     handleTopSearch() {
       // 如果当前页面不是课程搜索页面
       this.$router.push({
@@ -234,7 +234,7 @@ export default {
       });
     },
     handleRoute(payload) {
-      console.log("handle route change", payload);
+      // //console.log("handle route change", payload);
       this.$router.push({
         name: payload,
         params: {
@@ -243,7 +243,7 @@ export default {
       });
     },
     async handleLogout() {
-      console.log("clicking logout btn");
+      //console.log("clicking logout btn");
       await this.$store.dispatch("userInfo/logoutUser");
       // 成功退出
       this.$router.push({

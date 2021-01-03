@@ -25,7 +25,7 @@ export default {
   mounted() {},
 
   async beforeCreate() {
-    console.log(!this.userInfo, checkCookie());
+    //console.log(!this.userInfo, checkCookie());
     if (!this.userInfo) {
       //如果当前用户信息没有，先检查cookie中是否含有信息
       if (checkCookie()) {

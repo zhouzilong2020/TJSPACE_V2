@@ -6,7 +6,7 @@ import request from '../utils/request'
  * 分页查询课程评价
  */
 export async function getComment(payload) {
-    console.log("in get comment", payload)
+    //console.log("in get comment", payload)
     return request({
         url: `evlservice/courses/${payload.courseId}/comments/${payload.currentPage}`,
         method: 'get',
@@ -21,7 +21,7 @@ export async function getComment(payload) {
  * @param {Object} payload userID, commentID, type(1 有用， 2 没用)
  */
 export async function evaluateComment(payload) {
-    console.log("in evaluate comment", payload)
+    //console.log("in evaluate comment", payload)
     return request({
         method: 'patch',
         url: `evlservice/comments/${payload.commentId}/attitude`,
@@ -35,7 +35,7 @@ export async function evaluateComment(payload) {
  * @param {*} payload  
  */
 export async function makeComment(payload) {
-    console.log('in commit comment', payload)
+    //console.log('in commit comment', payload)
     return request({
         url: `evlservice/courses/${payload.courseId}/comment/`,
         method: "post",
@@ -50,7 +50,7 @@ export async function makeComment(payload) {
  * @param {Object}} payload currentPage
  */
 export async function getHistoryComment(payload) {
-    console.log('in get history comment', payload)
+    //console.log('in get history comment', payload)
     return request({
         url: `evlservice/personal/comments/${payload.currentPage}`,
         method: 'get',
@@ -66,7 +66,7 @@ export async function getHistoryComment(payload) {
  * @param {Object} payload {token, commentId}
  */
 export async function deleteComment(payload) {
-    console.log('in get delete comment', payload)
+    //console.log('in get delete comment', payload)
     return request({
         url: `evlservice/comments/${payload.commentId}`,
         method: 'delete',

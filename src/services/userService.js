@@ -7,7 +7,7 @@ import axios from "axios";
 
 
 export async function loginUser(userInfo){
-  //console.log("in login api",userInfo)
+  ////console.log("in login api",userInfo)
   return request({
     url: 'ucenterservice/login',
     method: "post",
@@ -20,7 +20,7 @@ export async function loginUser(userInfo){
  * @param {Object} payload payload需要传入 email，password，nickname，以及邮箱的相关验证码
  */
 export async function registerUser(payload) {
-  //console.log("in userSevice::reg", payload);
+  ////console.log("in userSevice::reg", payload);
   return request({
     url: 'ucenterservice/register',
     method: "post",
@@ -32,7 +32,7 @@ export async function registerUser(payload) {
  * 验证用户昵称是否重复
  */
 export async function validateNickname(userInfo){
- //console.log("in reg api",userInfo)
+ ////console.log("in reg api",userInfo)
   return request({
     url: 'ucenterservice/register/validate/'+userInfo.nickname,
     method: "get",
@@ -46,7 +46,7 @@ export async function validateNickname(userInfo){
  * @param {Object} payload
  */
 export async function sentAuthCode(payload) {
-  //console.log("in sending AuthCode", payload);
+  ////console.log("in sending AuthCode", payload);
   return request({
     url: 'emailservice/send',
     method: "post",
@@ -59,7 +59,7 @@ export async function sentAuthCode(payload) {
  * @param {Object} payload
  */
 export async function validateAuthCode(payload) {
-  //console.log("validate AuthCode", payload.addr+'/'+payload.code);
+  ////console.log("validate AuthCode", payload.addr+'/'+payload.code);
   return request({
     url: 'emailservice/validate/'+payload.addr+'/'+payload.code,
     method: "get",
@@ -70,7 +70,7 @@ export async function validateAuthCode(payload) {
  * @param {Object} payload
  */
 export async function sentMsmAuthCode(payload) {
-  //console.log("in sending AuthCode", payload.phone);
+  ////console.log("in sending AuthCode", payload.phone);
   return request({
     url: 'msmservice/send/'+payload.phone,
     method: "post",
@@ -82,7 +82,7 @@ export async function sentMsmAuthCode(payload) {
  * @param {Object} payload
  */
 export function validateMsmAuthCode(payload){
-  //console.log("validate AuthCode", payload);
+  ////console.log("validate AuthCode", payload);
   return request({
     url: 'msmservice/validate/'+payload.code+'/'+payload.phone,
     method: "get",
@@ -94,7 +94,7 @@ export function validateMsmAuthCode(payload){
  * @param {Object} payload
  */
 export function getUserInfo(payload) {
-  //console.log("getUserInfo")
+  ////console.log("getUserInfo")
   return request({
     url: 'infoservice/info',
     method: "get",
@@ -106,7 +106,7 @@ export function getUserInfo(payload) {
  * @param {Object} payload
  */
 export async function getFavoriteCourse(payload) {
-  console.log(payload);
+  //console.log(payload);
   var resp = await axios.get(`${URL}Show/getCollectedCourse`, {
     headers: {
       Authorization: payload.token,
@@ -123,7 +123,7 @@ export async function getFavoriteCourse(payload) {
  * @param {*} payload {token, userId, nickname, gender, phonenumber, majorid, year, degree}
  */
 export async function modifyUserInfo(payload) {
-  console.log('in modifyUserInfo', payload)
+  //console.log('in modifyUserInfo', payload)
   let resp = await axios({
     method: "post",
     url: `${URL}Modify/Info`,
@@ -140,6 +140,6 @@ export async function modifyUserInfo(payload) {
       degree: payload.degree,
     },
   });
-  console.log("after modifyUserInfo", resp);
+  //console.log("after modifyUserInfo", resp);
   return resp.data
 }

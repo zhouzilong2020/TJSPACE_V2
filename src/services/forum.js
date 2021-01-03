@@ -97,7 +97,7 @@ function post(api, params) {
 }
 
 export async function deleteMyPost(payload) {
-    console.log('in get delete BBS', payload)
+    //console.log('in get delete BBS', payload)
     return request({
         url: `bbsservice/posts/${payload.postId}`,
         method: 'delete',
@@ -108,7 +108,7 @@ export async function deleteMyPost(payload) {
 }
 
 export async function getMyPost(payload) {
-    console.log('in searching BBS', payload);
+    //console.log('in searching BBS', payload);
     return request({
         url: `bbsservice/personal/posts/${payload.currentPage}`,
         method: 'get',

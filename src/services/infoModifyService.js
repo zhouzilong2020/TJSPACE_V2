@@ -11,7 +11,7 @@ export  function getDepts(){
   }
 
 export async function getCourse(payload) {
-    console.log('in searching course', payload);
+    //console.log('in searching course', payload);
     return request({
         url: `infoservice/personal/courses/favorite/${payload.currentPage}`,
         method: 'get',
@@ -25,7 +25,7 @@ export async function getCourse(payload) {
  */
 
 export  function getMajors(data){
-  //console.log("getMajors",data)
+  ////console.log("getMajors",data)
   return request({
     url: 'infoservice/depts/{deptId}/majors?deptId='+data,
     method: "get",
@@ -37,7 +37,7 @@ export  function getMajors(data){
  */
 
 export async  function Update(data){
-  //console.log("update",data)
+  ////console.log("update",data)
   return request({
     url: 'infoservice/personal/info',
     method: "put",
@@ -50,7 +50,7 @@ export async  function Update(data){
  */
 
 export async  function UpdateOSS(data){
-  //console.log("update",data.avatar)
+  ////console.log("update",data.avatar)
   return request({
     url: 'infooss/fileoss/avatar',
     method: "post",

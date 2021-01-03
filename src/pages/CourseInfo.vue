@@ -101,7 +101,7 @@ export default {
     })
       .then((resp) => {
         if (resp.success) {
-          console.log(resp);
+          //console.log(resp);
           this.courseInfo = {
             ...resp.data,
             schoolTime: resp.data.historyTeachingList[0].schoolTime,
@@ -119,7 +119,7 @@ export default {
       limit: 20,
     })
       .then((resp) => {
-        console.log(resp);
+        //console.log(resp);
         this.comments = resp.data.commentList;
       })
       .catch((e) => {

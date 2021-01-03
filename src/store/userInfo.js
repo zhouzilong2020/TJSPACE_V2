@@ -113,7 +113,7 @@ export default {
             if (token) {
                 // 如果cookie中有保存用户信息，则使用cookie登录
                 getUserInfo().then((resp) => {
-                    //console.log('after cookie resp', resp)
+                    ////console.log('after cookie resp', resp)
                     context.commit("setUserInfo", resp.data)
                     context.commit("setToken", token)
                     setCookie('TJSPACE_userId', resp.data.nickname)
@@ -121,12 +121,12 @@ export default {
             }
             else {
                 loginUser(payload.account).then(async (resp1) => {
-                    //console.log("no cookie",resp1);
+                    ////console.log("no cookie",resp1);
                     if (resp1.success) {
                         // 登录成功，用户选择记住账号
-                        console.log(payload.remember)
+                        //console.log(payload.remember)
                         if (payload.remember) {
-                            //console.log("remember")
+                            ////console.log("remember")
                             localStorage.setItem('TJSPACE-email', payload.account.email)
                         }
                         //如果用户没有选择记住用户账号
@@ -135,7 +135,7 @@ export default {
                         }
                         // 登录成功，记录其token
                         context.commit("setToken", resp1.data.token)
-                        //console.log("setToken",resp1.data.token);
+                        ////console.log("setToken",resp1.data.token);
                         // 使用token获取用户个人信息
 
                         await getUserInfo().then((resp2) => {
@@ -153,7 +153,7 @@ export default {
          * @param {*} context 
          */
         async logoutUser(context) {
-            //console.log("in store logoutUser")
+            ////console.log("in store logoutUser")
 
             context.commit('setToken', "")
             context.commit('setUserInfo', null)
@@ -169,14 +169,14 @@ export default {
         async registerUser(context, payload) {
             context.commit("setIsLoading", true);
             var resp = await registerUser(payload)
-            //console.log("reg user resp:", resp)
+            ////console.log("reg user resp:", resp)
             // 注册成功
             if (resp.success) {
                 var resp1 = await loginUser({
                     email: payload.email,
                     password: payload.password
                 });
-                //console.log("login user", resp1);
+                ////console.log("login user", resp1);
                 if (resp1.success) {
                     // 登录成功，记录其token
                     context.commit('setToken', resp1.data.token)

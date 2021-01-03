@@ -82,7 +82,7 @@ export default {
   computed: {
     myAvg() {
       var avg = [];
-      // console.log(this.courseInfo);
+      // //console.log(this.courseInfo);
       // { name: "内容质量", max: 1000 },
       // { name: "授课质量", max: 1000 },
       // { name: "课业压力", max: 1000 },

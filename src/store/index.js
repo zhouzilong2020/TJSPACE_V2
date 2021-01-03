@@ -3,7 +3,6 @@ import Vue from "vue";
 import userInfo from "./userInfo";
 import comments from "./comments"
 import infoModify from './infoModify'
-import route from './route'
 import courseInfo from './courseInfo'
 Vue.use(vuex);
 
@@ -13,7 +12,6 @@ var store = new vuex.Store({
         userInfo, //userInfo 的名字
         comments,
         infoModify,
-        route,
         courseInfo,
    },
 });

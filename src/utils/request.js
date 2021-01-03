@@ -2,7 +2,8 @@ import axios from 'axios'
 import qs from 'qs'
 import { Loading, Notify } from 'quasar'
 import cookie from 'js-cookie'
-
+import store from '../store'
+import router from '../routes'
 // 创建axios实例
 const service = axios.create({
   baseURL: 'http://139.224.53.131:8002/tjspace/api', // base_url
@@ -39,7 +40,6 @@ service.interceptors.request.use(
     if (cookie.get('TJSPACE_token')) {
       //把获取cookie值放到header里面
       config.headers['token'] = cookie.get('TJSPACE_token');
-
     }
     config.paramsSerializer = params => {
       return qs.stringify(params, { indices: false })
@@ -58,19 +58,18 @@ service.interceptors.response.use(
   response => {
     if (response.data && response.data.data && response.data.data.token) {
       cookie.set('TJSPACE_token', response.data.data.token)
-      console.log("token", cookie.get('TJSPACE_token'))
+      ////console.log("token", cookie.get('TJSPACE_token'))
     }
     unsetLoading();
     // 其他地方登录
-    if (response.data.code == 20004) {
+    if (response.data.code > 19999) {
       cookie.remove('TJSPACE_token')
+      store.dispatch("userInfo/logoutUser")
+      router.push({
+        name: 'index'
+      })
       // 返回 错误代码-1 清除token信息并跳转到登录页面
       Notify.create({ position: "center", color: 'negative', message: response.data.message, icon: 'report_problem' })
-      return Promise.reject(response.data)   // 返回接口返回的错误信息
-    } else if (response.data.code == 20003) {
-      cookie.remove('TJSPACE_token')
-      // 返回 错误代码-1 清除token信息并跳转到登录页面
-      Notify.create({ position: "center", color: 'negative', message: "您已长时间未登录，请重新登录", icon: 'report_problem' })
       return Promise.reject(response.data)   // 返回接口返回的错误信息
     }
     // TODO 配置全局统一通知！

@@ -206,7 +206,7 @@ export default {
           operationType: "邮箱验证",
           subject: "TJSPACE·同济大学社群邮箱验证",
         });
-        //console.log("in receiving authCode", resp);
+        ////console.log("in receiving authCode", resp);
         if (resp.success) {
           //设置倒计时
           this.timer = setInterval(() => {
@@ -228,22 +228,22 @@ export default {
         addr: this.accountEmail,
         code: this.model.authCode,
       });
-      //console.log("resp", resp);
+      ////console.log("resp", resp);
       if (!resp.success) {
         await this.popWarning(resp.message);
       } else {
         var resp1 = await validateNickname({
           nickname: this.model.nickname,
         });
-        //console.log(resp1)
+        ////console.log(resp1)
         if (resp1.success) {
-          console.log("in sent reg form", this.model);
+          // //console.log("in sent reg form", this.model);
           var resp2 = await this.$store.dispatch("userInfo/registerUser", {
             email: this.model.email,
             password: this.model.password,
             nickname: this.model.nickname,
           });
-          //console.log("resp2",resp2)
+          ////console.log("resp2",resp2)
           if (this.token) {
             this.$router.push({
               name: "SelfInfoModify",

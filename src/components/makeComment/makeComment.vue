@@ -399,20 +399,22 @@ export default {
     async handleSubmit() {
       makeComment(this.apiInterface)
         .then((resp) => {
-          console.log(resp);
-          this.$q.notify({
-            type: "positive",
-            message: `评论提交成功！`,
-            position: "center",
-            timeout: 2500,
-          });
-          this.$router.push({
-            name: "courseInfo",
-            params: {
-              courseId: this.$route.params.courseId,
-              currentPage: 1,
-            },
-          });
+          // //console.log(resp);
+          if (resp.success) {
+            this.$q.notify({
+              type: "positive",
+              message: `评论提交成功！`,
+              position: "center",
+              timeout: 2500,
+            });
+            this.$router.push({
+              name: "courseInfo",
+              params: {
+                courseId: this.$route.params.courseId,
+                currentPage: 1,
+              },
+            });
+          }
         })
         .catch((e) => {
           console.log(e);

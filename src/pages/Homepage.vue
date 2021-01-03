@@ -90,7 +90,7 @@ export default {
   },
   methods: {
     onDeleteComment(i) {
-      // console.log("delete No:", i);
+      // //console.log("delete No:", i);
       this.commentList.splice(i, 1);
       this.$q.notify({
         type: "positive",
@@ -106,7 +106,7 @@ export default {
         currentPage: this.currentPage,
       })
         .then((resp) => {
-          console.log(resp);
+          //console.log(resp);
           if (resp.success) {
             Array.prototype.push.apply(this.commentList, resp.data.commentList);
             this.currentPage = resp.data.currentPage;
@@ -136,7 +136,7 @@ export default {
       limit: this.limit,
       currentPage: this.currentPage,
     }).then((resp) => {
-      console.log(resp);
+      //console.log(resp);
       if (resp.success) {
         Array.prototype.push.apply(this.commentList, resp.data.commentList);
         this.currentPage = resp.data.currentPage;

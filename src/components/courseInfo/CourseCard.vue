@@ -127,14 +127,13 @@ export default {
       })
         .then((resp) => {
           if (resp.success) {
-            console.log(this.courseInfo.favorite);
             this.courseInfo.favorite = resp.data.favorite;
-            console.log(this.courseInfo.favorite);
+            // //console.log(this.courseInfo.favorite);
           }
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        // .catch((e) => {
+        //   //console.log(e);
+        // });
     },
   },
 };

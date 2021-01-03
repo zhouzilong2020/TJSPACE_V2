@@ -200,7 +200,7 @@ export default {
           remember: this.remember,
         });
       } else {
-        console.log("asd");
+        // //console.log("asd");
         this.handleMSMLogin();
       }
     },
@@ -242,9 +242,9 @@ export default {
               }, 1000);
             }
           })
-          .catch((e) => {
-            console.log(e);
-          });
+          // .catch((e) => {
+          //   //console.log(e);
+          // });
       }
     },
     handleMSMLogin() {
@@ -257,13 +257,13 @@ export default {
         authCode.slice(8, 9) +
         authCode.slice(14, 15) +
         authCode.slice(20, 21);
-      console.log(authCode, mobile);
+      // //console.log(authCode, mobile);
       validateMsmAuthCode({
         phone: mobile,
         code: authCode,
       }).then((resp) => {
         if (resp.success) {
-          console.log(resp);
+          // //console.log(resp);
           // 此时有token了， 可以直接跳转页面， loginUser等于取回信息
           this.$store.dispatch("userInfo/loginUser", {
             account: this.account,

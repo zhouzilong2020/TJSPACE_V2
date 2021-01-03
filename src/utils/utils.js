@@ -9,7 +9,7 @@ export function setCookie(cname, cvalue, exhours) {
   }
   d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
 
-  // console.log("now:", d)
+  // //console.log("now:", d)
 
 
   var expires = "expires=" + d.toGMTString();

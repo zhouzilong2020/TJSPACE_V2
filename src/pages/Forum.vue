@@ -196,7 +196,7 @@ export default {
 
           this.isThumbUp = response.data.positive;
           this.isThumbDown = response.data.negative;
-          console.log(response);
+          //console.log(response);
         })
         .catch((error) => {
           console.log(error);
@@ -208,7 +208,7 @@ export default {
         limit: 10,
         isOnlyPoster: this.isOnlyPoster,
       }).then((response) => {
-        console.log(response);
+        //console.log(response);
 
         this.displays = response.data.replyList;
         this.usersInfo = response.data.usersInfo;
@@ -359,7 +359,7 @@ export default {
       limit: 10,
       sort: ["replyCount"],
     }).then((response) => {
-      console.log(response);
+      //console.log(response);
       this.recommend = response.data.postList;
       try {
         this.recommend[0]["color"] = "background:#FFD700";

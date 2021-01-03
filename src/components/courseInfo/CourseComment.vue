@@ -443,12 +443,12 @@ export default {
           cancel: true,
         })
         .onOk(() => {
-          console.log(">>>> second OK catcher");
+          //console.log(">>>> second OK catcher");
           this.btnLoading[2] = true;
 
           deleteComment({ commentId: this.commentInfo.commentId }).then(
             (resp) => {
-              console.log(resp);
+              //console.log(resp);
               if (resp.success) {
                 this.$emit("delete");
               }
@@ -466,7 +466,7 @@ export default {
     },
 
     async handleEvaluate(type) {
-      // console.log(this.commentInfo);
+      // //console.log(this.commentInfo);
       this.btnLoading[type] = true;
 
       if (
@@ -478,7 +478,7 @@ export default {
           commentId: this.commentInfo.commentId,
         })
           .then((resp) => {
-            // console.log(resp);
+            // //console.log(resp);
             if (resp.success) {
               // 先减去原来的评价人数上统一恢复到没有评价的状态
               if (this.commentInfo.attitude.positive) {
@@ -554,7 +554,7 @@ export default {
         courseId: this.apiData.courseId,
       },
     };
-    // console.log(this.isEvaluated)
+    // //console.log(this.isEvaluated)
   },
 };
 </script>
