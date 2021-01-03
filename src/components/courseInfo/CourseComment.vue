@@ -666,7 +666,7 @@ export default {
   width: 90%;
 }
 .footer span {
-  font-size: 3px;
+  font-size: 0.7em;
   color: grey;
   font-weight: 800;
 }

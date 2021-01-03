@@ -21,7 +21,7 @@
             flat
             :to="{
               name: 'courseInfo',
-              params: { courseId: course.courseId },
+              params: { courseId: course.courseId, currentPage: 1 },
             }"
           >
             <div class="rows" style="margin: 0 auto">
@@ -33,7 +33,7 @@
                 style="margin-bottom: 6px"
               ></q-avatar>
               <q-item-label class="h6 text-center">{{
-                course.title
+                collapse(course.title, 16)
               }}</q-item-label>
               <q-item-label caption class="text-center">{{
                 course.teacherName
@@ -43,7 +43,8 @@
         </q-item-section>
         <q-btn
           flat
-          size="12px"
+          size="11px"
+          color="grey-8"
           class="full-width"
           icon="delete"
           @click="confirmDelete(course.courseId, index)"
@@ -73,6 +74,7 @@
 <script>
 //import { mapState } from "vuex";
 //import axios from "axios";
+import { collapse } from "../../utils/utils";
 import { getCourse } from "../../services/infoModifyService";
 import { collectCourse } from "../../services/courseService";
 export default {
@@ -89,6 +91,9 @@ export default {
   },
   computed: {},
   methods: {
+    collapse(s, l) {
+      return collapse(s, l);
+    },
     getMoreCourse() {
       this.currentPage += 1;
       getCourse({

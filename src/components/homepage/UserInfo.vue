@@ -41,7 +41,7 @@
           <q-item-section>
             <q-item-label overline>年级</q-item-label>
             <q-item-label>
-              {{ userInfo.grade ? userInfo.grade : "暂无" }}</q-item-label
+              {{ userInfo.grade ? userInfo.grade+1+"年级" : "暂无" }}</q-item-label
             >
           </q-item-section>
         </q-item>

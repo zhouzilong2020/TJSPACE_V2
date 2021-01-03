@@ -99,7 +99,8 @@ export default {
     },
     getUserComment() {},
     onLoad(index, done) {
-      this.currentPage = index;
+      this.isDisableScroll = true;
+      this.currentPage = index + 1;
       getHistoryComment({
         limit: this.limit,
         currentPage: this.currentPage,
@@ -111,6 +112,7 @@ export default {
             this.currentPage = resp.data.currentPage;
             this.totalPage = resp.data.totalPage;
           }
+          this.isDisableScroll = false;
           if (this.currentPage == this.totalPage) {
             this.isDisableScroll = true;
             this.$q.notify({
@@ -129,7 +131,19 @@ export default {
         });
     },
   },
-  mounted() {},
+  mounted() {
+    getHistoryComment({
+      limit: this.limit,
+      currentPage: this.currentPage,
+    }).then((resp) => {
+      console.log(resp);
+      if (resp.success) {
+        Array.prototype.push.apply(this.commentList, resp.data.commentList);
+        this.currentPage = resp.data.currentPage;
+        this.totalPage = resp.data.totalPage;
+      }
+    });
+  },
 };
 </script>
 
