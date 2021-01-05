@@ -316,9 +316,12 @@ export default {
           .indexOf("q-header--hidden") != -1
       ) {
         title.style.top = position - 50 + "px";
+        toTop.style.top = position - 50 + "px";
       } else {
         title.style.top = position + "px";
+        toTop.style.top = position + "px";
       }
+      /*
       if (
         document
           .getElementsByTagName("footer")[0]
@@ -339,6 +342,7 @@ export default {
           100 +
           "px";
       }
+      */
       this.jump = false;
     },
   },
