@@ -152,7 +152,7 @@ export default {
   },
   data() {
     return {
-      path: require("../../assets/TJU.png"),
+      path: require("../../assets/TJU.svg"),
     };
   },
   mounted() {},
