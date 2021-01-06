@@ -1,5 +1,4 @@
-import request from "@/utils/request";
-import axios from "axios";
+import request from "@/utils/request"
 
 /**
  * 邮箱登录用户的API接口，如果成功返回token
@@ -100,46 +99,4 @@ export function getUserInfo(payload) {
     method: "get",
     params: payload,
   })
-}
-/**
- * 获取用户收藏的课程信息
- * @param {Object} payload
- */
-export async function getFavoriteCourse(payload) {
-  //console.log(payload);
-  var resp = await axios.get(`${URL}Show/getCollectedCourse`, {
-    headers: {
-      Authorization: payload.token,
-    },
-    params: {
-      userId: payload.userId,
-    },
-  });
-  return resp;
-}
-
-/**
- * 修改个人信息
- * @param {*} payload {token, userId, nickname, gender, phonenumber, majorid, year, degree}
- */
-export async function modifyUserInfo(payload) {
-  //console.log('in modifyUserInfo', payload)
-  let resp = await axios({
-    method: "post",
-    url: `${URL}Modify/Info`,
-    headers: {
-      Authorization: payload.token,
-    },
-    data: {
-      userid: payload.userId,
-      nickname: payload.nickname,
-      gender: payload.gender,
-      phonenumber: payload.phoneNumber,
-      majorid: payload.majorId,
-      year: payload.year,
-      degree: payload.degree,
-    },
-  });
-  //console.log("after modifyUserInfo", resp);
-  return resp.data
 }

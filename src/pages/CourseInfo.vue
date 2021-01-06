@@ -67,7 +67,7 @@ export default {
     return {
       text: "",
       logoPath: require("../assets/TJU.png"),
-      avatarPath: require("../assets/boy-avatar.png"),
+      avatarPath: null,
       avatarBGPath: require("../assets/material.png"),
       courseInfo: {
         avgContentScore: 4,

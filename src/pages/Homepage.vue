@@ -71,7 +71,7 @@ export default {
   data() {
     return {
       logoPath: require("../assets/TJU.png"),
-      avatarPath: require("../assets/boy-avatar.png"),
+      // avatarPath: require("../assets/boy-avatar.png"),
       avatarBGPath: require("../assets/material.png"),
       active: -1,
       Grade: "大二",

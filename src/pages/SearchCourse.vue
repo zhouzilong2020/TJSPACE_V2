@@ -173,14 +173,7 @@ export default {
   box-shadow: darkgrey 10px 10px 15px 5px;
 }
 
-@font-face {
-  font-family: maoyeye;
-  src: url("../assets/xingshu.ttf");
-}
-@font-face {
-  font-family: reccom;
-  src: url("../assets/Amazing sound.ttf");
-}
+
 .word {
   font-family: maoyeye;
   font-style: oblique;
