@@ -113,9 +113,9 @@
         </div>
         <!--返回顶部按钮-->
         <q-btn
-          @click="toTop"
+          @click="toTop('smooth')"
           class="q-py-sm"
-          style="width: 230px"
+          style="width: 230px; position: fixed; bottom: 0"
           color="black"
           icon="keyboard_arrow_up"
           flat
@@ -307,7 +307,7 @@ export default {
     //帖子标题和推荐栏随页面滚动
     follow(position) {
       var title = document.getElementById("title");
-      var toTop = document.getElementById("toTop");
+      //var toTop = document.getElementById("toTop");
       if (
         !this.jump &&
         document
@@ -316,33 +316,15 @@ export default {
           .indexOf("q-header--hidden") != -1
       ) {
         title.style.top = position - 50 + "px";
-        toTop.style.top = position - 50 + "px";
+        //toTop.style.top = position - 50 + "px";
       } else {
         title.style.top = position + "px";
-        toTop.style.top = position + "px";
+        //toTop.style.top = position + "px";
       }
-      /*
-      if (
-        document
-          .getElementsByTagName("footer")[0]
-          .getAttribute("class")
-          .indexOf("q-footer--hidden") != -1
-      ) {
-        toTop.style.top =
-          position +
-          document.documentElement.clientHeight -
-          toTop.offsetHeight -
-          50 +
-          "px";
-      } else {
-        toTop.style.top =
-          position +
-          document.documentElement.clientHeight -
-          toTop.offsetHeight -
-          100 +
-          "px";
-      }
-      */
+
+      /*toTop.style.top =
+        position + document.documentElement.clientHeight - toTop.offsetHeight - 50 + "px";*/
+
       this.jump = false;
     },
   },
