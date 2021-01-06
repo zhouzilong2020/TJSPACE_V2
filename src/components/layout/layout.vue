@@ -1,6 +1,6 @@
 <template>
-  <q-layout view="hHh lpR fFf">
-    <q-header reveal class="bg-primary text-white" height-hint="98">
+  <q-layout>
+    <q-header reveal class="header bg-primary text-white" height-hint="98">
       <!-- 功能按钮 -->
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="drawer = !drawer" />
@@ -121,15 +121,13 @@
             <q-avatar size="36pt" class="q-mb-sm avatar">
               <img :src="userInfo.avatar" />
             </q-avatar>
-
+            <!-- 登录 -->
             <template v-if="userInfo">
               <div class="text-weight-bold" v-show="!miniState">
                 {{ "欢迎你！" + userInfo.nickname }}
               </div>
-              <!-- 这个没存user的Email啊 -->
-              <!-- <div>{{ userInfo.eMail }}</div> -->
             </template>
-
+            <!-- 未登录 -->
             <template v-else>
               <div class="text-weight-bold">请先登录</div>
             </template>
@@ -148,12 +146,8 @@
             <template v-if="userInfo">
               <drawer-btn
                 :label="'个人主页'"
-                @click="debug()"
                 :to="{
                   name: 'Homepage',
-                  params: {
-                    userId: userInfo.userid,
-                  },
                 }"
                 :icon="'home'"
               />
@@ -183,25 +177,24 @@
 
     <q-page-container class="body">
       <!-- 你的内容将会被插入在这里 -->
-      <slot v-if="!isLoading" name="main"></slot>
+      <slot name="main"></slot>
     </q-page-container>
 
     <!-- footer -->
-    <q-footer reveal bordered class="bg-grey-8 text-white page-footer">
-      <q-toolbar>
-        <span class="footer-name">TJSPACE·同济大学社群</span>
-        <span class="footer-id">津ICP备20006438号</span>
-      </q-toolbar>
+    <q-footer>
+      <Footer class="footer" />
     </q-footer>
   </q-layout>
 </template>
 
 <script>
+import Footer from "./footer-google/Index";
 import DrawerBtnPenal from "./DrawerBtnPenal";
 import DrawerBtn from "./DrawerBtn";
 import { mapState } from "vuex";
 export default {
   components: {
+    Footer,
     DrawerBtnPenal,
     DrawerBtn,
   },
@@ -218,12 +211,9 @@ export default {
   },
   props: {},
   computed: {
-    ...mapState("userInfo", ["isLoading", "userInfo"]),
+    ...mapState("userInfo", ["userInfo"]),
   },
   methods: {
-    // debug() {
-    //console.log("this", this.userInfo.userId);
-    // },
     handleTopSearch() {
       // 如果当前页面不是课程搜索页面
       this.$router.push({

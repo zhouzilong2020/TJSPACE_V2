@@ -44,7 +44,7 @@ img {
   position: fixed;
   height: 100%;
   width: 100%;
-  margin-top: -120px;
+  margin-top: -40px;
   padding: 0;
   z-index: -1;
 }

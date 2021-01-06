@@ -10,6 +10,7 @@
 
 <script>
 import layout from "./components/layout/layout";
+
 import { checkCookie } from "./utils/utils";
 import { mapState } from "vuex";
 export default {
@@ -54,8 +55,10 @@ export default {
 
 <style>
 @import "~@/styles/global.css";
-
+html, body {
+  height: 100%; /*让页面撑满窗口*/
+}
 body {
-  background-color: rgb(245, 246, 247);
+  background-color: #f0f0f0;
 }
 </style>

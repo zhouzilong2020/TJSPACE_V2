@@ -1,83 +1,83 @@
 import request from '@/utils/request';
 
-export function getPostBrief(postId){
+export function getPostBrief(postId) {
     return request({
-      url:'bbsservice/posts/'+postId+'/brief',
-      method:'get'
-    })
-  }
-  
-export function getReplies(postId,currentPage,params){
-    if(!params["limit"]){
-        params["limit"]=10;
-    }
-    return request({
-        url:'bbsservice/posts/'+postId+'/replies/'+currentPage,
-        method:'get',
-        params:params
+        url: 'bbsservice/posts/' + postId + '/brief',
+        method: 'get'
     })
 }
 
-export function postReply(postId,content){
+export function getReplies(postId, currentPage, params) {
+    if (!params["limit"]) {
+        params["limit"] = 10;
+    }
     return request({
-        url:'bbsservice/posts/'+postId+'/reply',
-        method:'post',
-        data:{
-            content:content
+        url: 'bbsservice/posts/' + postId + '/replies/' + currentPage,
+        method: 'get',
+        params: params
+    })
+}
+
+export function postReply(postId, content) {
+    return request({
+        url: 'bbsservice/posts/' + postId + '/reply',
+        method: 'post',
+        data: {
+            content: content
         }
     })
 }
 
-export function postSubreply(replyId,content){
+export function postSubreply(replyId, content) {
     return request({
-        url:'bbsservice/replies/'+replyId+'/subreply',
-        method:'post',
-        data:{
-            content:content
+        url: 'bbsservice/replies/' + replyId + '/subreply',
+        method: 'post',
+        data: {
+            content: content
         }
     })
 }
 
-export function patchAttitude(postId,type){
+export function patchAttitude(postId, type) {
     return request({
-        url:'bbsservice/posts/'+postId+'/attitude',
-        method:'patch',
-        params:{
-            type:type
+        url: 'bbsservice/posts/' + postId + '/attitude',
+        method: 'patch',
+        params: {
+            type: type
         }
     })
 }
 
 
 
-export function getPosts(currentPage,params){
-    if(!params["limit"]){
-        params["limit"]=10;
+export function getPosts(currentPage, params) {
+    if (!params["limit"]) {
+        params["limit"] = 10;
     }
     return request({
-        url:'bbsservice/posts/'+currentPage,
-        method:'get',
-        params:params
+        url: 'bbsservice/posts/' + currentPage,
+        method: 'get',
+        params: params
     })
 }
 
-/***********************BBS Homepage************************/ 
+/***********************BBS Homepage************************/
 
-export function getCurPage(currentPage,order,sort){
-  return request({
-    url:'bbsservice/posts/'+currentPage+'?limit=5'+'&orderBy='+order+'&sort='+sort,
-    method:'get'
-  })
+export function getCurPage(currentPage, order, sort) {
+    return request({
+        url: 'bbsservice/posts/' + currentPage + '?limit=10' + '&orderBy=' + order + '&sort=' + sort,
+        method: 'get'
+    })
 }
 
-export function postPost(title,content){
-  return request({
-    url:'bbsservice/post',
-    method:'post',
-    data:{
-      content:content,
-      title:title
-    }
-  })
+export function postPost(title, content) {
+    return request({
+        url: 'bbsservice/post',
+        method: 'post',
+        data: {
+            content: content,
+            title: title
+        }
+    })
 }
 
