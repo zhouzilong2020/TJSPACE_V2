@@ -39,6 +39,7 @@ footer {
   background-color: #f0f0f0;
   // border-top: 1px solid #bebebe;
   padding: 10px 30px;
+  padding-left: 10px;
   font-family: "Montserrat-Regular", "RobotoDraft", "Helvetica", arial,
     sans-serif;
   width: 100%;
@@ -47,7 +48,7 @@ footer {
   align-items: center;
   .logo {
     flex: 100%;
-    height: 50px;
+    height: 35px;
     background-size: contain;
     background: url(../../../assets/tjspace-logo.svg) no-repeat center;
     max-width: 300px;
