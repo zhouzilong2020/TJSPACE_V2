@@ -16,12 +16,8 @@ export default {
       default() {
         return [
           {
-            url: "",
+            url: "http://139.224.53.131/aboutus.html/",
             text: "关于 TJSPACE",
-          },
-          {
-            url: "",
-            text: "关于 技术团队",
           },
           {
             url: "beian.gov.cn",

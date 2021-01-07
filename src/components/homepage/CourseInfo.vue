@@ -47,7 +47,7 @@
           color="grey-8"
           class="full-width"
           icon="delete"
-          @click="confirmDelete(course.courseId, index)"
+          @click="confirmDelete(course.courseId)"
         />
       </q-item>
       <q-separator />
@@ -110,7 +110,7 @@ export default {
         }
       });
     },
-    confirmDelete(courseId, index) {
+    confirmDelete(courseId) {
       this.$q
         .dialog({
           title: "确认取消收藏吗？",
@@ -123,7 +123,12 @@ export default {
           })
             .then((resp) => {
               if (resp.success) {
-                this.collectedCourse.splice(index, 1);
+                this.collectedCourse.splice(
+                  this.collectedCourse.findIndex((e) => {
+                    return e.courseId === courseId;
+                  }),
+                  1
+                );
                 this.$q.notify({
                   position: "top",
                   type: "positive",

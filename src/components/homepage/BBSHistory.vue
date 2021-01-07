@@ -69,7 +69,7 @@
         class="absolute"
         style="top: 5px; right: 0"
         icon="delete"
-        @click="confirmDelete(post.postId, i)"
+        @click="confirmDelete(post.postId)"
       >
       </q-btn>
       <q-separator />
@@ -110,7 +110,7 @@ export default {
     collapse(content, length) {
       return collapse(content, length);
     },
-    confirmDelete(postId, index) {
+    confirmDelete(postId) {
       this.$q
         .dialog({
           title: "确认删除吗？",
@@ -121,7 +121,12 @@ export default {
           deleteMyPost({ postId }).then((resp) => {
             // //console.log(resp);
             if (resp.success) {
-              this.postList.splice(index, 1);
+              this.postList.splice(
+                this.postList.findIndex((e) => {
+                  return e.postId === postId;
+                }),
+                1
+              );
               this.$q.notify({
                 position: "top",
                 type: "positive",
@@ -138,18 +143,17 @@ export default {
       getMyPost({
         currentPage: this.currentPage,
         limit: this.limit,
-      })
-        .then((resp) => {
-          if (resp.success) {
-            this.postList = this.postList.concat(resp.data.postList);
-            // //console.log(this.postList);
-            this.totalPage = resp.data.totalPage;
-            this.currentPage = resp.data.currentPage;
-          }
-        })
-        // .catch((e) => {
-        //   //console.log(e);
-        // });
+      }).then((resp) => {
+        if (resp.success) {
+          this.postList = this.postList.concat(resp.data.postList);
+          // //console.log(this.postList);
+          this.totalPage = resp.data.totalPage;
+          this.currentPage = resp.data.currentPage;
+        }
+      });
+      // .catch((e) => {
+      //   //console.log(e);
+      // });
     },
   },
 
@@ -157,18 +161,17 @@ export default {
     getMyPost({
       currentPage: this.currentPage,
       limit: this.limit,
-    })
-      .then((resp) => {
-        if (resp.success) {
-          // //console.log(resp);
-          this.postList = resp.data.postList;
-          this.totalPage = resp.data.totalPage;
-          this.currentPage = resp.data.currentPage;
-        }
-      })
-      // .catch((e) => {
-      //   //console.log(e);
-      // });
+    }).then((resp) => {
+      if (resp.success) {
+        // //console.log(resp);
+        this.postList = resp.data.postList;
+        this.totalPage = resp.data.totalPage;
+        this.currentPage = resp.data.currentPage;
+      }
+    });
+    // .catch((e) => {
+    //   //console.log(e);
+    // });
   },
 };
 </script>

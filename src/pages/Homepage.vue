@@ -23,11 +23,11 @@
         :offset="250"
       >
         <CourseComment
-          @delete="onDeleteComment(i)"
-          v-for="(comment, i) in commentList"
+          @delete="onDeleteComment(comment.commentId)"
+          v-for="comment in commentList"
           :isAuthor="false"
           :isDetail="false"
-          :key="i"
+          :key="comment.commentId"
           :apiData="comment"
           :disableBtn="true"
           :deleteBtn="true"
@@ -84,23 +84,31 @@ export default {
       commentList: [],
       currentPage: 1,
       totalPage: 0,
-      limit: 3,
-      isDisableScroll: false,
+      limit: 5,
+      isDisableScroll: true,
     };
   },
   methods: {
-    onDeleteComment(i) {
-      // //console.log("delete No:", i);
-      this.commentList.splice(i, 1);
+    onDeleteComment(commentId) {
+      //console.log("delete No:", i);
+      this.commentList.splice(
+        this.commentList.findIndex((e) => e.commentId === commentId),
+        1
+      );
+      // this.commentList.splice(i, 1);
       this.$q.notify({
         type: "positive",
         message: `评论删除成功`,
+        position: "center",
       });
     },
     getUserComment() {},
     onLoad(index, done) {
       this.isDisableScroll = true;
       this.currentPage = index + 1;
+      if (this.currentPage >= this.totalPage) {
+        return;
+      }
       getHistoryComment({
         limit: this.limit,
         currentPage: this.currentPage,
@@ -141,6 +149,7 @@ export default {
         Array.prototype.push.apply(this.commentList, resp.data.commentList);
         this.currentPage = resp.data.currentPage;
         this.totalPage = resp.data.totalPage;
+        this.isDisableScroll = false;
       }
     });
   },
