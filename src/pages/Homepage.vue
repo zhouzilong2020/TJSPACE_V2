@@ -4,7 +4,7 @@
       <UserInfo />
       <CourseInfo />
     </div>
-    <div class="column q-gutter-md" style="max-width: 550pt">
+    <div class="col-5 column q-gutter-md" >
       <Header
         :content="{
           title: '请开始您的旅程并留下您的足迹',

@@ -11,7 +11,7 @@
             class="rating"
             :class="getRate(commentStatistic.avgContentScore)"
           >
-            {{ commentStatistic.avgContentScore }}
+            {{ commentStatistic.avgContentScore.toFixed(1) }}
           </span>
         </div>
       </li>
@@ -21,7 +21,7 @@
           <span
             class="rating"
             :class="getRate(commentStatistic.avgTeachingScore)"
-            >{{ commentStatistic.avgTeachingScore }}</span
+            >{{ commentStatistic.avgTeachingScore.toFixed(1) }}</span
           >
         </div>
       </li>
@@ -31,7 +31,7 @@
           <span
             class="rating"
             :class="getRate(commentStatistic.avgGradingScore)"
-            >{{ commentStatistic.avgGradingScore }}</span
+            >{{ commentStatistic.avgGradingScore.toFixed(1) }}</span
           >
         </div>
       </li>
@@ -41,7 +41,7 @@
           <span
             class="rating"
             :class="getRate(commentStatistic.avgWorkloadScore)"
-            >{{ commentStatistic.avgWorkloadScore }}</span
+            >{{ commentStatistic.avgWorkloadScore.toFixed(1) }}</span
           >
         </div>
       </li>
@@ -53,8 +53,14 @@
 
 
 <script>
+import { format } from "quasar";
 export default {
   name: "CourseStatistic",
+  data() {
+    return {
+      between: format,
+    };
+  },
   props: {
     commentStatistic: {
       type: Object,
@@ -70,8 +76,7 @@ export default {
       },
     },
   },
-  mounted() {
-  },
+  mounted() {},
   computed: {
     getRate() {
       return (grade) => {

@@ -1,5 +1,5 @@
 <template>
-  <div id="CommentHeatChart" style="min-width: 600px; height: 160px"></div>
+  <div id="CommentHeatChart" style="width: 100%; height: 160px"></div>
 </template>
 
 <script>

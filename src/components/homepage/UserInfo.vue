@@ -1,5 +1,5 @@
 <template>
-  <q-card style="min-width: 160px" elevated>
+  <q-card elevated>
     <q-item>
       <q-item-section>
         <q-item-label class="text-center"> 个人信息</q-item-label>
@@ -11,7 +11,7 @@
       </q-avatar>
     </q-card-section>
     <q-card-section horizontal>
-      <q-list padding>
+      <q-list class="q-px-lg" padding>
         <q-item>
           <q-item-section avatar>
             <q-icon color="primary" name="face" />

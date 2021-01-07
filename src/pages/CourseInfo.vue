@@ -1,12 +1,12 @@
 <template>
   <div class="row q-gutter-sm q-pa-md flex-center no-wrap items-stretch">
     <!-- <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 detail body-left"> -->
-    <div class="detail body-left q-gutter-sm">
+    <div class="detail body-left q-gutter-sm col-2">
       <course-detail refs="courseDeatil" :courseInfo="courseInfo" />
     </div>
 
     <!-- <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8 body-right"> -->
-    <div class="body-right q-gutter-sm">
+    <div class="body-right q-gutter-sm col-7">
       <div class="course-head">
         <course-head :courseInfo="courseInfo" />
       </div>
@@ -130,19 +130,4 @@ export default {
 </script>
 
 <style scoped>
-.body-right .course-comment {
-  margin-top: 15px;
-}
-.body-right {
-  min-width: 60%;
-}
-
-.body-right .option-group {
-  margin-top: 15px;
-  max-width: 1000px;
-}
-
-.body-right .option-group .btn {
-  margin-top: 10px;
-}
 </style>

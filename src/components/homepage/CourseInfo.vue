@@ -1,5 +1,5 @@
 <template>
-  <q-card elevated style="min-width: 160px" class="course-info">
+  <q-card elevated class="course-info">
     <q-item>
       <q-item-section avatar>
         <q-icon color="black" name="attachment"></q-icon>
@@ -43,6 +43,7 @@
         </q-item-section>
         <q-btn
           flat
+          rounded
           size="11px"
           color="grey-8"
           class="full-width"
