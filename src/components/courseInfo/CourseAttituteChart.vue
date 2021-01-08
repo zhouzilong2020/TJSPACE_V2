@@ -16,7 +16,7 @@ export default {
   name: "CourseAttitudeChart",
   data: () => {
     return {
-      chart:null,
+      chart: null,
       echarts: null,
       option: {
         tooltip: {
@@ -31,7 +31,7 @@ export default {
           {
             name: "学生态度",
             type: "pie",
-            radius: [10, 50],
+            radius: [1, 60],
             center: ["50%", "35%"],
             roseType: "radius",
             label: {
@@ -66,12 +66,12 @@ export default {
   computed: {},
   methods: {
     init() {
-      this.chart  = this.echarts.init(
+      this.chart = this.echarts.init(
         document.getElementById("CourseAttitudeChart"),
         "light"
       );
-      this.chart .setOption(this.option);
-      this.chart .setOption({
+      this.chart.setOption(this.option);
+      this.chart.setOption({
         series: [
           {
             name: "学生态度",

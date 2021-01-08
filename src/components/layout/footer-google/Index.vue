@@ -16,12 +16,12 @@ export default {
       default() {
         return [
           {
-            url: "http://139.224.53.131/aboutus.html/",
+            url: "https://tongji.space/aboutus.html/",
             text: "关于 TJSPACE",
           },
           {
-            url: "beian.gov.cn",
-            text: "ICP 粤备xxxxxxxxx",
+            url: "http://beian.miit.gov.cn/",
+            text: "粤ICP备2021003490号",
           },
         ];
       },
