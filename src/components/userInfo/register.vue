@@ -202,7 +202,7 @@ export default {
       } else {
         var resp = await sentAuthCode({
           emailAddr: this.accountEmail,
-          expireTime: 60,
+          expireTime: 300,
           operationType: "邮箱验证",
           subject: "TJSPACE·同济大学社群邮箱验证",
         });

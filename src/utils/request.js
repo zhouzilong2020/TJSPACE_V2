@@ -6,7 +6,7 @@ import store from '../store'
 import router from '../routes'
 // 创建axios实例
 const service = axios.create({
-  baseURL: 'https://tongji.space:8002/tjspace/api', // base_url
+  baseURL: 'https://tongji.space/tjspace/api', // base_url
   timeout: 20000 // 请求超时时间
 });
 
