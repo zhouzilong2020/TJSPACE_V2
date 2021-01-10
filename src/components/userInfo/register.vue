@@ -6,7 +6,9 @@
         <!-- 昵称 -->
         <q-input
           id="nickname"
-          v-model="model.nickname"
+          :loading="isCheckingNickname"
+          @blur="checkNickname"
+          v-model="account.nickname"
           label="昵称:"
           hint="设置你的昵称，最长10位"
           lazy-rules
@@ -14,11 +16,20 @@
             (val) => (val && val.length > 0) || '请输入你的昵称',
             (val) => val.length <= 10 || '昵称长度不能超过10位',
           ]"
-        />
+        >
+          <template v-if="haveBlured" v-slot:label>
+            <q-icon
+              name="check_circle_outline"
+              :color="isNicknameGood ? 'green-8' : 'red-8'"
+            /><span :class="isNicknameGood ? 'text-green-8' : 'text-red-8'">{{
+              isNicknameGood ? "该昵称可以使用" : "该昵称已经被使用"
+            }}</span>
+          </template>
+        </q-input>
         <!-- 邮箱 -->
         <q-input
           id="email"
-          v-model="model.email"
+          v-model="account.email"
           suffix="@tongji.edu.cn"
           label="邮箱："
           hint="邮箱将作为您的唯一登录凭证"
@@ -39,14 +50,14 @@
         </q-input>
         <!-- 邮箱验证码 -->
         <q-input
-          v-model="model.authCode"
+          v-model="account.authCode"
           label="邮箱验证码："
           lazy-rules
           :rules="[(val) => (val !== null && val !== '') || '请输入验证码']"
         />
         <!-- 输入密码 -->
         <q-input
-          v-model="model.password"
+          v-model="account.password"
           :type="isPwd ? 'password' : 'text'"
           label="密码："
           lazy-rules
@@ -69,7 +80,7 @@
           :type="isRPwd ? 'password' : 'text'"
           label="再次输入密码："
           lazy-rules
-          :rules="[(val) => val === this.model.password || '两次密码不同']"
+          :rules="[(val) => val === this.account.password || '两次密码不同']"
         >
           <template v-slot:append>
             <q-icon
@@ -104,32 +115,28 @@
         />
       </div>
     </q-card-section>
-    <pop-dialog
-      :content="warningText"
-      :bgColor="'bg-warning'"
-      :show="warning"
-    />
   </q-card>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import popDialog from "../popDialog";
 import {
   sentAuthCode,
   validateAuthCode,
   validateNickname,
 } from "../../services/userService";
 export default {
-  components: {
-    popDialog,
-  },
+  components: {},
   data() {
     return {
       isPwd: true,
       isRPwd: true,
+      haveBlured: false,
       password: null,
-      model: {
+      isNicknameGood: false,
+      isCheckingNickname: false,
+      nicknameErrorMessage: null,
+      account: {
         email: null,
         nickname: null,
         authCode: null,
@@ -165,21 +172,22 @@ export default {
     },
 
     sentIsDisabled() {
-      if (this.model.email && !this.timer) {
+      if (this.account.email && !this.timer) {
         return false;
       }
       return true;
     },
     accountEmail() {
-      return this.model.email + "@tongji.edu.cn";
+      return this.account.email + "@tongji.edu.cn";
     },
     regIsDisabled() {
       if (
-        this.model.email &&
-        this.model.nickname &&
-        this.model.authCode &&
-        this.model.password &&
-        this.accept
+        this.account.email &&
+        this.account.nickname &&
+        this.account.authCode &&
+        this.account.password &&
+        this.accept &&
+        this.isNicknameGood
       ) {
         return false;
       }
@@ -188,17 +196,12 @@ export default {
   },
 
   methods: {
-    async popWarning(text) {
-      this.warningText = text;
-      this.warning = true;
-      setTimeout(() => {
-        this.warning = false;
-      }, 2000);
-    },
-
     async handleAuthCode() {
       if (this.isSendingAuthCode) {
-        await this.popWarning("验证码已发送，请稍后再试！");
+        this.$q.notify({
+          type: "warning",
+          message: "验证码已经发送，请稍后再试",
+        });
       } else {
         var resp = await sentAuthCode({
           emailAddr: this.accountEmail,
@@ -217,50 +220,44 @@ export default {
               this.downCnt -= 1;
             }
           }, 1000);
-        } else {
-          await this.popWarning(resp.message);
         }
       }
     },
-
-    async handleRegister() {
-      var resp = await validateAuthCode({
-        addr: this.accountEmail,
-        code: this.model.authCode,
+    checkNickname() {
+      this.isCheckingNickname = true;
+      validateNickname({
+        nickname: this.account.nickname,
+      }).then((resp) => {
+        if (resp.success) {
+          this.isNicknameGood = true;
+          this.nicknameErrorMessage = "该昵称可以使用";
+        } else {
+          this.isNicknameGood = false;
+          this.nicknameMessage = "该昵称已经被使用使用";
+        }
+        this.haveBlured = true;
+        this.isCheckingNickname = false;
       });
-      ////console.log("resp", resp);
-      if (!resp.success) {
-        await this.popWarning(resp.message);
-      } else {
-        var resp1 = await validateNickname({
-          nickname: this.model.nickname,
-        });
-        ////console.log(resp1)
-        if (resp1.success) {
-          // //console.log("in sent reg form", this.model);
-          var resp2 = await this.$store.dispatch("userInfo/registerUser", {
-            email: this.model.email,
-            password: this.model.password,
-            nickname: this.model.nickname,
+    },
+
+    handleRegister() {
+      validateAuthCode({
+        addr: this.accountEmail,
+        code: this.account.authCode,
+      }).then((resp) => {
+        if (!resp.success) {
+          this.$q.notify({
+            type: "negative",
+            message: resp.message,
           });
-          ////console.log("resp2",resp2)
-          if (this.token) {
-            this.$router.push({
-              name: "SelfInfoModify",
-            });
-          } else {
-            await this.popWarning(resp2.message);
-          }
+        } else {
+          this.$store.dispatch("userInfo/registerUser", {
+            email: this.account.email,
+            password: this.account.password,
+            nickname: this.account.nickname,
+          });
         }
-        //昵称重复
-        else {
-          await this.popWarning(resp1.message);
-          if (resp1.message == "昵称重复") {
-            this.model.nickname = "";
-            document.getElementById("nickname").focus();
-          }
-        }
-      }
+      });
     },
   },
 };

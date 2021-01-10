@@ -1,5 +1,5 @@
 <template>
-    <div class="container row justify-center">
+    <div class="container row justify-center q-pt-lg">
       <img :src="bgPath" alt="">
       <register/>
     </div>
@@ -33,7 +33,6 @@ img {
   z-index: -1;
 }
 .container{
-    margin-top: 90px;
 }
 
 

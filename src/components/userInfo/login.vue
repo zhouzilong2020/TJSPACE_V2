@@ -223,28 +223,27 @@ export default {
           mobile.slice(0, 3) + mobile.slice(6, 10) + mobile.slice(13, 17);
         sentMsmAuthCode({
           phone: mobile,
-        })
-          .then((resp) => {
-            if (resp.success) {
-              this.$q.notify({
-                position: "center",
-                type: "positive",
-                message: `验证码发送成功`,
-              });
-              // 设置倒计时
-              this.timer = setInterval(() => {
-                if (this.downCnt == 0) {
-                  this.timer = clearInterval(this.timer);
-                  this.downCnt = 120;
-                } else {
-                  this.downCnt -= 1;
-                }
-              }, 1000);
-            }
-          })
-          // .catch((e) => {
-          //   //console.log(e);
-          // });
+        }).then((resp) => {
+          if (resp.success) {
+            this.$q.notify({
+              position: "center",
+              type: "positive",
+              message: `验证码发送成功`,
+            });
+            // 设置倒计时
+            this.timer = setInterval(() => {
+              if (this.downCnt == 0) {
+                this.timer = clearInterval(this.timer);
+                this.downCnt = 120;
+              } else {
+                this.downCnt -= 1;
+              }
+            }, 1000);
+          }
+        });
+        // .catch((e) => {
+        //   //console.log(e);
+        // });
       }
     },
     handleMSMLogin() {
@@ -268,9 +267,6 @@ export default {
           this.$store.dispatch("userInfo/loginUser", {
             account: this.account,
             remember: this.remember,
-          });
-          this.$router.push({
-            name: "Homepage",
           });
         } else {
           this.$q.notify({

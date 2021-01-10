@@ -1,6 +1,6 @@
 import { loginUser, registerUser, getUserInfo } from "../services/userService"
 import { getCookie, removeCookie, setCookie } from '../utils/utils'
-
+import router from "../routes"
 /**
  * 用户登录的数据仓库
  */
@@ -31,7 +31,7 @@ export default {
                 gender: payload.gender,
                 avatar: payload.avatar,
                 majorId: payload.majorId,
-                majorName:payload.majorName,
+                majorName: payload.majorName,
                 nickname: payload.nickname,
                 phoneNumber: payload.phoneNumber,
                 year: payload.year,
@@ -120,7 +120,7 @@ export default {
                 })
             }
             else {
-                loginUser(payload.account).then(async (resp1) => {
+                loginUser(payload.account).then((resp1) => {
                     ////console.log("no cookie",resp1);
                     if (resp1.success) {
                         // 登录成功，用户选择记住账号
@@ -133,14 +133,11 @@ export default {
                         if (!payload.remember) {
                             localStorage.removeItem('TJSPACE-email')
                         }
-                        // 登录成功，记录其token
-                        context.commit("setToken", resp1.data.token)
                         ////console.log("setToken",resp1.data.token);
-                        // 使用token获取用户个人信息
-
-                        await getUserInfo().then((resp2) => {
+                        getUserInfo().then((resp2) => {
                             //成功获取到了用户信息
                             context.commit("setUserInfo", resp2.data)
+                            // 跳转到个人主页
                         })
                     }
                 })
@@ -168,30 +165,18 @@ export default {
          */
         async registerUser(context, payload) {
             context.commit("setIsLoading", true);
-            var resp = await registerUser(payload)
-            ////console.log("reg user resp:", resp)
-            // 注册成功
-            if (resp.success) {
-                var resp1 = await loginUser({
-                    email: payload.email,
-                    password: payload.password
-                });
-                ////console.log("login user", resp1);
-                if (resp1.success) {
-                    // 登录成功，记录其token
-                    context.commit('setToken', resp1.data.token)
-                    // 使用token获取用户个人信息
-                    await getUserInfo().then((resp2) => {
+            registerUser(payload).then((resp) => {
+                if (resp.success) {
+                    getUserInfo().then((resp2) => {
                         //成功获取到了用户信息
                         context.commit("setUserInfo", resp2.data)
-                        context.commit("setIsLoading", false);
-                        return resp;
+                        // 跳转到个人主页
+                        router.push({
+                            name: "SelfInfoModify"
+                        })
                     })
                 }
-            }
-            else {
-                return resp;
-            }
+            })
         },
     },
 }

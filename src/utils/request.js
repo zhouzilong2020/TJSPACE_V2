@@ -73,7 +73,9 @@ service.interceptors.response.use(
       return Promise.reject(response.data)   // 返回接口返回的错误信息
     }
     // TODO 配置全局统一通知！
-    // Notify.create({ color: response.'negative', message: "您已长时间未登录，请重新登录", icon: 'report_problem' })
+    // if(code == 500){
+    // Notify.create({ color: 'negative', message: "您已长时间未登录，请重新登录", icon: 'report_problem' })
+    // }
     return response.data;
   },
   error => {
