@@ -19,7 +19,7 @@
         >
           <template v-if="haveBlured" v-slot:label>
             <q-icon
-              name="check_circle_outline"
+              :name="isNicknameGood ? 'check_circle_outline' : 'error_outline'"
               :color="isNicknameGood ? 'green-8' : 'red-8'"
             /><span :class="isNicknameGood ? 'text-green-8' : 'text-red-8'">{{
               isNicknameGood ? "该昵称可以使用" : "该昵称已经被使用"
@@ -224,6 +224,9 @@ export default {
       }
     },
     checkNickname() {
+      if (!this.account.nickname) {
+        return;
+      }
       this.isCheckingNickname = true;
       validateNickname({
         nickname: this.account.nickname,
