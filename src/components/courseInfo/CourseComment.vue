@@ -508,6 +508,7 @@ export default {
   },
 
   mounted() {
+    console.log(this.apiData)
     this.commentInfo = {
       commentId: this.apiData.commentId,
       attitude: {
@@ -522,8 +523,9 @@ export default {
       },
       userInfo: {
         nickname: this.apiData.userInfo ? this.apiData.userInfo.nickname : "",
-        grade: this.apiData.userInfo ? this.apiData.userInfo.grade : "",
-        major: this.apiData.userInfo ? this.apiData.userInfo.major : "",
+        grade: this.apiData.userInfo ? this.apiData.userInfo.grade+1 : "",
+        major: this.apiData.userInfo ? this.apiData.userInfo.majorName : "",
+        degree : this.apiData.userInfo ? this.apiData.userInfo.degree : "",
       },
       courseDetail: {
         // year:"2020-2021",

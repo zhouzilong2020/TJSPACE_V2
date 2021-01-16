@@ -5,7 +5,7 @@ import request from "@/utils/request"
  */
 
 
-export async function loginUser(userInfo){
+export async function loginUser(userInfo) {
   ////console.log("in login api",userInfo)
   return request({
     url: 'ucenterservice/login',
@@ -30,10 +30,10 @@ export async function registerUser(payload) {
 /**
  * 验证用户昵称是否重复
  */
-export async function validateNickname(userInfo){
- ////console.log("in reg api",userInfo)
+export async function validateNickname(userInfo) {
+  ////console.log("in reg api",userInfo)
   return request({
-    url: 'ucenterservice/register/validate/'+userInfo.nickname,
+    url: 'ucenterservice/register/validate/' + userInfo.nickname,
     method: "get",
   })
 }
@@ -60,10 +60,11 @@ export async function sentAuthCode(payload) {
 export async function validateAuthCode(payload) {
   ////console.log("validate AuthCode", payload.addr+'/'+payload.code);
   return request({
-    url: 'emailservice/validate/'+payload.addr+'/'+payload.code,
+    url: 'emailservice/validate/' + payload.addr + '/' + payload.code,
     method: "get",
   })
 }
+
 /**
  * 向用户的手机发送验证码
  * @param {Object} payload
@@ -71,7 +72,7 @@ export async function validateAuthCode(payload) {
 export async function sentMsmAuthCode(payload) {
   ////console.log("in sending AuthCode", payload.phone);
   return request({
-    url: 'msmservice/send/'+payload.phone,
+    url: 'msmservice/send/' + payload.phone,
     method: "post",
   })
 }
@@ -80,10 +81,10 @@ export async function sentMsmAuthCode(payload) {
  * 确认手机验证码
  * @param {Object} payload
  */
-export function validateMsmAuthCode(payload){
+export function validateMsmAuthCode(payload) {
   ////console.log("validate AuthCode", payload);
   return request({
-    url: 'msmservice/validate/'+payload.code+'/'+payload.phone,
+    url: 'msmservice/validate/' + payload.code + '/' + payload.phone,
     method: "get",
   })
 }

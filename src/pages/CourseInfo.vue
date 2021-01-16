@@ -34,6 +34,7 @@
             v-for="comment in comments"
             :key="comment.commentId"
             :apiData="comment"
+            :isAuthor="true"
           />
         </template>
         <template v-else class="row justify-between">
@@ -120,7 +121,8 @@ export default {
     })
       .then((resp) => {
         //console.log(resp);
-        this.comments = resp.data.commentList;
+        // 逆序，让时间晚的在上面
+        this.comments = resp.data.commentList.reverse();
       })
       .catch((e) => {
         console.log(e);
