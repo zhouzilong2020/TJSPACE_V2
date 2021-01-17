@@ -1,8 +1,8 @@
 <template>
   <!-- 添加v-if 当没有获取完数据前 不渲染该组件 -->
   <q-card class="course-review" flat bordered v-if="commentInfo">
-    <q-item :class="topColor">
-      <div class="user-infro col-auto row inline justify-evenly">
+    <q-item :class="topColor" class="no-padding">
+      <div class="user-infro q-px-md q-my-sm">
         <!-- <q-item-section class="avatar" avatar>
           <q-avatar>
             <img :src="commentInfo.userInfro.photoPath" />
@@ -16,7 +16,6 @@
                 : collapse(commentInfo.courseInfo.courseTitle, 14)
             }}
           </q-item-label>
-
           <q-item-label class="grade text-center" caption>
             {{
               isAuthor
@@ -97,10 +96,7 @@
 
     <q-separator />
     <!-- 课程的一些作业情况 -->
-    <q-item
-      v-if="isDetail"
-      class="course-requirement q-gutter-sm q-px-sm q-my-sm"
-    >
+    <q-item v-if="isDetail" class="course-requirement">
       <ul class="">
         <li :class="[commentInfo.courseDetail.midterm == true ? 'active' : '']">
           <span
@@ -218,40 +214,61 @@
 
     <q-separator />
 
-    <!-- 具体内容 -->
-    <q-item v-if="isDetail" class="course-review-body" horizontal>
-      <div class="col-6 q-gutter-sm">
-        <q-card-section>
-          <div class="text-h6 text-center">课程内容</div>
-          <p class="tetx-body2 text-justify">
-            {{ commentInfo.commentDetail.content }}
-          </p>
+    <!-- 具体内容, 默认展示缩略图 -->
+    <q-item
+      :class="isExpanded ? '' : 'content-hidden'"
+      style="overflow: hidden"
+      v-if="isDetail"
+      class="course-review-body no-margin q-px-md"
+      horizontal
+    >
+      <div class="col-6">
+        <q-card-section class="q-py-sm">
+          <div class="text-h6 text-grey-8">课程内容</div>
+          <p
+            class="tetx-body2 text-justify content"
+            v-html="commentInfo.commentDetail.content"
+          ></p>
         </q-card-section>
 
-        <q-card-section>
-          <div class="text-h6 text-center">教学水平</div>
-          <p class="tetx-body2 text-justify">
-            {{ commentInfo.commentDetail.teaching }}
-          </p>
+        <q-card-section class="q-py-sm">
+          <div class="text-h6 text-grey-8">教学水平</div>
+          <p
+            class="tetx-body2 text-justify content"
+            v-html="commentInfo.commentDetail.teaching"
+          ></p>
         </q-card-section>
       </div>
-      <div class="col-6 q-gutter-sm">
-        <q-card-section>
-          <div class="text-h6 text-center">评分情况</div>
-          <p class="tetx-body2 text-justify">
+
+      <q-separator vertical />
+
+      <div class="col-6">
+        <q-card-section class="q-py-sm">
+          <div class="text-h6 text-grey-8">评分情况</div>
+          <p class="tetx-body2 content">
             {{ commentInfo.commentDetail.grading }}
           </p>
         </q-card-section>
-        <q-card-section>
-          <div class="text-h6 text-center">课程作业</div>
-          <p class="tetx-body2 text-justify">
-            {{ commentInfo.commentDetail.workload }}
-          </p>
+        <q-card-section class="q-py-sm">
+          <div class="text-h6 text-grey-8">课程作业</div>
+          <p
+            class="tetx-body2 content"
+            v-html="commentInfo.commentDetail.workload"
+          ></p>
         </q-card-section>
       </div>
     </q-item>
 
-    <q-separator />
+    <q-btn
+      color="grey"
+      round
+      flat
+      dense
+      :icon="isExpanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+      @click="isExpanded = !isExpanded"
+    />
+    <q-separator v-if="isDetail" />
+
     <!-- footer -->
     <q-card-section class="footer row justify-between">
       <span class="course-review-date"
@@ -332,7 +349,7 @@ export default {
       btnLoading: [false, false, false],
       zan: require("../../assets/zan.png"),
       cai: require("../../assets/cai.png"),
-      expanded: false,
+      isExpanded: false,
       commentInfo: null,
     };
   },
@@ -508,7 +525,6 @@ export default {
   },
 
   mounted() {
-    console.log(this.apiData)
     this.commentInfo = {
       commentId: this.apiData.commentId,
       attitude: {
@@ -523,9 +539,9 @@ export default {
       },
       userInfo: {
         nickname: this.apiData.userInfo ? this.apiData.userInfo.nickname : "",
-        grade: this.apiData.userInfo ? this.apiData.userInfo.grade+1 : "",
+        grade: this.apiData.userInfo ? this.apiData.userInfo.grade + 1 : "",
         major: this.apiData.userInfo ? this.apiData.userInfo.majorName : "",
-        degree : this.apiData.userInfo ? this.apiData.userInfo.degree : "",
+        degree: this.apiData.userInfo ? this.apiData.userInfo.degree : "",
       },
       courseDetail: {
         // year:"2020-2021",
@@ -563,16 +579,31 @@ export default {
 
 <style scoped>
 .course-review {
+  border-radius: 10px;
   margin-bottom: 20px;
   max-width: 800px;
 }
 .nickname {
   margin-top: 10px;
 }
-.user-infro-detail {
+
+.user-infro {
   width: 140px;
+}
+.user-infro-detail {
   margin-right: 10px;
   display: inline;
+}
+
+.content-hidden {
+  background-color: rgba(0, 0, 0, 0.08);
+  height: 66px;
+  filter: blur(20px);
+  overflow: hidden;
+}
+
+.course-review-body {
+  padding-top: 12px;
 }
 
 .course-detail {
@@ -643,9 +674,11 @@ export default {
 
 .course-requirement {
   color: grey;
+  margin: 0 0;
 }
 .course-requirement ul {
   list-style: none;
+  padding-left: 0;
   margin: 0 auto;
 }
 .course-requirement ul li {
@@ -658,6 +691,9 @@ export default {
 }
 .course-requirement ul .iconfont {
   margin-right: 5px;
+}
+.content {
+  padding-left: 24px;
 }
 
 .footer {
