@@ -215,7 +215,7 @@
     <q-separator />
 
     <!-- 具体内容, 默认展示缩略图 -->
-    <template>
+    <template  v-if="isDetail">
       <q-btn
         v-show="!isExpanded"
         class="expend-btn text-overline"
@@ -227,7 +227,7 @@
       />
       <q-item
         :class="isExpanded ? '' : 'content-hidden'"
-        v-if="isDetail"
+       
         class="course-review-body no-margin q-px-md"
         horizontal
       >
@@ -249,7 +249,7 @@
             ></p>
           </q-card-section>
         </div>
-        
+
         <div class="col-6">
           <q-card-section class="q-py-sm">
             <div class="text-h6 text-grey-8">评分情况</div>
@@ -257,7 +257,7 @@
               {{ commentInfo.commentDetail.grading }}
             </p>
           </q-card-section>
-           <q-separator />
+          <q-separator />
           <q-card-section class="q-py-sm">
             <div class="text-h6 text-grey-8">课程作业</div>
             <p
@@ -320,7 +320,7 @@
         </template>
       </span>
     </q-card-section>
-    
+
     <!-- 仅在个人主页显示 -->
     <q-btn
       v-if="deleteBtn"
