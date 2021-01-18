@@ -29,14 +29,30 @@
       </div> -->
 
       <div class="course-comment">
-        <template v-if="comments.length > 0">
-          <course-comment
-            v-for="comment in comments"
-            :key="comment.commentId"
-            :apiData="comment"
-            :isAuthor="true"
-          />
+        <template v-if="commentList.length > 0">
+          <!-- 无限滚动 -->
+          <q-infinite-scroll
+            :disable="isDisableScroll"
+            @load="onLoad"
+            :offset="250"
+          >
+            <course-comment
+              v-for="comment in commentList"
+              :key="comment.commentId"
+              :apiData="comment"
+              :isAuthor="true"
+            />
+            <template v-slot:loading>
+              <div class="row justify-center q-my-md">
+                <q-spinner-dots color="primary" size="40px" />
+              </div>
+            </template>
+            <div v-if="isDisableScroll" class="text-grey-7 caption text-center">
+              已经到底啦！
+            </div>
+          </q-infinite-scroll>
         </template>
+
         <template v-else class="row justify-between">
           <div class="text-h6 text-center">暂时还没有人评价该课程哦！</div>
         </template>
@@ -89,10 +105,52 @@ export default {
         teacherTitle: "教授",
         title: "软件工程",
       },
-      comments: [],
+      commentList: [],
+      currentPage: 1,
+      totalPage: 0,
+      limit: 6,
+      isDisableScroll: true,
     };
   },
-  async mounted() {
+  methods: {
+    onLoad(index, done) {
+      this.isDisableScroll = true;
+      console.log(index, this.totalPage);
+      this.currentPage = index + 1;
+      if (this.currentPage > this.totalPage) {
+        return;
+      }
+      getComment({
+        courseId: this.$route.params.courseId,
+        limit: this.limit,
+        currentPage: this.currentPage,
+      })
+        .then((resp) => {
+          //console.log(resp);
+          if (resp.success) {
+            Array.prototype.push.apply(this.commentList, resp.data.commentList);
+            this.currentPage = resp.data.currentPage;
+            this.totalPage = resp.data.totalPage;
+          }
+          this.isDisableScroll = false;
+          if (this.currentPage == this.totalPage) {
+            this.isDisableScroll = true;
+            this.$q.notify({
+              message: "已经全部加载了哦",
+              color: "info",
+              icon: "tag_faces",
+              timeout: 2000,
+            });
+          }
+          done();
+        })
+        .catch((e) => {
+          console.log(e);
+          done();
+        });
+    },
+  },
+  mounted() {
     window.scrollTo({
       top: 0,
       type: "auto",
@@ -113,16 +171,18 @@ export default {
       .catch((e) => {
         console.log(e);
       });
-
     getComment({
       courseId: this.$route.params.courseId,
-      currentPage: this.$route.params.currentPage,
-      limit: 20,
+      currentPage: this.currentPage,
+      limit: this.limit,
     })
       .then((resp) => {
         //console.log(resp);
         // 逆序，让时间晚的在上面
-        this.comments = resp.data.commentList.reverse();
+        this.commentList = resp.data.commentList;
+        this.currentPage = resp.data.currentPage;
+        this.totalPage = resp.data.totalPage;
+        this.isDisableScroll = false;
       })
       .catch((e) => {
         console.log(e);

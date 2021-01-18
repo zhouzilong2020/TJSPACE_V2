@@ -218,7 +218,7 @@
     <template>
       <q-btn
         v-show="!isExpanded"
-        class="expend-btn"
+        class="expend-btn text-overline"
         color="grey-8"
         bordered
         flat
@@ -239,6 +239,7 @@
               v-html="commentInfo.commentDetail.content"
             ></p>
           </q-card-section>
+          <q-separator />
 
           <q-card-section class="q-py-sm">
             <div class="text-h6 text-grey-8">教学水平</div>
@@ -248,9 +249,7 @@
             ></p>
           </q-card-section>
         </div>
-
-        <q-separator vertical />
-
+        
         <div class="col-6">
           <q-card-section class="q-py-sm">
             <div class="text-h6 text-grey-8">评分情况</div>
@@ -258,6 +257,7 @@
               {{ commentInfo.commentDetail.grading }}
             </p>
           </q-card-section>
+           <q-separator />
           <q-card-section class="q-py-sm">
             <div class="text-h6 text-grey-8">课程作业</div>
             <p
@@ -320,6 +320,7 @@
         </template>
       </span>
     </q-card-section>
+    
     <!-- 仅在个人主页显示 -->
     <q-btn
       v-if="deleteBtn"
@@ -583,7 +584,6 @@ export default {
 .course-review {
   border-radius: 10px;
   margin-bottom: 20px;
-  max-width: 800px;
 }
 .nickname {
   margin-top: 10px;
@@ -601,7 +601,7 @@ export default {
   position: absolute;
   z-index: 999;
   left: 50%;
-  bottom: 12%;
+  bottom: 11%;
   transform: translate(-50%);
 }
 .content-hidden {
