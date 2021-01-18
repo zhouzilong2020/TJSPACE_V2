@@ -1,13 +1,7 @@
 <template>
   <div
     id="CourseAttitudeChart"
-    style="
-      width: 100%;
-      height: 100%;
-      min-width: 180px;
-      max-width: 200px;
-      min-height: 200px;
-    "
+    style="width: 100%; height: 100%; min-height: 200px"
   ></div>
 </template>
 
@@ -31,15 +25,15 @@ export default {
           {
             name: "学生态度",
             type: "pie",
-            radius: [1, 60],
-            center: ["50%", "35%"],
+            radius: [1, 50],
+            center: ["50%", "25%"],
             roseType: "radius",
             label: {
               show: false,
             },
             emphasis: {
               label: {
-                show: true,
+                show: false,
               },
             },
             data: [

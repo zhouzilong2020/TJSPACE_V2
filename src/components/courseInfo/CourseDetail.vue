@@ -71,7 +71,7 @@
         </q-item>
       </q-list>
     </q-card-section>
-    <q-card-section style="padding: 0 auto">
+    <q-card-section style="width: 100%">
       <CourseAttitudeChart :courseInfo="this.courseInfo" />
     </q-card-section>
     <q-card-section>
@@ -93,7 +93,9 @@
         unelevated
       >
         <q-tooltip content-class="bg-accent">{{
-          !courseInfo.commented ? "现在就撰写你的评论吧！" : "你已经评价过该课程！"
+          !courseInfo.commented
+            ? "现在就撰写你的评论吧！"
+            : "你已经评价过该课程！"
         }}</q-tooltip>
       </q-btn>
     </q-card-section>
@@ -128,7 +130,7 @@ export default {
       type: Object,
       default: () => {
         return {
-          commented:false,
+          commented: false,
           avgContentScore: 4,
           avgGradingScore: 3,
           avgTeachingScore: 5,

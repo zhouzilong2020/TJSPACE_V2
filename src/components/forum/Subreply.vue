@@ -10,9 +10,14 @@
       <div class="col q-px-sm q-py-sm">
         <div class="row">
           <!--昵称和回复内容-->
-          <div class="text-body1" style="word-break: break-all; word-wrap: break-word">
+          <div
+            class="text-body1"
+            style="word-break: break-all; word-wrap: break-word"
+          >
             {{ nickname }}
-            <div style="display: inline-block" v-if="!/^回复@/.test(content)">:</div>
+            <div style="display: inline-block" v-if="!/^回复@/.test(content)">
+              :
+            </div>
             {{ content }}
           </div>
         </div>
@@ -29,7 +34,6 @@
 </template>
 
 <script>
-import config from "../../utils/config";
 export default {
   name: "Reply",
   props: {
@@ -50,10 +54,6 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      ip: config.ip,
-    };
-  },
+  data() {},
 };
 </script>

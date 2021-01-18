@@ -215,58 +215,60 @@
     <q-separator />
 
     <!-- 具体内容, 默认展示缩略图 -->
-    <q-item
-      :class="isExpanded ? '' : 'content-hidden'"
-      style="overflow: hidden"
-      v-if="isDetail"
-      class="course-review-body no-margin q-px-md"
-      horizontal
-    >
-      <div class="col-6">
-        <q-card-section class="q-py-sm">
-          <div class="text-h6 text-grey-8">课程内容</div>
-          <p
-            class="tetx-body2 text-justify content"
-            v-html="commentInfo.commentDetail.content"
-          ></p>
-        </q-card-section>
+    <template>
+      <q-btn
+        v-show="!isExpanded"
+        class="expend-btn"
+        color="grey-8"
+        bordered
+        flat
+        label="点击以查看更多"
+        @click="isExpanded = !isExpanded"
+      />
+      <q-item
+        :class="isExpanded ? '' : 'content-hidden'"
+        v-if="isDetail"
+        class="course-review-body no-margin q-px-md"
+        horizontal
+      >
+        <div class="col-6">
+          <q-card-section class="q-py-sm">
+            <div class="text-h6 text-grey-8">课程内容</div>
+            <p
+              class="tetx-body2 text-justify content"
+              v-html="commentInfo.commentDetail.content"
+            ></p>
+          </q-card-section>
 
-        <q-card-section class="q-py-sm">
-          <div class="text-h6 text-grey-8">教学水平</div>
-          <p
-            class="tetx-body2 text-justify content"
-            v-html="commentInfo.commentDetail.teaching"
-          ></p>
-        </q-card-section>
-      </div>
+          <q-card-section class="q-py-sm">
+            <div class="text-h6 text-grey-8">教学水平</div>
+            <p
+              class="tetx-body2 text-justify content"
+              v-html="commentInfo.commentDetail.teaching"
+            ></p>
+          </q-card-section>
+        </div>
 
-      <q-separator vertical />
+        <q-separator vertical />
 
-      <div class="col-6">
-        <q-card-section class="q-py-sm">
-          <div class="text-h6 text-grey-8">评分情况</div>
-          <p class="tetx-body2 content">
-            {{ commentInfo.commentDetail.grading }}
-          </p>
-        </q-card-section>
-        <q-card-section class="q-py-sm">
-          <div class="text-h6 text-grey-8">课程作业</div>
-          <p
-            class="tetx-body2 content"
-            v-html="commentInfo.commentDetail.workload"
-          ></p>
-        </q-card-section>
-      </div>
-    </q-item>
+        <div class="col-6">
+          <q-card-section class="q-py-sm">
+            <div class="text-h6 text-grey-8">评分情况</div>
+            <p class="tetx-body2 content">
+              {{ commentInfo.commentDetail.grading }}
+            </p>
+          </q-card-section>
+          <q-card-section class="q-py-sm">
+            <div class="text-h6 text-grey-8">课程作业</div>
+            <p
+              class="tetx-body2 content"
+              v-html="commentInfo.commentDetail.workload"
+            ></p>
+          </q-card-section>
+        </div>
+      </q-item>
+    </template>
 
-    <q-btn
-      color="grey"
-      round
-      flat
-      dense
-      :icon="isExpanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
-      @click="isExpanded = !isExpanded"
-    />
     <q-separator v-if="isDetail" />
 
     <!-- footer -->
@@ -595,9 +597,16 @@ export default {
   display: inline;
 }
 
+.expend-btn {
+  position: absolute;
+  z-index: 999;
+  left: 50%;
+  bottom: 12%;
+  transform: translate(-50%);
+}
 .content-hidden {
-  background-color: rgba(0, 0, 0, 0.08);
-  height: 66px;
+  /* background-color: rgba(0, 0, 0, 0.08); */
+  height: 0px;
   filter: blur(20px);
   overflow: hidden;
 }
