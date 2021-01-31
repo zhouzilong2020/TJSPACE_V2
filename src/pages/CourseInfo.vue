@@ -12,45 +12,49 @@
       </div>
       <!-- 搜索栏 -->
 
-      <div class="row justify-between" style="max-width: 800px">
-        <q-btn-toggle
-          v-model="sort"
-          dense
-          toggle-color="primary"
-          :options="[
-            { label: '评价时间', value: 'createTime' },
-            { label: '评价分数', value: 'totScore' },
-            { label: '点赞数', value: 'positiveCnt' },
-          ]"
-        />
+      <q-card flat class="row justify-between q-px-md" style="max-width: 800px">
+        <div class="q-gutter-sm">
+          <q-icon name="list" size="28px" />
+          <q-btn-toggle
+            v-model="sort"
+            dense
+            unelevated
+            toggle-color="primary"
+            :options="[
+              { label: '评价时间', value: 'createTime' },
+              { label: '评价分数', value: 'totScore' },
+              { label: '点赞数', value: 'positiveCnt' },
+            ]"
+          />
+        </div>
 
-        <q-btn-toggle
-          v-model="orderBy"
-          dense
-          toggle-color="primary"
-          :options="[
-            { label: '降序排序', value: 'desc' },
-            { label: '升序排序', value: 'asc' },
-          ]"
-        />
-        <q-btn dense unelevated icon="refresh" @click="onRefresh"></q-btn>
-      </div>
-      <!-- <div class="row q-gutter-sm">
-        <q-select
-          v-model="order"
-          label="选择排序方式"
-          :options="orderOptions"
-          style="width: 200px"
-          behavior="menu"
-        />
-        <q-select
-          v-model="dept"
-          label="选择其他学院"
-          :options="deptsOptions"
-          style="width: 200px"
-          behavior="menu"
-        />
-      </div> -->
+        <div class="q-gutter-sm">
+          <q-icon name="vertical_align_center" size="24px" />
+          <q-btn-toggle
+            v-model="orderBy"
+            dense
+            unelevated
+            toggle-color="primary"
+            :options="[
+              { label: '降序排序', value: 'desc' },
+              { label: '升序排序', value: 'asc' },
+            ]"
+          />
+          <q-btn
+            dense
+            unelevated
+            icon="refresh"
+            :disable="disableRefresh"
+            @click="
+              {
+                disableRefresh = true;
+                onRefresh();
+                disableRefresh = false;
+              }
+            "
+          />
+        </div>
+      </q-card>
 
       <div class="course-comment">
         <template v-if="commentList.length > 0">
@@ -129,6 +133,7 @@ export default {
         teacherTitle: "教授",
         title: "软件工程",
       },
+      disableRefresh: false,
       // 排序方式
       sort: "createTime",
       orderBy: "desc",
