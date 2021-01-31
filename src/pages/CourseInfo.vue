@@ -1,17 +1,16 @@
 <template>
   <div class="row q-gutter-sm q-pa-md flex-center no-wrap items-stretch">
     <!-- <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 detail body-left"> -->
-    <div class="detail body-left q-gutter-sm col-2">
+    <div class="col-3" style="max-width: 215px">
       <course-detail refs="courseDeatil" :courseInfo="courseInfo" />
     </div>
 
     <!-- <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8 body-right"> -->
-    <div class="body-right q-gutter-sm col-8">
+    <div class="q-gutter-sm col-9" style="max-width: 800px">
       <div class="course-head">
         <course-head :courseInfo="courseInfo" />
       </div>
-      <!-- 搜索栏 -->
-
+      <!-- 筛选条件栏 -->
       <q-card flat class="row justify-between q-px-md" style="max-width: 800px">
         <div class="q-gutter-sm">
           <q-icon name="list" size="28px" />
