@@ -6,12 +6,36 @@
     </div>
 
     <!-- <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8 body-right"> -->
-    <div class="body-right q-gutter-sm col-7">
+    <div class="body-right q-gutter-sm col-8">
       <div class="course-head">
         <course-head :courseInfo="courseInfo" />
       </div>
       <!-- 搜索栏 -->
-      <!-- <div class="option-group col justify-start q-gutter-sm">
+
+      <div class="row justify-between" style="max-width: 800px">
+        <q-btn-toggle
+          v-model="sort"
+          dense
+          toggle-color="primary"
+          :options="[
+            { label: '评价时间', value: 'createTime' },
+            { label: '评价分数', value: 'totScore' },
+            { label: '点赞数', value: 'positiveCnt' },
+          ]"
+        />
+
+        <q-btn-toggle
+          v-model="orderBy"
+          dense
+          toggle-color="primary"
+          :options="[
+            { label: '降序排序', value: 'desc' },
+            { label: '升序排序', value: 'asc' },
+          ]"
+        />
+        <q-btn dense unelevated icon="refresh" @click="onRefresh"></q-btn>
+      </div>
+      <!-- <div class="row q-gutter-sm">
         <q-select
           v-model="order"
           label="选择排序方式"
@@ -105,6 +129,9 @@ export default {
         teacherTitle: "教授",
         title: "软件工程",
       },
+      // 排序方式
+      sort: "createTime",
+      orderBy: "desc",
       commentList: [],
       currentPage: 1,
       totalPage: 0,
@@ -113,9 +140,30 @@ export default {
     };
   },
   methods: {
+    onRefresh() {
+      this.commentList = [];
+      getComment({
+        courseId: this.$route.params.courseId,
+        currentPage: this.currentPage,
+        limit: this.limit,
+        orderBy: this.orderBy,
+        sort: this.sort,
+      })
+        .then((resp) => {
+          //console.log(resp);
+          // 逆序，让时间晚的在上面
+          this.commentList = resp.data.commentList;
+          this.currentPage = resp.data.currentPage;
+          this.totalPage = resp.data.totalPage;
+          this.isDisableScroll = false;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     onLoad(index, done) {
       this.isDisableScroll = true;
-      console.log(index, this.totalPage);
+      // console.log(index, this.totalPage);
       this.currentPage = index + 1;
       if (this.currentPage > this.totalPage) {
         return;
@@ -124,6 +172,8 @@ export default {
         courseId: this.$route.params.courseId,
         limit: this.limit,
         currentPage: this.currentPage,
+        orderBy: this.orderBy,
+        sort: this.sort,
       })
         .then((resp) => {
           //console.log(resp);
@@ -175,6 +225,8 @@ export default {
       courseId: this.$route.params.courseId,
       currentPage: this.currentPage,
       limit: this.limit,
+      orderBy: this.orderBy,
+      sort: this.sort,
     })
       .then((resp) => {
         //console.log(resp);

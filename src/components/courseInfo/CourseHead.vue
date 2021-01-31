@@ -97,16 +97,15 @@ export default {
     handleCollect() {
       collectCourse({
         courseId: this.$route.params.courseId,
-      })
-        .then((resp) => {
-          // //console.log(resp)
-          if (resp.success) {
-            this.courseInfo.favorite = resp.data.favorite;
-          }
-        })
-        // .catch((e) => {
-        //   //console.log(e);
-        // });
+      }).then((resp) => {
+        // //console.log(resp)
+        if (resp.success) {
+          this.courseInfo.favorite = resp.data.favorite;
+        }
+      });
+      // .catch((e) => {
+      //   //console.log(e);
+      // });
     },
   },
   props: {

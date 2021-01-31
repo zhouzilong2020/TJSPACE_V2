@@ -6,12 +6,14 @@ import request from '../utils/request'
  * 分页查询课程评价
  */
 export async function getComment(payload) {
-    //console.log("in get comment", payload)
+    console.log("in get comment", payload)
     return request({
         url: `evlservice/courses/${payload.courseId}/comments/${payload.currentPage}`,
         method: 'get',
         params: {
-            limit: payload.limit
+            limit: payload.limit,
+            orderBy: payload.orderBy ? payload.orderBy : 'desc',
+            sort: payload.sort.length ? payload.sort : ['createTime']
         }
     })
 }

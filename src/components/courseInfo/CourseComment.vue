@@ -215,7 +215,7 @@
     <q-separator />
 
     <!-- 具体内容, 默认展示缩略图 -->
-    <template  v-if="isDetail">
+    <template v-if="isDetail">
       <q-btn
         v-show="!isExpanded"
         class="expend-btn text-overline"
@@ -227,7 +227,6 @@
       />
       <q-item
         :class="isExpanded ? '' : 'content-hidden'"
-       
         class="course-review-body no-margin q-px-md"
         horizontal
       >
@@ -583,6 +582,8 @@ export default {
 <style scoped>
 .course-review {
   border-radius: 10px;
+  min-width: 400px;
+  max-width: 800px;
   margin-bottom: 20px;
 }
 .nickname {
