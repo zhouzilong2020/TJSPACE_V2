@@ -1,7 +1,7 @@
 <template>
-  <div class="row q-gutter-sm q-pa-md flex-center no-wrap items-stretch">
+  <div class="row q-gutter-md q-pa-md flex-center no-wrap items-stretch">
     <!-- <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 detail body-left"> -->
-    <div class="col-3" style="max-width: 215px">
+    <div class="col-3 q-pt-sm" style="max-width: 215px">
       <course-detail refs="courseDeatil" :courseInfo="courseInfo" />
     </div>
 
@@ -22,7 +22,7 @@
             :options="[
               { label: '评价时间', value: 'createTime' },
               { label: '评价分数', value: 'totScore' },
-              { label: '点赞数', value: 'positiveCnt' },
+              { label: '点赞数', value: 'positiveCount' },
             ]"
           />
         </div>

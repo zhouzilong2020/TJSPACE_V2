@@ -1,5 +1,5 @@
 <template>
-  <q-card class="history-news" style="min-width: 540px" flat bordered>
+  <q-card class="course-card" style="min-width: 540px" flat bordered>
     <div class="justify-between row q-pt-sm">
       <q-item>
         <q-item-section avatar>
@@ -140,7 +140,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.history-news {
+.course-card {
   width: 100%;
   max-width: 700px;
   max-height: 300px;

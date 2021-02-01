@@ -22,9 +22,9 @@
         <div>
           <q-separator style="width: 820px" />
         </div>
-        <div class="col q-pt-sm q-gutter-sm">
+        <div class="row justify-center q-pt-md q-gutter-lg">
           <template v-if="this.courseList.length > 0">
-            <CourseCard
+            <CourseCardStatistic class="col-3"
               v-for="course in courseList"
               :apiInterface="course"
               :key="course.courseId"
@@ -56,10 +56,11 @@
 </template>
 
 <script>
-import CourseCard from "../components/courseInfo/CourseCard";
+// import CourseCard from "../components/courseInfo/CourseCard";
+import CourseCardStatistic from "../components/courseInfo/CourseCardStatistic";
 import { searchCourse } from "../services/courseService";
 export default {
-  components: { CourseCard },
+  components: { CourseCardStatistic },
   data() {
     return {
       searchKeyword: "",
@@ -98,7 +99,10 @@ export default {
   methods: {
     handleSearch() {
       // 避免冗余跳转
-      if (this.searchKeyword != "" && this.searchKeyword != this.$route.params.keyword) {
+      if (
+        this.searchKeyword != "" &&
+        this.searchKeyword != this.$route.params.keyword
+      ) {
         // //console.log(this.keywords, this.$route.params.keyword);
         this.$router.push({
           name: "SearchCourse",
@@ -130,7 +134,7 @@ export default {
         keywords: this.searchKeyword,
         limit: this.limit,
       }).then((resp) => {
-        //console.log(resp);
+        console.log(resp);
         if (resp.success) {
           this.courseList = resp.data.courseList;
           this.totalPage = resp.data.totalPage;
@@ -172,7 +176,6 @@ export default {
   background-color: rgb(245, 245, 245);
   box-shadow: darkgrey 10px 10px 15px 5px;
 }
-
 
 .word {
   font-family: maoyeye;

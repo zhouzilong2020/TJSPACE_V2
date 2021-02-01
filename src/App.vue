@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!-- <CourseCardStatistic /> -->
     <layout>
       <template v-slot:main>
         <router-view></router-view>
@@ -10,12 +11,13 @@
 
 <script>
 import layout from "./components/layout/layout";
-
+// import CourseCardStatistic from "./components/courseInfo/CourseCardStatistic";
 import { checkCookie } from "./utils/utils";
 import { mapState } from "vuex";
 export default {
   name: "APP",
   components: {
+    // CourseCardStatistic,
     layout,
   },
   data() {
@@ -55,7 +57,8 @@ export default {
 
 <style>
 @import "~@/styles/global.css";
-html, body {
+html,
+body {
   height: 100%; /*让页面撑满窗口*/
 }
 body {
