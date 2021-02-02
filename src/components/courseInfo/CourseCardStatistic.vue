@@ -3,21 +3,30 @@
     <!-- <q-img src="https://cdn.quasar.dev/img/chicken-salad.jpg" /> -->
 
     <q-card-section class="q-pt-sm q-pb-sm">
-      <!-- bookmark_border -->
       <q-btn
         dense
         flat
         color="yellow-8"
+        @click="handleCollect"
         :icon="isCollected"
         class="absolute"
         style="top: 0; right: 0px"
       />
 
       <div class="row no-wrap items-center">
-        <a
-          :href="'courseInfo/' + this.courseInfo.courseId + '/1'"
-          class="title ellipsis"
-          >{{ courseInfo.title }}</a
+        <q-btn
+          flat
+          dense
+          no-wrap
+          :to="{
+            name: 'courseInfo',
+            params: {
+              courseId: courseInfo.courseId,
+              currentPage: 1,
+            },
+          }"
+          class="text-blue-10 text-h6 ellipsis"
+          >{{ courseInfo.title }}</q-btn
         >
       </div>
       <div class="row">
@@ -34,7 +43,7 @@
             size="24px"
           />
         </div>
-        <div>
+        <div class="float-right">
           <strong class="rating-type">平均绩点</strong>
           <span :class="getRate(avgGPA * 2)" class="rating">
             {{ avgGPA }}
@@ -46,42 +55,47 @@
       </div>
     </q-card-section>
 
-    <q-card-section class="q-pt-none">
-      <div class="row q-gutter-sm">
-        <div>
-          <q-icon style="margin-right: 2px" name="people" /><span
-            class="text-caption"
-            >{{ courseInfo.teacherName }}</span
-          >
+    <q-card-section class="q-py-none">
+      <div class="column">
+        <div class="row">
+          <div>
+            <q-icon style="margin-right: 2px" name="people" /><span
+              class="text-caption"
+              >{{ courseInfo.teacherName }}</span
+            >
+          </div>
         </div>
-        <div>
-          <q-icon style="margin-right: 2px" name="code" /><span
-            class="text-caption"
-            >{{ courseInfo.officialId }}</span
-          >
-        </div>
-        <div>
-          <q-icon style="margin-right: 2px" name="access_time" /><span
-            class="text-caption"
-            >{{ courseInfo.period }}学时 {{ courseInfo.credit }}学分</span
-          >
-        </div>
-        <div>
-          <q-icon style="margin-right: 2px" name="account_balance" /><span
-            class="text-caption"
-            >{{ courseInfo.deptName }}</span
-          >
+        <div class="row justify-between">
+          <div>
+            <q-icon style="margin-right: 2px" name="code" /><span
+              class="text-caption"
+              >{{ courseInfo.officialId }}</span
+            >
+          </div>
+          <div>
+            <q-icon style="margin-right: 2px" name="access_time" /><span
+              class="text-caption"
+              >{{ courseInfo.period }}学时 {{ courseInfo.credit }}学分</span
+            >
+          </div>
+          <div>
+            <q-icon style="margin-right: 2px" name="account_balance" /><span
+              class="text-caption"
+              >{{ courseInfo.deptName }}</span
+            >
+          </div>
         </div>
       </div>
-      <div class="text-caption text-grey" style="height: 46px">
+      <div class="q-pt-sm text-caption text-grey ellipsis" style="height: 38px">
         {{
           courseInfo.breif
-            ? collapse(courseInfo.breif, 140)
-            : "暂时还未收录该课程的简介哦!"
+            ? courseInfo.breif
+            : "暂时还没有收录该条课程的信息哦!"
         }}
       </div>
     </q-card-section>
     <q-separator />
+
     <div
       :class="'top-' + getRate(statistic.avgTotScore)"
       class="q-px-md q-pb-sm row justify-between"
@@ -227,7 +241,7 @@ export default {
 <style lang="scss" scoped>
 .my-card {
   width: 100%;
-  max-width: 350px;
+  max-width: 380px;
 }
 a {
   font-size: 22px;

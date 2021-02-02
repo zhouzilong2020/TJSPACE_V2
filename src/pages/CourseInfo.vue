@@ -1,11 +1,9 @@
 <template>
   <div class="row q-gutter-md q-pa-md flex-center no-wrap items-stretch">
-    <!-- <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 detail body-left"> -->
     <div class="col-3 q-pt-sm" style="max-width: 215px">
       <course-detail refs="courseDeatil" :courseInfo="courseInfo" />
     </div>
 
-    <!-- <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8 body-right"> -->
     <div class="q-gutter-sm col-9" style="max-width: 800px">
       <div class="course-head">
         <course-head :courseInfo="courseInfo" />
